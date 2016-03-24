@@ -11,6 +11,7 @@
     <url>http://www.blc-archetype.com</url>
     <properties>
         <blc.version>3.1.14-SNAPSHOT</blc.version>
+        <!--<blc.version>4.0.9-GA</blc.version>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <description>My Company's eCommerce Website</description>
@@ -20,6 +21,11 @@
             <name>public snapshots</name>
             <url>http://nexus.broadleafcommerce.org/nexus/content/repositories/snapshots/</url>
         </repository>
+       <!-- <repository>
+            <id>public releases</id>
+            <name>public releases</name>
+            <url>http://nexus.broadleafcommerce.org/nexus/content/repositories/releases/</url>
+        </repository>-->
     </repositories>
     <build>
         <pluginManagement>
@@ -269,10 +275,17 @@
             </dependency>
 
             <!-- Other dependencies -->
-            <dependency>
+            <!--<dependency>
                 <groupId>org.hsqldb</groupId>
                 <artifactId>hsqldb</artifactId>
                 <version>2.3.1</version>
+                <type>jar</type>
+                <scope>compile</scope>
+            </dependency>-->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.26</version>
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>

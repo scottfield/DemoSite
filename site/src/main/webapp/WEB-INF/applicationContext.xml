@@ -2,18 +2,17 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+
+
         http://www.springframework.org/schema/task
         http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
-    <task:annotation-driven />
+    <task:annotation-driven/>
 
-    <bean id="blConfiguration" class="org.broadleafcommerce.common.config.RuntimeEnvironmentPropertiesConfigurer" />
+    <bean id="blConfiguration" class="org.broadleafcommerce.common.config.RuntimeEnvironmentPropertiesConfigurer"/>
 
     <!-- Set up Broadleaf messaging -->
     <bean id="messageSource" class="org.broadleafcommerce.common.util.BroadleafMergeResourceBundleMessageSource">
@@ -22,8 +21,9 @@
                 <value>classpath:messages</value>
             </list>
         </property>
+        <property name="defaultEncoding" value="utf-8"/>
     </bean>
-    
+
     <!-- Set up custom entity overrides. These are defined in core/src/main/resources -->
     <bean id="blMergedEntityContexts" class="org.springframework.beans.factory.config.ListFactoryBean">
         <property name="sourceList">
@@ -32,7 +32,7 @@
             </list>
         </property>
     </bean>
-    
+
     <!-- Delete this bean to enable caching - leaving it on for development is recommended -->
     <!-- as it will allow changes made in the admin or directly on the database to be reflected -->
     <!-- immediately. However, caching is obviously beneficial in production. -->
@@ -43,7 +43,7 @@
             </list>
         </property>
     </bean>
-    
+
     <!-- Delete this section to disable the embedded solr search service. Although this will result in a smaller -->
     <!-- application footprint, it will default the search service to use the database implementation, which  -->
     <!-- is slower and less full-featured. Broadleaf suggests maintaining this solr implementation in the vast -->
@@ -61,53 +61,53 @@
     <!--such as clustering.-->
 
     <!--<bean id="purgeCartConfig" class="org.springframework.beans.factory.config.MapFactoryBean">-->
-        <!--<property name="sourceMap">-->
-            <!--<map>-->
-                <!--<entry key="SECONDS_OLD" value="2592000"/>-->
-                <!--<entry key="STATUS" value="IN_PROCESS"/>-->
-            <!--</map>-->
-        <!--</property>-->
+    <!--<property name="sourceMap">-->
+    <!--<map>-->
+    <!--<entry key="SECONDS_OLD" value="2592000"/>-->
+    <!--<entry key="STATUS" value="IN_PROCESS"/>-->
+    <!--</map>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <!--<bean id="purgeCartJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
-        <!--<property name="targetObject" ref="blResourcePurgeService" />-->
-        <!--<property name="targetMethod" value="purgeCarts" />-->
-        <!--<property name="arguments">-->
-            <!--<list>-->
-                <!--<ref bean="purgeCartConfig"/>-->
-            <!--</list>-->
-        <!--</property>-->
+    <!--<property name="targetObject" ref="blResourcePurgeService" />-->
+    <!--<property name="targetMethod" value="purgeCarts" />-->
+    <!--<property name="arguments">-->
+    <!--<list>-->
+    <!--<ref bean="purgeCartConfig"/>-->
+    <!--</list>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <!--<bean id="purgeCartTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">-->
-        <!--<property name="jobDetail" ref="purgeCartJobDetail" />-->
-        <!--<property name="startDelay" value="30000" />-->
-        <!--<property name="repeatInterval" value="86400000" />-->
+    <!--<property name="jobDetail" ref="purgeCartJobDetail" />-->
+    <!--<property name="startDelay" value="30000" />-->
+    <!--<property name="repeatInterval" value="86400000" />-->
     <!--</bean>-->
 
     <!--<bean id="purgeCustomerConfig" class="org.springframework.beans.factory.config.MapFactoryBean">-->
-        <!--<property name="sourceMap">-->
-            <!--<map>-->
-                <!--<entry key="SECONDS_OLD" value="2592000"/>-->
-                <!--<entry key="IS_REGISTERED" value="false"/>-->
-            <!--</map>-->
-        <!--</property>-->
+    <!--<property name="sourceMap">-->
+    <!--<map>-->
+    <!--<entry key="SECONDS_OLD" value="2592000"/>-->
+    <!--<entry key="IS_REGISTERED" value="false"/>-->
+    <!--</map>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <!--<bean id="purgeCustomerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
-        <!--<property name="targetObject" ref="blResourcePurgeService" />-->
-        <!--<property name="targetMethod" value="purgeCustomers" />-->
-        <!--<property name="arguments">-->
-            <!--<list>-->
-                <!--<ref bean="purgeCustomerConfig"/>-->
-            <!--</list>-->
-        <!--</property>-->
+    <!--<property name="targetObject" ref="blResourcePurgeService" />-->
+    <!--<property name="targetMethod" value="purgeCustomers" />-->
+    <!--<property name="arguments">-->
+    <!--<list>-->
+    <!--<ref bean="purgeCustomerConfig"/>-->
+    <!--</list>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <!--<bean id="purgeCustomerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">-->
-        <!--<property name="jobDetail" ref="purgeCustomerJobDetail" />-->
-        <!--<property name="startDelay" value="30000" />-->
-        <!--<property name="repeatInterval" value="86400000" />-->
+    <!--<property name="jobDetail" ref="purgeCustomerJobDetail" />-->
+    <!--<property name="startDelay" value="30000" />-->
+    <!--<property name="repeatInterval" value="86400000" />-->
     <!--</bean>-->
 
     <!-- If you want to use a standalone solr server for at least one environment, uncomment the following -->
@@ -135,32 +135,33 @@
     <!--         <constructor-arg value="${solr.url.admin}"/> -->
     <!--     </bean> -->
     <bean id="blSearchService" class="org.broadleafcommerce.core.search.service.solr.SolrSearchServiceImpl">
-        <constructor-arg name="solrServer" ref="${solr.source.primary}" />
-        <constructor-arg name="reindexServer" ref="${solr.source.reindex}" />
-        <constructor-arg name="adminServer" ref="${solr.source.admin}" />
+        <constructor-arg name="solrServer" ref="${solr.source.primary}"/>
+        <constructor-arg name="reindexServer" ref="${solr.source.reindex}"/>
+        <constructor-arg name="adminServer" ref="${solr.source.admin}"/>
     </bean>
     <bean id="rebuildIndexJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="blSearchService" />
-        <property name="targetMethod" value="rebuildIndex" />
-    </bean> 
+        <property name="targetObject" ref="blSearchService"/>
+        <property name="targetMethod" value="rebuildIndex"/>
+    </bean>
     <bean id="rebuildIndexTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-        <property name="jobDetail" ref="rebuildIndexJobDetail" />
-        <property name="startDelay" value="${solr.index.start.delay}" />
-        <property name="repeatInterval" value="${solr.index.repeat.interval}" />
+        <property name="jobDetail" ref="rebuildIndexJobDetail"/>
+        <property name="startDelay" value="${solr.index.start.delay}"/>
+        <property name="repeatInterval" value="${solr.index.repeat.interval}"/>
     </bean>
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="rebuildIndexTrigger" />
+                <ref bean="rebuildIndexTrigger"/>
                 <!--<ref bean="purgeCartTrigger" />-->
                 <!--<ref bean="purgeCustomerTrigger" />-->
             </list>
         </property>
     </bean>
-    
+
     <!--  Broaldeaf Commerce comes with an Image Server that allows you to manipulate images.   For example, the 
           demo includes a high resolution image for each product that is reduced in size for browsing operations -->
-    <bean id="blStaticMapNamedOperationComponent" class="org.broadleafcommerce.cms.file.service.operation.StaticMapNamedOperationComponent">
+    <bean id="blStaticMapNamedOperationComponent"
+          class="org.broadleafcommerce.cms.file.service.operation.StaticMapNamedOperationComponent">
         <property name="namedOperations">
             <map>
                 <entry key="browse">
@@ -171,7 +172,7 @@
                         <entry key="resize-maintain-aspect-ratio" value="true"/>
                         <entry key="resize-reduce-only" value="true"/>
                     </map>
-                </entry> 
+                </entry>
                 <entry key="thumbnail">
                     <map>
                         <entry key="resize-width-amount" value="60"/>
@@ -180,11 +181,11 @@
                         <entry key="resize-maintain-aspect-ratio" value="true"/>
                         <entry key="resize-reduce-only" value="true"/>
                     </map>
-                </entry>  
+                </entry>
             </map>
         </property>
-    </bean>    
-    
+    </bean>
+
     <!-- This is an example of a custom dialect definition that uses a custom processor -->
     <!-- The second bean registers the dialct to the blWebTemplateEngine -->
     <!-- Note that the same thing could be done for the blEmailTemplateEngine -->
@@ -204,7 +205,7 @@
         </property>
     </bean> 
     -->
-    
+
     <!-- The following two beans are defined like this in Broadleaf Commerce. However, -->
     <!-- you may want to override the bean definitions by uncommenting these two beans -->
     <!-- to control whether or not templates are cacheable. This will generally be desireable -->
@@ -227,7 +228,7 @@
         <property name="characterEncoding" value="UTF-8" />
     </bean>
     -->
-    
+
     <bean id="jsLocations" class="org.springframework.beans.factory.config.ListFactoryBean">
         <property name="sourceList">
             <list>
@@ -236,10 +237,10 @@
         </property>
     </bean>
     <bean class="org.broadleafcommerce.common.extensibility.context.merge.LateStageMergeBeanPostProcessor">
-        <property name="collectionRef" value="jsLocations" />
-        <property name="targetRef" value="blJsLocations" />
+        <property name="collectionRef" value="jsLocations"/>
+        <property name="targetRef" value="blJsLocations"/>
     </bean>
-    
+
     <bean id="cssLocations" class="org.springframework.beans.factory.config.ListFactoryBean">
         <property name="sourceList">
             <list>
@@ -248,17 +249,17 @@
         </property>
     </bean>
     <bean class="org.broadleafcommerce.common.extensibility.context.merge.LateStageMergeBeanPostProcessor">
-        <property name="collectionRef" value="cssLocations" />
-        <property name="targetRef" value="blCssLocations" />
+        <property name="collectionRef" value="cssLocations"/>
+        <property name="targetRef" value="blCssLocations"/>
     </bean>
-    
+
     <bean id="blJsResources" class="org.broadleafcommerce.common.web.resource.BroadleafResourceHttpRequestHandler">
         <property name="locations" ref="blJsLocations"/>
-        <property name="handlers" ref="blJsHandlers" />
+        <property name="handlers" ref="blJsHandlers"/>
     </bean>
-    
+
     <bean id="blCssResources" class="org.broadleafcommerce.common.web.resource.BroadleafResourceHttpRequestHandler">
         <property name="locations" ref="blCssLocations"/>
-        <property name="handlers" ref="blCssHandlers" />
+        <property name="handlers" ref="blCssHandlers"/>
     </bean>
 </beans>

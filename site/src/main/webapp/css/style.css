@@ -2956,3 +2956,9 @@ and (max-width : 480px) {
 .icon-filter{background-position:-408px -144px;}
 .icon-briefcase{background-position:-432px -144px;}
 .icon-fullscreen{background-position:-456px -144px;}
+
+/*header section*/
+#zh_CN{
+    height: 24px;
+    width: 24px;
+}

@@ -37,23 +37,26 @@
         <div id="languages">
             <span id="selectedLocale" th:text="${session.blLocale.localeCode}" style="display: none" />
 
-            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'en_US')">
+            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'locale', 'en_US')">
                 <img id="en_US" src="img/flags/United-States.png" blc:src="@{/img/flags/United-States.png}" alt="United States" title="English" />
             </a>
 
-            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'en_GB')">
+            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'locale', 'en_GB')">
                 <img id="en_GB" src="img/flags/United-Kingdom.png" blc:src="@{/img/flags/United-Kingdom.png}" alt="United Kingdom" title="English (UK)"/>
             </a>
 
-            <a  href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'es_MX')">
+            <a  href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'locale', 'es_MX')">
                 <img id="es_MX" src="img/flags/Mexico.png" blc:src="@{/img/flags/Mexico.png}" alt="Mexico" title="Spanish (Mexico)"/>
             </a>
 
-            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'es_ES')">
+            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'locale', 'es_ES')">
                 <img id="es_ES" src="img/flags/Mexico.png" blc:src="@{/img/flags/Spain.png}" alt="Spain" title="Spanish (Spain)"/>
             </a>
-            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'fr_FR')">
+            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'locale', 'fr_FR')">
                 <img id="fr_FR" src="img/flags/Mexico.png" blc:src="@{/img/flags/France.png}" alt="France" title="French (France)" />
+            </a>
+            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'locale', 'zh_CN')">
+                <img id="zh_CN" src="img/flags/Mexico.png" blc:src="@{/img/flags/China.jpg}" alt="中国" title="简体中文(中国)" />
             </a>
 
         </div>
