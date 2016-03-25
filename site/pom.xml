@@ -31,7 +31,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+         <!--   <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.1.5.v20120716</version>
@@ -39,12 +39,12 @@
                     <webAppSourceDirectory>${webappDirectory}</webAppSourceDirectory>
                     <contextPath>/</contextPath>
                     
-                    <!-- !!!!! WARNING !!!!!! -->
-                    <!-- This configuration of Jetty is not as secure as it causes Sessions to use a java.util.Random
+                    &lt;!&ndash; !!!!! WARNING !!!!!! &ndash;&gt;
+                    &lt;!&ndash; This configuration of Jetty is not as secure as it causes Sessions to use a java.util.Random
                         vs. java.security.SecureRandom. This speeds up startup times locally but this should not be used
-                        in production -->
+                        in production &ndash;&gt;
                     <jettyXml>jetty-server.xml</jettyXml>
-                    <!-- !!!!! WARNING !!!!!! -->
+                    &lt;!&ndash; !!!!! WARNING !!!!!! &ndash;&gt;
                     
                     <stopPort>9966</stopPort>
                     <stopKey>foo</stopKey>
@@ -65,7 +65,7 @@
                          <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
                     </webAppConfig>
                 </configuration>
-            </plugin>
+            </plugin>-->
         
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

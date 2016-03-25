@@ -113,5 +113,8 @@
         <env-entry-type>java.lang.String</env-entry-type>
         <env-entry-value>admin2</env-entry-value>
     </env-entry>
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
 
 </web-app>

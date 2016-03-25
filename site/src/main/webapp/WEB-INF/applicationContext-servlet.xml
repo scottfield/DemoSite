@@ -59,7 +59,7 @@
         </bean>
         <!-- Interceptor for blLocalCode-->
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-            <property name="paramName" value="locale"/>
+            <property name="paramName" value="blLocaleCode"/>
         </bean>
     </mvc:interceptors>
 
