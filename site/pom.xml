@@ -11,15 +11,15 @@
     <packaging>war</packaging>
     <name>site</name>
     <description>Web Module For Broadleaf Commerce Based ECommerce Site</description>
-    <properties>
+<!--    <properties>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- httpsPort and httpPort are used by embeded jetty server.-->
-        <!-- Make sure the following httpsPort matches what's in the runtime-properties file,  -->
+        &lt;!&ndash; httpsPort and httpPort are used by embeded jetty server.&ndash;&gt;
+        &lt;!&ndash; Make sure the following httpsPort matches what's in the runtime-properties file,  &ndash;&gt;
         <httpsPort>8443</httpsPort> 
         <httpPort>8080</httpPort>
-    </properties>
-    <build>
+    </properties>-->
+<!--    <build>
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
         <finalName>mycompany</finalName>
         <plugins>
@@ -31,7 +31,7 @@
                 </configuration>
             </plugin>
 
-         <!--   <plugin>
+         &lt;!&ndash;   <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.1.5.v20120716</version>
@@ -65,7 +65,7 @@
                          <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
                     </webAppConfig>
                 </configuration>
-            </plugin>-->
+            </plugin>&ndash;&gt;
         
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -115,7 +115,7 @@
                 </executions>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
     <dependencies>
         <dependency>
             <groupId>com.mycompany</groupId>
