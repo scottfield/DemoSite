@@ -17,7 +17,7 @@
         http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
-        
+    <context:load-time-weaver />
     <!-- Shared properties between admin and site go here -->
     <bean id="blMergedDataSources" class="org.springframework.beans.factory.config.MapFactoryBean">
         <property name="sourceMap">

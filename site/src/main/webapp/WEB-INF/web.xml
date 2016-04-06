@@ -20,6 +20,7 @@
             classpath:/applicationContext-email.xml
             /WEB-INF/applicationContext-datasource.xml
             /WEB-INF/applicationContext-email.xml
+            /WEB-INF/applicationContext-rest-api.xml
             /WEB-INF/applicationContext-security.xml
             /WEB-INF/applicationContext-filter.xml
             /WEB-INF/applicationContext-workflow.xml
@@ -112,10 +113,10 @@
     <servlet>
     	<servlet-name>RESTApiServlet</servlet-name>
     	<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
-        <init-param>
+        <!--<init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>org.codehaus.jackson.jaxrs</param-value>
-        </init-param>
+            <param-value>com.mycompany.api</param-value>
+        </init-param>-->
 	</servlet>
 
 	<servlet-mapping>
