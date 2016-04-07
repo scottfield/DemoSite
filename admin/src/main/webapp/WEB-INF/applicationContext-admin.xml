@@ -112,14 +112,27 @@
         <!-- Fallback to use the default message in the admin. This will ensure that client-specific friendly
             names are not required to appear in an internationalized properties file -->
         <property name="useCodeAsDefaultMessage" value="${messages.useCodeAsDefaultMessage}" />
-        <property name="cacheSeconds" value="${messages.cacheSeconds}" />
+        <!--<property name="cacheSeconds" value="${messages.cacheSeconds}" />-->
+        <property name="cacheSeconds" value="3" />
         <property name="basenames">
             <list>
-                <value>classpath:messages-admin</value>
+                <value>classpath:/entityMessages/GeneratedMessagesEntityCommon</value>
+                <value>classpath:/entityMessages/GeneratedMessagesEntityFramework</value>
+                <value>classpath:/entityMessages/GeneratedMessagesEntityOpenAdmin</value>
+                <value>classpath:/entityMessages/GeneratedMessagesEntityProfile</value>
+                <value>classpath:/entityMessages/OpenAdminMessages</value>
+                <value>classpath:/moduleMessages/CustomerCareMessages</value>
+                <value>classpath:/moduleMessages/MerchandisingMessages</value>
+                <value>classpath:/moduleMessages/PromotionMessages</value>
+                <value>classpath:/moduleMessages/RuleMessages</value>
+                <value>classpath:/moduleMessages/AbstractModuleMessages</value>
+                <value>classpath:/moduleMessages/UtilityMessages</value>
+                <value>classpath:/moduleMessages/ContentManagementMessages</value>
+                <value>classpath:/moduleMessages/GeneratedMessagesEntityCMS</value>
             </list>
         </property>
+        <property name="defaultEncoding" value="utf-8"/>
     </bean>
-	
 	<bean id="blJsResources" class="org.broadleafcommerce.common.web.resource.BroadleafResourceHttpRequestHandler">
         <property name="handlers">
             <list>
