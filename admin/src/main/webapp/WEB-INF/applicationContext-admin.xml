@@ -121,6 +121,7 @@
                 <value>classpath:/entityMessages/GeneratedMessagesEntityOpenAdmin</value>
                 <value>classpath:/entityMessages/GeneratedMessagesEntityProfile</value>
                 <value>classpath:/entityMessages/OpenAdminMessages</value>
+                <value>classpath:/entityMessages/GeneratedMessagesEntityCMS</value>
                 <value>classpath:/moduleMessages/CustomerCareMessages</value>
                 <value>classpath:/moduleMessages/MerchandisingMessages</value>
                 <value>classpath:/moduleMessages/PromotionMessages</value>
@@ -128,7 +129,6 @@
                 <value>classpath:/moduleMessages/AbstractModuleMessages</value>
                 <value>classpath:/moduleMessages/UtilityMessages</value>
                 <value>classpath:/moduleMessages/ContentManagementMessages</value>
-                <value>classpath:/moduleMessages/GeneratedMessagesEntityCMS</value>
             </list>
         </property>
         <property name="defaultEncoding" value="utf-8"/>
