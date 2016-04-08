@@ -221,13 +221,13 @@
 
             var div = $("<div>", {"class": "conditional " + kind});
             var selectWrapper = $("<div>", {"class": "all-any-none-wrapper"});
-            selectWrapper.append($("<span>", {text: "Match", "class": "conditional-spacer"}));
+            selectWrapper.append($("<span>", {text: "匹配", "class": "conditional-spacer"}));
 
             var qty = ruleData.quantity;
             if (qty != null) {
                 var quantity = $("<input>", {"class": "conditional-qty", "type": "text", "value": qty});
                 selectWrapper.append(quantity);
-                selectWrapper.append($("<span>", {text: "of", "class": "conditional-spacer"}));
+                selectWrapper.append($("<span>", {text: "符合", "class": "conditional-spacer"}));
             }
 
             var id = ruleData.id;
@@ -244,11 +244,11 @@
             div.append(removeLink);
 
             var select = $("<select>", {"class": "all-any-none"});
-            select.append($("<option>", {"value": "all", "text": "All", "selected": kind == "all"}));
-            select.append($("<option>", {"value": "any", "text": "Any", "selected": kind == "any"}));
-            select.append($("<option>", {"value": "none", "text": "None", "selected": kind == "none"}));
+            select.append($("<option>", {"value": "all", "text": "全部", "selected": kind == "all"}));
+            select.append($("<option>", {"value": "any", "text": "任意", "selected": kind == "any"}));
+            select.append($("<option>", {"value": "none", "text": "无", "selected": kind == "none"}));
             selectWrapper.append(select);
-            selectWrapper.append($("<span>", {text: "of the following rules:"}));
+            selectWrapper.append($("<span>", {text: "如下规则:"}));
             div.append(selectWrapper);
 
             var addRuleLink = $("<a>", {"href": "#", "class": "add-rule tiny secondary radius button", "text": BLCAdmin.messages.rule});
