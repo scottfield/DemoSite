@@ -5,7 +5,7 @@
              and building a list of the categories sub-categories.                          
         -->
     </div>
-    <blc:categories resultVar="navCategories" parentCategory="Primary Nav" maxResults="10" />
+    <blc:categories resultVar="navCategories" parentCategory="主导航" maxResults="10" />
     
     <ul>
         <li th:each="category : ${navCategories}" th:unless="${#strings.isEmpty(category.url)}">

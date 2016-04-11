@@ -21,26 +21,26 @@
     
     BLCAdmin.messages = {
         // List grid messages
-        saved : 'Saved',
-        reorder : 'Reorder',
-        done : 'Done',
-        updated : 'Updated',
+        saved : '保存',
+        reorder : '重排',
+        done : '完成',
+        updated : '修改',
         
         // Rule builder messages
-        rule : 'Rule',
-        subCondition : 'Sub-Condition',
-        entireCondition : 'Entire Condition',
-        booleanTrue : 'True',
-        booleanFalse : 'False',
+        rule : '规则',
+        subCondition : '子规则',
+        entireCondition : '全部规则',
+        booleanTrue : '真',
+        booleanFalse : '假',
         
         // Asset messages
-        selectUploadAsset : 'Select / Upload Asset',
+        selectUploadAsset : '选择 / 上传资源',
         
         // Modal messages
-        error : 'Error',
-        forbidden403 : '403 Forbidden',
-        errorOccurred : 'An error occurred',
-        loading : 'Loading'
+        error : '错误',
+        forbidden403 : '403 禁止',
+        errorOccurred : '发生错误',
+        loading : '加载中'
             
     };
             

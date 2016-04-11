@@ -4,13 +4,13 @@
                                entityId=${entityForm.translationId},
                                propertyName=${field.translationFieldName},
                                isRte=${field.fieldType == 'HTML' || field.fieldType == 'HTML_BASIC'})}">
-        <img th:src="@{/img/admin/button/translate.png}" />&nbsp;translate
+        <img th:src="@{/img/admin/button/translate.png}" />&nbsp;翻译
     </a>
     <a class="show-translations" th:if="${df}"
        th:href="@{/translation(ceilingEntity=${df.translationCeilingEntity},
                                entityId=${df.translationId},
                                propertyName=${field.translationFieldName},
                                isRte=${field.fieldType == 'HTML' || field.fieldType == 'HTML_BASIC'})}">
-        <img th:src="@{/img/admin/button/translate.png}" />&nbsp;translate
+        <img th:src="@{/img/admin/button/translate.png}" />&nbsp;翻译
     </a>
 </div>
