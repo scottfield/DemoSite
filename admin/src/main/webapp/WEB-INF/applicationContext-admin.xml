@@ -6,6 +6,7 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mo="http://schema.broadleafcommerce.org/mo"
        xsi:schemaLocation="
         http://www.springframework.org/schema/jee
         http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
@@ -16,6 +17,7 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
         http://www.springframework.org/schema/aop
+        http://schema.broadleafcommerce.org/mo
         http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
         
     <context:component-scan base-package="com.mycompany.admin.service" />
@@ -168,5 +170,32 @@
             </list>
         </property>
     </bean>
-    
+    <!--override admin entity-->
+    <mo:override id="blMetadataOverrides">
+        <mo:overrideItem ceilingEntity="org.broadleafcommerce.core.catalog.domain.Product">
+            <mo:field name="defaultSku.description">
+                <mo:property name="excluded" value="false" />
+            </mo:field>
+            <mo:field name="defaultSku.taxCode">
+                <mo:property name="excluded" value="true" />
+            </mo:field>
+            <mo:field name="defaultSku.taxable">
+                <mo:property name="excluded" value="true" />
+            </mo:field>
+            <mo:field name="allowedValues">
+                <mo:property name="excluded" value="false" />
+            </mo:field>
+            <mo:field name="defaultSku.dimension">
+                <mo:property name="excluded" value="true" />
+            </mo:field>
+            <mo:field name="defaultSku.weight">
+                <mo:property name="excluded" value="true" />
+            </mo:field>
+            <mo:field name="defaultSku.isMachineSortable">
+                <mo:property name="excluded" value="true" />
+            </mo:field>
+        </mo:overrideItem>
+    </mo:override>
+
+
 </beans>
