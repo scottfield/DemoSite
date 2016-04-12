@@ -230,6 +230,16 @@
         <property name="characterEncoding" value="UTF-8" />
     </bean>
     -->
+    <!--override template location-->
+    <bean id="blWebTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+        <property name="prefix" value="/WEB-INF/bufeng/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML5" />
+        <property name="characterEncoding" value="UTF-8" />
+        <property name="cacheable" value="${cache.page.templates}"/>
+        <property name="cacheTTLMs" value="${cache.page.templates.ttl}" />
+        <property name="order" value="200"/>
+    </bean>
 
     <bean id="jsLocations" class="org.springframework.beans.factory.config.ListFactoryBean">
         <property name="sourceList">

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="css/swiper.min.css">
+<link type="text/css" href="css/style.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/fastclick.js"></script>
+<script type="text/javascript">
+window.addEventListener('load', function() {
+	FastClick.attach(document.body);
+}, false);
+</script>
+</head>
+<body>
+<!-- header -->
+<div class="header"></div>
+<header>
+	<div class="l-img">
+		<a href="#"><img src="images/5_ct_04.png" height="15"> 提货信息</a>
+	</div>
+	<div class="r-img"><img src="images/5_ct_02.png" height="30"></div>
+</header>
+
+<!---->
+<form name="form" style="padding-top:30px;">
+<div class="take-cargo-info">
+	<em><img src="images/qro_03.png" width="20"></em>
+	<span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
+	<input type="text">
+</div>
+<div class="take-cargo-info">
+	<em><img src="images/qro_06.png" width="20"></em>
+	<span>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：</span>
+	<input type="text">
+</div>
+<div class="take-cargo-info adress">
+	<em><img src="images/qro_08.png" width="20"></em>
+	<span>提货门店：</span>
+	<div class="select">
+		<select>
+			<option>中国大陆</option>
+		</select>
+		<select>
+			<option>四川省/成都市/青羊区/苏坡街道</option>
+		</select>
+		<textarea></textarea>
+	</div>
+</div>
+
+
+<div class="take-cargo-btn">
+	<a href="#" class="adress-btn" onclick="form.submit.click()">确认信息</a>
+	<input type="submit" name="submit" class="none">
+</div>
+</form>
+
+</body>
+</html>

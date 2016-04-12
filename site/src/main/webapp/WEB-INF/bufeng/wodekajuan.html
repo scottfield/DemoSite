@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="css/swiper.min.css">
+<link type="text/css" href="css/style.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/fastclick.js"></script>
+<script type="text/javascript">
+window.addEventListener('load', function() {
+	FastClick.attach(document.body);
+}, false);
+</script>
+<script type="text/javascript">
+$(function(){
+
+	function win_load(){
+		var win_h = $(window).width();
+		var con_w = (win_h-34)/2;
+		$(".card-volume .box").width(con_w);
+		$(".card-volume .img").height(con_w*534/697);
+	}
+	win_load();
+
+	$(window).resize(function() {
+		win_load();
+	});
+	
+})
+</script>
+</head>
+<body>
+<!-- header -->
+<div class="header"></div>
+<header>
+	<div class="l-img"><img src="images/in_1_01.png" height="30"></div>
+	<div class="r-img"><img src="images/in_1_03.png" height="30"></div>
+	<div class="text">我的卡卷</div>
+</header>
+
+<!---->
+
+<div class="card-volume-empty">
+	<img src="images/empty_03.jpg" width="50%">
+</div>
+<div class="card-volume-empty">
+	<a href="#">马上去领取</a>
+</div>
+
+<div class="card-volume hidden">
+	<div class="box">
+		<div class="img">
+			<img src="images/5card_jh.jpg">
+		</div>
+		<div class="bm">请在2016年3月4日-6日前往活动门店内使用</div>
+	</div>
+	<div class="box">
+		<div class="con">
+			<div class="pice"><font>50</font> <span><em></em><em>元</em></span></div>
+			<div class="p-tx">购买满50元可以用</div>
+			<img src="images/vm_03.png" width="100%">
+		</div>
+		<div class="bm">请在2016年3月4日-6日前往活动门店内使用</div>
+	</div>
+	<div class="box">
+		<div class="img">
+			<img src="images/5card_wjh.jpg">
+		</div>
+		<div class="bm">请在2016年3月6日前激活</div>
+	</div>
+	<div class="box">
+		<div class="con">
+			<div class="active">已领</div>
+			<div class="pice"><font>50</font> <span><em></em><em>元</em></span></div>
+			<div class="p-tx">购买满50元可以用</div>
+			<img src="images/vm_03.png" width="100%">
+		</div>
+		<div class="bm">请在2016年3月4日-6日前往活动门店内使用</div>
+	</div>
+</div>
+
+
+<!---->
+<div class="footer"></div>
+<footer>
+	<a href="#" title="首页"><img src="images/5_c_09.png" height="25"></a>
+	<a href="#" title="我的卡卷"><img src="images/5_c_11.png" height="25"></a>
+	<a href="#" title="我的购物车"><img src="images/5_c_13.png" height="25"></a>
+	<a href="#" title="我的订单"><img src="images/5_c_16.png" height="25"></a>
+</footer>
+
+</body>
+</html>
+<script type="text/javascript">
+$(function(){
+	$(".mnus").on("click",function(){
+		var num = parseInt($("#number").val());
+		if(num>1){
+			num--
+			$("#number").val(num);
+		}
+	});
+	$(".add").on("click",function(){
+		var num = parseInt($("#number").val());
+			num++
+			$("#number").val(num);
+	});
+});
+</script>

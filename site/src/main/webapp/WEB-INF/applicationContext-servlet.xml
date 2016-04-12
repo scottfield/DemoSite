@@ -68,8 +68,10 @@
 
     <!-- Tell Spring to not try to map things in these directories to controllers -->
     <!-- Order must be set to supercede the handler configured by the mvc:annotation-driven annotation -->
-    <mvc:resources order="-10" location="/img/, classpath:/common_style/img/" mapping="/img/**"/>
-    <mvc:resources order="-10" location="/fonts/, classpath:/common_style/fonts/" mapping="/fonts/**"/>
+    <mvc:resources order="-10" location="/WEB-INF/bufeng/images/, classpath:/common_style/img/" mapping="/images/**"/>
+    <mvc:resources order="-10" location="/WEB-INF/bufeng/css/, classpath:/common_style/img/" mapping="/css/**"/>
+    <mvc:resources order="-10" location="/WEB-INF/bufeng/js/, classpath:/common_style/img/" mapping="/js/**"/>
+    <!--<mvc:resources order="-10" location="/fonts/, classpath:/common_style/fonts/" mapping="/fonts/**"/>-->
     <mvc:resources order="-10" location="WEB-INF/favicon.ico" mapping="/favicon.ico"/>
 
     <!-- Map various location URLs to our resource handlers -->
@@ -105,5 +107,4 @@
     <!-- This validator will additionally require state on shipping addresses -->
     <bean id="blShippingInfoFormValidator"
           class="org.broadleafcommerce.core.web.checkout.validator.USShippingInfoFormValidator"/>
-
 </beans>

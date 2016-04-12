@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="css/swiper.min.css">
+<link type="text/css" href="css/style.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/fastclick.js"></script>
+<script type="text/javascript">
+window.addEventListener('load', function() {
+	FastClick.attach(document.body);
+}, false);
+</script>
+</head>
+<body>
+<!-- header -->
+<div class="header"></div>
+<header>
+	<div class="l-img">
+		<a href="#"><img src="images/5_ct_04.png" height="15"> 订单确认</a>
+	</div>
+	<div class="r-img"><img src="images/5_ct_02.png" height="30"></div>
+</header>
+
+<!---->
+<form name="form">
+<div class="take-cargo-tit"><img src="images/dh_03.jpg" height="35"></div>
+<div class="take-cargo-sm"><em>1</em> 请填写您的信息</div>
+<div class="take-cargo-info">
+	<em><img src="images/qro_03.png" width="20"></em>
+	<span>姓       名：</span>
+	<input type="text">
+</div>
+<div class="take-cargo-info">
+	<em><img src="images/qro_06.png" width="20"></em>
+	<span>电       话：</span>
+	<input type="text">
+</div>
+
+<div class="hr"></div>
+
+<div class="take-cargo-sm"><em>2</em> 请服务台工作人员输入验证码</div>
+<div class="pb-box">
+	<div class="take-cargo-yz">
+		<span>验证码</span>
+		<input type="text">
+	</div>
+</div>
+
+<div class="take-cargo-btn">
+	<img src="images/confirm_03.jpg" onclick="form.submit.click()" height="40">
+	<input type="submit" name="submit" class="none">
+</div>
+</form>
+</body>
+</html>
