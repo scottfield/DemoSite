@@ -69,10 +69,16 @@
     <!-- Tell Spring to not try to map things in these directories to controllers -->
     <!-- Order must be set to supercede the handler configured by the mvc:annotation-driven annotation -->
     <mvc:resources order="-10" location="/WEB-INF/bufeng/images/, classpath:/common_style/img/" mapping="/images/**"/>
-    <mvc:resources order="-10" location="/WEB-INF/bufeng/css/, classpath:/common_style/img/" mapping="/css/**"/>
-    <mvc:resources order="-10" location="/WEB-INF/bufeng/js/, classpath:/common_style/img/" mapping="/js/**"/>
+    <mvc:resources order="-10" location="/WEB-INF/bufeng/css/, classpath:/common_style/css/" mapping="/css/**"/>
+    <mvc:resources order="-10" location="/WEB-INF/bufeng/js/, classpath:/common_style/js/" mapping="/js/**"/>
     <!--<mvc:resources order="-10" location="/fonts/, classpath:/common_style/fonts/" mapping="/fonts/**"/>-->
     <mvc:resources order="-10" location="WEB-INF/favicon.ico" mapping="/favicon.ico"/>
+    <!--for hot clinic-->
+    <!--<mvc:resources order="-10" location="/img/, classpath:/common_style/img/" mapping="/images/**"/>
+    <mvc:resources order="-10" location="/css/, classpath:/common_style/css/" mapping="/css/**"/>
+    <mvc:resources order="-10" location="/js/, classpath:/common_style/js/" mapping="/js/**"/>
+    <mvc:resources order="-10" location="/fonts/, classpath:/common_style/fonts/" mapping="/fonts/**"/>
+    <mvc:resources order="-10" location="WEB-INF/favicon.ico" mapping="/favicon.ico"/>-->
 
     <!-- Map various location URLs to our resource handlers -->
     <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
@@ -90,7 +96,7 @@
         <property name="templateEngine" ref="blWebTemplateEngine"/>
         <property name="order" value="1"/>
         <property name="cache" value="${thymeleaf.view.resolver.cache}"/>
-        <property name="fullPageLayout" value="layout/fullPageLayout"/>
+        <!--<property name="fullPageLayout" value="layout/fullPageLayout"/>-->
         <property name="characterEncoding" value="UTF-8"/>
         <property name="layoutMap">
             <map>
@@ -100,6 +106,7 @@
                 <entry key="checkout/confirmation" value="layout/fullPageNoNavLayout"/>
                 <entry key="layout/" value="NONE"/>
                 <entry key="content/NONE" value="NONE"/>
+                <entry key="cart/" value="cart/cart"/>
             </map>
         </property>
     </bean>

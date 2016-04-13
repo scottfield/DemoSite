@@ -850,6 +850,7 @@ footer a:last-child{
 	position:absolute;
 	right:15px;
 	top:70px;
+	z-index: 100;
 }
 .goods-shopcar span{
 	width:15px;

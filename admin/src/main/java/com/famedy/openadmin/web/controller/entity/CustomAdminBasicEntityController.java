@@ -1,5 +1,7 @@
 package com.famedy.openadmin.web.controller.entity;
 
+import com.mycompany.sample.core.catalog.domain.CustomProductImpl;
+import org.broadleafcommerce.openadmin.dto.ClassTree;
 import org.broadleafcommerce.openadmin.web.controller.entity.AdminBasicEntityController;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -16,7 +18,11 @@ import java.util.Map;
 public class CustomAdminBasicEntityController extends AdminBasicEntityController {
     @Override
     public String viewEntityList(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable Map<String, String> pathVars, @RequestParam MultiValueMap<String, String> requestParams) throws Exception {
-        System.out.println("call my custom entity controller");
         return super.viewEntityList(request, response, model, pathVars, requestParams);
+    }
+
+    @Override
+    protected String getDefaultEntityType() {
+        return CustomProductImpl.class.getName();
     }
 }
