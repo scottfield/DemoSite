@@ -9,7 +9,6 @@
         <mapping-file>config/bc/jpa/domain/Shop.orm.xml</mapping-file>
         <class>com.mycompany.sample.core.catalog.domain.CustomProductImpl</class>
         <class>com.mycompany.sample.core.catalog.domain.ShopImpl</class>
-        <class>com.mycompany.sample.core.catalog.domain.CustomAddressImpl</class>
         <exclude-unlisted-classes/>
     </persistence-unit>
     
