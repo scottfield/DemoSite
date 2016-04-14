@@ -10,4 +10,7 @@
     <bean id="org.broadleafcommerce.core.catalog.domain.Product"
           class="com.mycompany.sample.core.catalog.domain.CustomProductImpl"
           scope="prototype"/>
+    <bean id="com.mycompany.sample.core.catalog.domain.Shop"
+          class="com.mycompany.sample.core.catalog.domain.ShopImpl"
+          scope="prototype"/>
 </beans>

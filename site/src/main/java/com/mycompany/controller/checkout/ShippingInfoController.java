@@ -16,14 +16,18 @@
 
 package com.mycompany.controller.checkout;
 
+import com.mycompany.controller.form.CustomShippingInfoForm;
+import com.mycompany.sample.core.catalog.domain.Shop;
+import com.mycompany.sample.service.ShopService;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
-import org.broadleafcommerce.core.web.checkout.model.BillingInfoForm;
-import org.broadleafcommerce.core.web.checkout.model.GiftCardInfoForm;
-import org.broadleafcommerce.core.web.checkout.model.OrderInfoForm;
-import org.broadleafcommerce.core.web.checkout.model.OrderMultishipOptionForm;
-import org.broadleafcommerce.core.web.checkout.model.ShippingInfoForm;
+import org.broadleafcommerce.core.web.checkout.model.*;
 import org.broadleafcommerce.core.web.controller.checkout.BroadleafShippingInfoController;
+import org.broadleafcommerce.profile.core.domain.Address;
+import org.broadleafcommerce.profile.core.domain.CountryImpl;
+import org.broadleafcommerce.profile.core.domain.State;
+import org.broadleafcommerce.profile.core.domain.StateImpl;
+import org.broadleafcommerce.profile.core.service.AddressService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,26 +37,85 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class ShippingInfoController extends BroadleafShippingInfoController {
+    @Resource(name = "shopService")
+    private ShopService shopService;
+    @Resource(name = "blAddressService")
+    private AddressService addressService;
 
-    @RequestMapping(value="/checkout/singleship", method = RequestMethod.GET)
+    /**
+     * 填写提货信息页面
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     * @throws PricingException
+     */
+    @RequestMapping(value = "/checkout/singleship", method = RequestMethod.GET)
     public String convertToSingleship(HttpServletRequest request, HttpServletResponse response, Model model) throws PricingException {
-        return super.convertToSingleship(request, response, model);
+        Set<Shop> shops = shopService.getAllShop();
+        Map<String, Set<Shop>> shopmap = new HashMap<>();
+        for (Shop shop : shops) {
+            String area = shop.getArea();
+            if (!shopmap.containsKey(area)) {
+                Set<Shop> set = new HashSet<>();
+                shopmap.put(area, set);
+                set.add(shop);
+            } else {
+                shopmap.get(area).add(shop);
+            }
+        }
+        model.addAttribute("areas", shopmap);
+        return "checkout/addressForm";
     }
 
-    @RequestMapping(value="/checkout/singleship", method = RequestMethod.POST)
+    /**
+     * 保存收货地址
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param orderInfoForm
+     * @param billingForm
+     * @param giftCardInfoForm
+     * @param shippingForm
+     * @param result
+     * @return
+     * @throws PricingException
+     * @throws ServiceException
+     */
+    @RequestMapping(value = "/checkout/singleship", method = RequestMethod.POST)
     public String saveSingleShip(HttpServletRequest request, HttpServletResponse response, Model model,
                                  @ModelAttribute("orderInfoForm") OrderInfoForm orderInfoForm,
                                  @ModelAttribute("billingInfoForm") BillingInfoForm billingForm,
                                  @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
-                                 @ModelAttribute("shippingInfoForm") ShippingInfoForm shippingForm,
+                                 @ModelAttribute("shippingInfoForm") CustomShippingInfoForm shippingForm,
                                  BindingResult result)
             throws PricingException, ServiceException {
-        return super.saveSingleShip(request, response, model, shippingForm, result);
+        Address address = shippingForm.getAddress();
+        address.setAddressLine1("default");
+        address.setPostalCode("default");
+        address.setLastName("default");
+        address.setCity("default");
+       /*
+        CountryImpl country = new CountryImpl();
+        country.setName("default");
+        address.setCountry(country);
+        State state = new StateImpl();
+        state.setName("default");
+        address.setState(state);*/
+        Address savedAddress = addressService.saveAddress(address);
+        return "redirect:/checkout/singleship";
     }
 
     @RequestMapping(value = "/checkout/multiship", method = RequestMethod.GET)

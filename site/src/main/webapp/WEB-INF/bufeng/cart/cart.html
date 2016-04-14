@@ -60,7 +60,7 @@
             15分钟未支付将自动取消订单
         </div>
         <div class="sum-money">共[[${#lists.size(cart.orderItems)}]]件商品 合计:￥[[${cart.total}]]</div>
-        <a href="#">去结算</a>
+        <a th:href="@{/checkout/singleship}">去结算</a>
         <a href="#">取消订单</a>
     </div>
 </div>
