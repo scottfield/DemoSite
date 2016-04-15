@@ -34,30 +34,31 @@
         <sec:session-management session-fixation-protection="none" />
         
         <!-- Wishlist modifications live under /account, but we don't need HTTPS -->
-        <sec:intercept-url pattern="/account/wishlist/**" access="ROLE_USER" requires-channel="any" />
+        <!--<sec:intercept-url pattern="/account/wishlist/**" access="ROLE_USER"/>-->
         
         <!-- Specify these URLs as requiring HTTPS to encrypt user data  -->
-        <sec:intercept-url pattern="/register*" requires-channel="https" />
-        <sec:intercept-url pattern="/login*/**" requires-channel="https" />
-        <sec:intercept-url pattern="/account/**" access="ROLE_USER" requires-channel="https" />
-        <sec:intercept-url pattern="/checkout/**" requires-channel="https" />
-        <sec:intercept-url pattern="/null-checkout/**" requires-channel="https" />
-        <sec:intercept-url pattern="/null-giftcard/**" requires-channel="https" />
-        <sec:intercept-url pattern="/confirmation/**" requires-channel="https" />
+        <!--<sec:intercept-url pattern="/register*" />-->
+        <!--<sec:intercept-url pattern="/login*/**"/>-->
+        <!--<sec:intercept-url pattern="/**" access="ROLE_USER"/>-->
+        <!--<sec:intercept-url pattern="/checkout/**" access="ROLE_USER"/>-->
+        <!--<sec:intercept-url pattern="/null-checkout/**" access="ROLE_USER"/>-->
+        <!--<sec:intercept-url pattern="/null-giftcard/**" access="ROLE_USER"/>-->
+        <!--<sec:intercept-url pattern="/confirmation/**" access="ROLE_USER"/>-->
         
         <!-- Since the cart page is viewing as a modal, we want to allow it on any page -->
-        <sec:intercept-url pattern="/cart/**" requires-channel="any" />
+        <!--<sec:intercept-url pattern="/cart/**" requires-channel="any" />-->
         
         <!-- All URLs not explicitly specified as https will be served under http -->
-        <sec:intercept-url pattern="/" requires-channel="http"/>
-        <sec:intercept-url pattern="/**" requires-channel="http"/>
-        
+        <sec:intercept-url pattern="/" requires-channel="http" access="ROLE_USER"/>
+        <sec:intercept-url pattern="/**" requires-channel="http" access="ROLE_USER"/>
+        <sec:intercept-url pattern="/login" requires-channel="http"/>
+        <sec:http-basic/>
         <!-- Define the login form along with the success and failure handlers -->
-        <sec:form-login login-page='/login'
+       <!-- <sec:form-login login-page='/login'
             authentication-success-handler-ref="blAuthenticationSuccessHandler"
             authentication-failure-handler-ref="blAuthenticationFailureHandler"
             login-processing-url="/login_post.htm" 
-        />
+        />-->
         
         <!-- Provide the logout handler -->
         <sec:logout delete-cookies="ActiveID" invalidate-session="true" logout-url="/logout"/>

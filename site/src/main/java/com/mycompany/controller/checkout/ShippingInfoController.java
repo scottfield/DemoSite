@@ -63,19 +63,6 @@ public class ShippingInfoController extends BroadleafShippingInfoController {
      */
     @RequestMapping(value = "/checkout/singleship", method = RequestMethod.GET)
     public String convertToSingleship(HttpServletRequest request, HttpServletResponse response, Model model) throws PricingException {
-        Set<Shop> shops = shopService.getAllShop();
-        Map<String, Set<Shop>> shopmap = new HashMap<>();
-        for (Shop shop : shops) {
-            String area = shop.getArea();
-            if (!shopmap.containsKey(area)) {
-                Set<Shop> set = new HashSet<>();
-                shopmap.put(area, set);
-                set.add(shop);
-            } else {
-                shopmap.get(area).add(shop);
-            }
-        }
-        model.addAttribute("areas", shopmap);
         return "checkout/addressForm";
     }
 

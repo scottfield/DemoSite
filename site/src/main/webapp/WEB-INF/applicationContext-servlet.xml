@@ -107,7 +107,7 @@
                 <entry key="layout/" value="NONE"/>
                 <entry key="content/NONE" value="NONE"/>
                 <entry key="cart/" value="cart/cart"/>
-                <entry key="checkout/addressForm" value="checkout/addressForm"/>
+                <entry key="account/addressForm" value="account/addressForm"/>
             </map>
         </property>
     </bean>

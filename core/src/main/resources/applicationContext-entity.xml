@@ -13,4 +13,6 @@
     <bean id="com.mycompany.sample.core.catalog.domain.Shop"
           class="com.mycompany.sample.core.catalog.domain.ShopImpl"
           scope="prototype"/>
+    <bean id="org.broadleafcommerce.profile.core.domain.Address"
+          class="com.mycompany.sample.core.catalog.domain.CustomAddressImpl" scope="prototype"/>
 </beans>

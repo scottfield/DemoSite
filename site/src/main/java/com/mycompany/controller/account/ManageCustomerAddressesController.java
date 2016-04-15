@@ -16,12 +16,17 @@
 
 package com.mycompany.controller.account;
 
+import com.mycompany.controller.form.CustomCustomerAddressForm;
+import com.mycompany.sample.core.catalog.domain.Shop;
+import com.mycompany.sample.service.ShopService;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafManageCustomerAddressesController;
 import org.broadleafcommerce.core.web.controller.account.CustomerAddressForm;
+import org.broadleafcommerce.profile.core.domain.Address;
 import org.broadleafcommerce.profile.core.domain.Country;
 import org.broadleafcommerce.profile.core.domain.CustomerAddress;
 import org.broadleafcommerce.profile.core.domain.State;
+import org.broadleafcommerce.profile.core.service.AddressService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,14 +38,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/account/addresses")
 public class ManageCustomerAddressesController extends BroadleafManageCustomerAddressesController {
-
+    @Resource(name = "shopService")
+    private ShopService shopService;
+    @Resource(name = "blAddressService")
+    private AddressService addressService;
     @InitBinder
     protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
         super.initBinder(request, binder);
@@ -63,12 +72,31 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
     
     @RequestMapping(method = RequestMethod.GET)
     public String viewCustomerAddresses(HttpServletRequest request, Model model) {
-        return super.viewCustomerAddresses(request, model);
+        Set<Shop> shops = shopService.getAllShop();
+        Map<String, Set<Shop>> shopmap = new HashMap<>();
+        for (Shop shop : shops) {
+            String area = shop.getArea();
+            if (!shopmap.containsKey(area)) {
+                Set<Shop> set = new HashSet<>();
+                shopmap.put(area, set);
+                set.add(shop);
+            } else {
+                shopmap.get(area).add(shop);
+            }
+        }
+        model.addAttribute("areas", shopmap);
+        return "account/addressForm";
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public String addCustomerAddress(HttpServletRequest request, Model model, @ModelAttribute("customerAddressForm") CustomerAddressForm form, BindingResult result, RedirectAttributes redirectAttributes) throws ServiceException {
-        return super.addCustomerAddress(request, model, form, result, redirectAttributes);
+    public String addCustomerAddress(HttpServletRequest request, Model model, @ModelAttribute("customerAddressForm") CustomCustomerAddressForm form, BindingResult result, RedirectAttributes redirectAttributes) throws ServiceException {
+        Address address = form.getAddress();
+        address.setAddressLine1("default");
+        address.setPostalCode("default");
+        address.setLastName("default");
+        address.setCity("default");
+        Address savedAddress = addressService.saveAddress(address);
+        return "redirect:/account/addresses";
     }
     
     @RequestMapping(value = "/{customerAddressId}", method = RequestMethod.GET)
