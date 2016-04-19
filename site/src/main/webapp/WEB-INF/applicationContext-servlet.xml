@@ -92,15 +92,15 @@
     </bean>
 
     <!-- Set up the view resolver to be used by Spring -->
-    <bean class="org.broadleafcommerce.common.web.BroadleafThymeleafViewResolver">
+   <!-- <bean class="org.broadleafcommerce.common.web.BroadleafThymeleafViewResolver">
         <property name="templateEngine" ref="blWebTemplateEngine"/>
         <property name="order" value="1"/>
         <property name="cache" value="${thymeleaf.view.resolver.cache}"/>
-        <!--<property name="fullPageLayout" value="layout/fullPageLayout"/>-->
+        &lt;!&ndash;<property name="fullPageLayout" value="layout/fullPageLayout"/>&ndash;&gt;
         <property name="characterEncoding" value="UTF-8"/>
         <property name="layoutMap">
             <map>
-                <entry key="account/" value="layout/accountLayout"/>
+                <entry key="account/" value="checkout/checkout"/>
                 <entry key="catalog/" value="NONE"/>
                 <entry key="checkout/" value="layout/checkoutLayout"/>
                 <entry key="checkout/confirmation" value="layout/fullPageNoNavLayout"/>
@@ -108,9 +108,18 @@
                 <entry key="content/NONE" value="NONE"/>
                 <entry key="cart/" value="cart/cart"/>
                 <entry key="account/addressForm" value="account/addressForm"/>
+                <entry key="account/addressForm" value="account/addressForm"/>
             </map>
         </property>
+    </bean>-->
+    <bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="blWebTemplateEngine"/>
+        <property name="order" value="1"/>
+        <property name="cache" value="${thymeleaf.view.resolver.cache}"/>
+        <!--<property name="fullPageLayout" value="layout/fullPageLayout"/>-->
+        <property name="characterEncoding" value="UTF-8"/>
     </bean>
+
 
     <!-- This validator will additionally require state on shipping addresses -->
     <bean id="blShippingInfoFormValidator"

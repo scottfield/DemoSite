@@ -37,19 +37,18 @@
         </property>
     </bean>
 
-    <bean id="blCheckoutWorkflow" class="org.broadleafcommerce.core.workflow.SequenceProcessor">
+<!--    <bean id="blCheckoutWorkflow" class="org.broadleafcommerce.core.workflow.SequenceProcessor">
         <property name="activities">
             <list>
-                <!-- This activity is only necessary if you are managing inventory. This activity has been enabled in the core
-                    Broadleaf framework in version 3.2.0+ and should be removed if on that version -->
+                &lt;!&ndash; This activity is only necessary if you are managing inventory. This activity has been enabled in the core
+                    Broadleaf framework in version 3.2.0+ and should be removed if on that version &ndash;&gt;
                 <bean p:order="5010" id="blDecrementInventoryActivity" class="org.broadleafcommerce.core.checkout.service.workflow.DecrementInventoryActivity">
                     <property name="rollbackHandler" ref="blDecrementInventoryRollbackHandler" />
                 </bean>
 
-                <!-- This activity should occur at the very end of the checkout workflow, after everything has been executed -->
+                &lt;!&ndash; This activity should occur at the very end of the checkout workflow, after everything has been executed &ndash;&gt;
                 <bean p:order="9999999" class="com.mycompany.worklow.checkout.SendOrderConfirmationEmailActivity" />
             </list>
         </property>
-    </bean>
-
+    </bean>-->
 </beans>

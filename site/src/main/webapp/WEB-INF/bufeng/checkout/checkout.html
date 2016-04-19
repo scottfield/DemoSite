@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <div th:replace="/partials/header::header"></div>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            FastClick.attach(document.body);
+        }, false);
+    </script>
+</head>
+<body th:inline="text">
+<!-- header -->
+<div class="header"></div>
+<header>
+    <div class="l-img">
+        <a th:href="@{/cart}"><img src="images/5_ct_04.png" height="15"/> 订单确认</a>
+    </div>
+    <div class="r-img"><img src="images/5_ct_02.png" height="30"/></div>
+</header>
+
+<!--info-->
+<div class="pb-box" th:if="${#lists.size(cart.customer.customerAddresses) eq 0}">
+    <div class="order-fillIn-img">
+        <a th:href="@{/account/addresses}">
+            <div class="img"></div>
+        </a>
+    </div>
+</div>
+
+<div class="pb-box" th:object="${cart.customer.customerAddresses[0].address}"
+     th:unless="${#lists.size(cart.customer.customerAddresses) eq 0}">
+    <div class="order-fillIn-img">
+        <img src="images/qr_03.jpg" class="opacity-0" width="100%"/>
+        <div class="info">
+            <div class="con">
+                <em><img src="images/qro_03.png" height="20"/></em>
+                <span th:text="*{firstName}">马丁</span>
+            </div>
+            <div class="con">
+                <em><img src="images/qro_06.png" height="20"/></em>
+                <span th:text="*{phonePrimary.phoneNumber}">13898776543</span>
+            </div>
+            <div class="con ls">
+                <em><img src="images/qro_08.png" height="20"/></em>
+                <span>[[*{shop.province}]] [[*{shop.city}]] [[*{shop.name}]]<br/> [[*{shop.address}]]</span>
+            </div>
+            <div class="btn"><a th:href="@{/account/addresses}"><img src="images/qro_11.png" height="25"/></a></div>
+        </div>
+    </div>
+</div>
+
+<div class="order-affirm-list hidden">
+    <div class="box" th:each="item:${cart.orderItems}" th:object="${item}">
+        <div class="img"><img th:src="@{*{sku.skuMedia['primary'].url}}"/></div>
+        <div class="text">
+            <div class="title" th:text="*{name}">香奈儿清香黛尔香氛香奈儿清香黛尔香氛香奈儿清香黛尔香氛</div>
+            <div class="spec">
+                <div th:each="attr:*{product.productAttributes}" th:remove="tag">[[${attr.key}]]:[[${attr.value}]]
+                </div>
+            </div>
+            <div class="num">X[[*{quantity}]]</div>
+        </div>
+        <div class="pice">¥[[${item.price.multiply(item.quantity)}]]</div>
+    </div>
+</div>
+
+<blc:form th:action="@{/checkout}" th:method="post">
+    <div class="affirm-sum-money">
+        <div class="sum-money">实付款:￥[[${cart.total}]]</div>
+        <a href="#" id="submitBtn">提交订单</a>
+    </div>
+</blc:form>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("#submitBtn").click(function (e) {
+            e.preventDefault();
+            $("form")[0].submit();
+        });
+    });
+</script>
+<script type="text/javascript" th:inline="text">
+    var errorMsg = '[[${errorMsg}]]';
+    if (errorMsg != "null") {
+        alert(errorMsg);
+    }
+</script>
+</html>

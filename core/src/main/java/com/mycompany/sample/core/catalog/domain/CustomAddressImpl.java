@@ -14,8 +14,7 @@ public class CustomAddressImpl extends AddressImpl implements CustomAddress {
     @JoinTable(name = "ADDRESS_SHOP",
             joinColumns = {@JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ADDRESS_ID")},
             inverseJoinColumns = {@JoinColumn(name = "SHOP_ID", referencedColumnName = "ID")})
-    private Shop shop;
-
+    private Shop shop = new ShopImpl();
     @Override
     public Shop getShop() {
         return shop;

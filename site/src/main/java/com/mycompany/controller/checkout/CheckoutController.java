@@ -19,19 +19,14 @@ package com.mycompany.controller.checkout;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.common.payment.PaymentType;
 import org.broadleafcommerce.common.vendor.service.exception.PaymentException;
-import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
-import org.broadleafcommerce.core.order.domain.FulfillmentOption;
-import org.broadleafcommerce.core.order.domain.Order;
-import org.broadleafcommerce.core.payment.domain.OrderPayment;
+import org.broadleafcommerce.core.checkout.service.exception.CheckoutException;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
-import org.broadleafcommerce.core.web.checkout.model.BillingInfoForm;
-import org.broadleafcommerce.core.web.checkout.model.CustomerCreditInfoForm;
-import org.broadleafcommerce.core.web.checkout.model.GiftCardInfoForm;
-import org.broadleafcommerce.core.web.checkout.model.OrderInfoForm;
-import org.broadleafcommerce.core.web.checkout.model.ShippingInfoForm;
+import org.broadleafcommerce.core.web.checkout.model.*;
 import org.broadleafcommerce.core.web.controller.checkout.BroadleafCheckoutController;
 import org.broadleafcommerce.core.web.order.CartState;
-import org.broadleafcommerce.profile.core.domain.CustomerAddress;
+import org.broadleafcommerce.core.workflow.Activity;
+import org.broadleafcommerce.core.workflow.ProcessContext;
+import org.broadleafcommerce.core.workflow.Processor;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,29 +38,65 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class CheckoutController extends BroadleafCheckoutController {
+    @Resource(name = "blCheckoutWorkflow")
+    private Processor checkoutWorkflow;
+    @Resource(name = "blValidateProductOptionsActivity")
+    private Activity blValidateProductOptionsActivity;
+    @Resource(name = "blCompleteOrderActivity")
+    private Activity blCompleteOrderActivity;
+    @Resource(name = "blDecrementInventoryActivity")
+    private Activity blDecrementInventoryActivity;
 
-    @RequestMapping("/checkout")
+    @RequestMapping(value = "/checkout", method = RequestMethod.GET)
+    public String checkoutPage(HttpServletRequest request, HttpServletResponse response, Model model,
+                               @ModelAttribute("orderInfoForm") OrderInfoForm orderInfoForm,
+                               @ModelAttribute("shippingInfoForm") ShippingInfoForm shippingForm,
+                               @ModelAttribute("billingInfoForm") BillingInfoForm billingForm,
+                               @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
+                               @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
+                               RedirectAttributes redirectAttributes) {
+        return checkoutView;
+    }
+
+    @RequestMapping(value = "/checkout", method = RequestMethod.POST)
     public String checkout(HttpServletRequest request, HttpServletResponse response, Model model,
-            @ModelAttribute("orderInfoForm") OrderInfoForm orderInfoForm,
-            @ModelAttribute("shippingInfoForm") ShippingInfoForm shippingForm,
-            @ModelAttribute("billingInfoForm") BillingInfoForm billingForm,
-            @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
-            @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
-            RedirectAttributes redirectAttributes) {
+                           @ModelAttribute("orderInfoForm") OrderInfoForm orderInfoForm,
+                           @ModelAttribute("shippingInfoForm") ShippingInfoForm shippingForm,
+                           @ModelAttribute("billingInfoForm") BillingInfoForm billingForm,
+                           @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
+                           @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
+                           RedirectAttributes redirectAttributes) {
+        //check if the order have a pickup address
+        if (Objects.isNull(CustomerState.getCustomer().getCustomerAddresses()) || CustomerState.getCustomer().getCustomerAddresses().size() == 0) {
+            model.addAttribute("errorMsg", "请填写收货地址");
+            return checkoutView;
+        }
+        try {
+            checkoutService.performCheckout(CartState.getCart());
+        } catch (CheckoutException e) {
+            e.printStackTrace();
+            model.addAttribute("errorMsg", "下单失败!");
+            return checkoutView;
+        }
         return super.checkout(request, response, model, redirectAttributes);
     }
 
     @RequestMapping(value = "/checkout/savedetails", method = RequestMethod.POST)
     public String saveGlobalOrderDetails(HttpServletRequest request, Model model,
-            @ModelAttribute("shippingInfoForm") ShippingInfoForm shippingForm,
-            @ModelAttribute("billingInfoForm") BillingInfoForm billingForm,
-            @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
-            @ModelAttribute("orderInfoForm") OrderInfoForm orderInfoForm, BindingResult result) throws ServiceException {
+                                         @ModelAttribute("shippingInfoForm") ShippingInfoForm shippingForm,
+                                         @ModelAttribute("billingInfoForm") BillingInfoForm billingForm,
+                                         @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
+                                         @ModelAttribute("orderInfoForm") OrderInfoForm orderInfoForm, BindingResult result) throws ServiceException {
         return super.saveGlobalOrderDetails(request, model, orderInfoForm, result);
     }
 
@@ -84,5 +115,14 @@ public class CheckoutController extends BroadleafCheckoutController {
     protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
         super.initBinder(request, binder);
     }
-    
+
+    @PostConstruct
+    private void init() {
+        List<Activity<ProcessContext<?>>> activities = new ArrayList<>();
+        activities.add(blValidateProductOptionsActivity);
+        activities.add(blDecrementInventoryActivity);
+        activities.add(blCompleteOrderActivity);
+        checkoutWorkflow.setActivities(activities);
+    }
+
 }
