@@ -69,6 +69,7 @@
 <div class="hidden"><img src="../images/youl_02.jpg" width="100%"/></div>
 <!--商品列表-->
 <div th:replace="/catalog/partials/productList::productList(showAdd=true)"></div>
+<blc:form th:id="addToCartForm" th:action="@{/cart/add}"></blc:form>
 <!-- 浮层 -->
 <div class="float-layer none">
     <div class="volume">
@@ -85,5 +86,38 @@
         </div>
     </div>
 </div>
+<div th:replace="partials/footer::footer"></div>
+<script type="text/javascript">
+    $(function () {
+        //添加购物车绑定事件
+        $(".addToCartBtn img").click(function (e) {
+            e.preventDefault();
+            var quantityavailable = $(this).data("quantityavailable");
+            if(!quantityavailable) {
+                alert("暂时无货");
+                return;
+            }
+            var url = $("#addToCartForm").attr("action");
+            var productId = $(this).data("productid");
+            var quantity = 1;
+            var csrfToken = $('input[name="csrfToken"]').val();
+            $.ajax({
+                method: "post",
+                url: url,
+                data: {
+                    productId: productId,
+                    quantity: quantity,
+                    csrfToken: csrfToken
+                },
+                dataType: 'json'
+            }).done(function (data) {
+                console.log(data);
+            }).fail(function (data) {
+                console.log(data);
+                location.reload();
+            });
+        });
+    });
+</script>
 </body>
 </html>

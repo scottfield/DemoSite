@@ -9,4 +9,6 @@ import java.util.Set;
  */
 public interface ShopService {
     Set<Shop> getAllShop();
+
+    Shop readShopByCode(String code);
 }

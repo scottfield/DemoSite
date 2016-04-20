@@ -32,4 +32,13 @@ public class ShopDaoImpl implements ShopDao {
         Set<Shop> shopSet = new HashSet<>(resultList);
         return shopSet;
     }
+
+    @Override
+    public Shop readShopByCode(String code) {
+        Query query = em.createQuery("SELECT shop FROM com.mycompany.sample.core.catalog.domain.Shop shop where shop.code=:code");
+        query.setParameter("code", code);
+        query.setHint(QueryHints.HINT_CACHEABLE, true);
+        Shop shop = (Shop) query.getSingleResult();
+        return shop;
+    }
 }

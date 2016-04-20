@@ -16,6 +16,8 @@
 
 package com.mycompany.controller.checkout;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.common.payment.PaymentType;
 import org.broadleafcommerce.common.vendor.service.exception.PaymentException;
@@ -48,6 +50,7 @@ import java.util.Objects;
 
 @Controller
 public class CheckoutController extends BroadleafCheckoutController {
+    private static final Log LOG = LogFactory.getLog(CheckoutController.class);
     @Resource(name = "blCheckoutWorkflow")
     private Processor checkoutWorkflow;
     @Resource(name = "blValidateProductOptionsActivity")
@@ -56,6 +59,10 @@ public class CheckoutController extends BroadleafCheckoutController {
     private Activity blCompleteOrderActivity;
     @Resource(name = "blDecrementInventoryActivity")
     private Activity blDecrementInventoryActivity;
+    @Resource(name = "incrementProductSalesActivity")
+    private Activity incrementProductSalesActivity;
+    @Resource(name = "changeOrderStatusToUnpaidActivity")
+    private Activity changeOrderStatusToUnpaidActivity;
 
     @RequestMapping(value = "/checkout", method = RequestMethod.GET)
     public String checkoutPage(HttpServletRequest request, HttpServletResponse response, Model model,
@@ -84,11 +91,11 @@ public class CheckoutController extends BroadleafCheckoutController {
         try {
             checkoutService.performCheckout(CartState.getCart());
         } catch (CheckoutException e) {
-            e.printStackTrace();
+            LOG.error("下单失败", e);
             model.addAttribute("errorMsg", "下单失败!");
             return checkoutView;
         }
-        return super.checkout(request, response, model, redirectAttributes);
+        return "redirect:/account/orders";
     }
 
     @RequestMapping(value = "/checkout/savedetails", method = RequestMethod.POST)
@@ -116,12 +123,17 @@ public class CheckoutController extends BroadleafCheckoutController {
         super.initBinder(request, binder);
     }
 
+    /**
+     * 重写checkout工作流
+     */
     @PostConstruct
     private void init() {
         List<Activity<ProcessContext<?>>> activities = new ArrayList<>();
         activities.add(blValidateProductOptionsActivity);
         activities.add(blDecrementInventoryActivity);
+        activities.add(incrementProductSalesActivity);
         activities.add(blCompleteOrderActivity);
+        activities.add(changeOrderStatusToUnpaidActivity);
         checkoutWorkflow.setActivities(activities);
     }
 

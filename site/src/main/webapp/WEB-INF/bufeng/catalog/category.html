@@ -64,13 +64,7 @@
 </div>
 <div th:replace="/catalog/partials/productList::productList"></div>
 <div class="footer"></div>
-<footer>
-    <a th:href="@{/}"><img src="images/5_c_09.png" height="25"/></a>
-    <a href="#"><img src="images/5_c_11.png" height="25"/></a>
-    <a th:href="@{/cart}"><img src="images/5_c_13.png" height="25"/></a>
-    <a href="#"><img src="images/5_c_16.png" height="25"/></a>
-</footer>
-
+<div th:replace="partials/footer::footer"></div>
 <!-- 浮层 -->
 <div class="float-layer none">
     <div class="volume">

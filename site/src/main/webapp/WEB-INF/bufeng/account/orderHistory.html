@@ -33,7 +33,10 @@
 <div th:each="order:${orders}" th:remove="tag" th:with="totalQuantity=0">
     <div class="myorder-tt">
         <span class="fl"><em></em>[[${order.orderNumber}]]</span>
-        <span class="fr">[[${order.status.type}]]</span>
+        <span class="fr" th:if="${order.status.type eq 'UNPAID'}" th:text="未付款"></span>
+        <span class="fr" th:if="${order.status.type eq 'PAID'}" th:text="付款成功"></span>
+        <span class="fr" th:if="${order.status.type eq 'CONSUMED'}" th:text="已领取"></span>
+        <span class="fr" th:if="${order.status.type eq 'CANCELLED'}" th:text="已取消"></span>
     </div>
 
     <div class="myorder-list hidden" th:each="item:${order.orderItems}" th:object="${item}" th:attr="totalQuantity=totalQuantity+ *{quantity}">
@@ -54,8 +57,10 @@
     </div>
 
     <div class="affirm-sum-money">
-        <div class="sum-money">共[[${#aggregates.sum(1)}]]件商品 合计:￥[[${order.total}]]</div>
-        <a href="#">取消订单</a>
+        <div class="sum-money">共[[${order.itemCount}]]件商品 合计:￥[[${order.total}]]</div>
+        <a th:href="@{'/account/orders/cancel/'+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">取消订单</a>
+        <a th:href="@{'/pickup?orderId='+${order.id}}" th:if="${order.status.type eq 'PAID'}">领取</a>
+        <a th:href="@{/}" th:if="${order.status.type eq 'UNPAID'}">付款</a>
     </div>
 </div>
 <!---->

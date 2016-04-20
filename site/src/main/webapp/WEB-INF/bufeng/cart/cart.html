@@ -59,7 +59,7 @@
         <!--<div class="tishi">-->
             <!--15分钟未支付将自动取消订单-->
         <!--</div>-->
-        <div class="sum-money">共[[${#lists.size(cart.orderItems)}]]件商品 合计:￥[[${cart.total}]]</div>
+        <div class="sum-money">共[[${cart.itemCount}]]件商品 合计:￥[[${cart.total}]]</div>
         <a th:href="@{/checkout}">去结算</a>
         <!--<a th:href="@{/cart/empty}">取消订单</a>-->
     </div>

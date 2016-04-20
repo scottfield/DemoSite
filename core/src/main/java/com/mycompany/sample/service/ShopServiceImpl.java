@@ -19,4 +19,9 @@ public class ShopServiceImpl implements ShopService {
     public Set<Shop> getAllShop() {
         return shopDao.readAllShop();
     }
+
+    @Override
+    public Shop readShopByCode(String code) {
+        return shopDao.readShopByCode(code);
+    }
 }

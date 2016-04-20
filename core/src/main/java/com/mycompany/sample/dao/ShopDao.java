@@ -9,4 +9,6 @@ import java.util.Set;
  */
 public interface ShopDao {
     Set<Shop> readAllShop();
+
+    Shop readShopByCode(String code);
 }

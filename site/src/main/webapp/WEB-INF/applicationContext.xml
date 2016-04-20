@@ -305,4 +305,5 @@
             </bean>
         </property>
     </bean>
+    <bean id="blOrderService" class="com.mycompany.service.CustomOrderServiceImpl"/>
 </beans>
