@@ -18,10 +18,10 @@
         <httpsPort>8444</httpsPort> 
         <httpPort>8081</httpPort>
     </properties>
-    <build>
-        <!--<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>-->
+   <!-- <build>
+        &lt;!&ndash;<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>&ndash;&gt;
         <finalName>admin</finalName>
-       <!-- <plugins>
+       &lt;!&ndash; <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -129,7 +129,19 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>-->
+        </plugins>&ndash;&gt;
+    </build>-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
     <dependencies>
         <dependency>

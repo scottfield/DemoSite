@@ -17,8 +17,8 @@
               logAbandoned="true"
               minEvictableIdleTimeMillis="30000"
               jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
-              username="root"
-              password="root"
+              username="broadleaf"
+              password="broadleaf12_Q"
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/broadleaf?useUnicode=true&amp;characterEncoding=utf8"/>
 
@@ -39,8 +39,8 @@
               logAbandoned="true"
               minEvictableIdleTimeMillis="30000"
               jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
-              username="root"
-              password="root"
+              username="broadleaf"
+              password="broadleaf12_Q"
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/broadleaf?useUnicode=true&amp;characterEncoding=utf8"/>
 
@@ -61,8 +61,8 @@
               logAbandoned="true"
               minEvictableIdleTimeMillis="30000"
               jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
-              username="root"
-              password="root"
+              username="broadleaf"
+              password="broadleaf12_Q"
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/broadleaf?useUnicode=true&amp;characterEncoding=utf8"/>
     <Loader loaderClass="org.springframework.instrument.classloading.tomcat.TomcatInstrumentableClassLoader"/>
