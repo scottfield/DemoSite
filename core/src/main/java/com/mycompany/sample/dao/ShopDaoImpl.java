@@ -21,9 +21,6 @@ public class ShopDaoImpl implements ShopDao {
     @PersistenceContext(unitName = "blPU")
     protected EntityManager em;
 
-    @Resource(name = "blEntityConfiguration")
-    protected EntityConfiguration entityConfiguration;
-
     @Override
     public Set<Shop> readAllShop() {
         Query query = em.createQuery("SELECT shop FROM com.mycompany.sample.core.catalog.domain.Shop shop");

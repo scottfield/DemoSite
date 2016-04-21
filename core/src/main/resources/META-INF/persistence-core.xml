@@ -6,10 +6,10 @@
              
     <persistence-unit name="blPU" transaction-type="RESOURCE_LOCAL">
         <non-jta-data-source>jdbc/web</non-jta-data-source>
-        <mapping-file>config/bc/jpa/domain/Shop.orm.xml</mapping-file>
         <class>com.mycompany.sample.core.catalog.domain.CustomProductImpl</class>
         <class>com.mycompany.sample.core.catalog.domain.ShopImpl</class>
         <class>com.mycompany.sample.core.catalog.domain.CustomAddressImpl</class>
+        <class>com.mycompany.sample.core.catalog.domain.QRCodeImpl</class>
         <exclude-unlisted-classes/>
     </persistence-unit>
     

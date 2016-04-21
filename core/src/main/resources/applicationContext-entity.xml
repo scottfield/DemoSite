@@ -15,4 +15,8 @@
           scope="prototype"/>
     <bean id="org.broadleafcommerce.profile.core.domain.Address"
           class="com.mycompany.sample.core.catalog.domain.CustomAddressImpl" scope="prototype"/>
+
+    <bean id="com.mycompany.sample.core.catalog.domain.QRCode"
+          class="com.mycompany.sample.core.catalog.domain.QRCodeImpl"
+          scope="prototype"/>
 </beans>

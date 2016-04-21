@@ -306,4 +306,5 @@
         </property>
     </bean>
     <bean id="blOrderService" class="com.mycompany.service.CustomOrderServiceImpl"/>
+    <bean id="md5Encoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
 </beans>

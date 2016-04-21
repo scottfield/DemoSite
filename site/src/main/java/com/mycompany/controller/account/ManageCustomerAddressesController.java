@@ -83,18 +83,18 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
         }
         //获取门店列表
         Set<Shop> shops = shopService.getAllShop();
-        Map<String, Set<Shop>> shopmap = new HashMap<>();
+        Map<String, Set<Shop>> shopMap = new HashMap<>();
         for (Shop shop : shops) {
-            String area = shop.getArea();
-            if (!shopmap.containsKey(area)) {
+            String province = shop.getProvince();
+            if (!shopMap.containsKey(province)) {
                 Set<Shop> set = new HashSet<>();
-                shopmap.put(area, set);
+                shopMap.put(province, set);
                 set.add(shop);
             } else {
-                shopmap.get(area).add(shop);
+                shopMap.get(province).add(shop);
             }
         }
-        model.addAttribute("areas", shopmap);
+        model.addAttribute("areas", shopMap);
         return "account/addressForm";
     }
 
