@@ -31,4 +31,12 @@ public interface Shop {
     String getProvince();
 
     void setProvince(String province);
+
+    String getAppId();
+
+    void setAppId(String appId);
+
+    String getMchid();
+
+    void setMchid(String mchid);
 }

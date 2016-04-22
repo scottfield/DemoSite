@@ -29,6 +29,10 @@ public class ShopImpl implements Shop {
     @AdminPresentation(friendlyName = "地址")
     private String address;
 
+    private String appId;
+    private String mchid;
+
+
     public String getAddress() {
         return address;
     }
@@ -83,5 +87,25 @@ public class ShopImpl implements Shop {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    @Override
+    public String getAppId() {
+        return appId;
+    }
+
+    @Override
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    @Override
+    public String getMchid() {
+        return mchid;
+    }
+
+    @Override
+    public void setMchid(String mchid) {
+        this.mchid = mchid;
     }
 }

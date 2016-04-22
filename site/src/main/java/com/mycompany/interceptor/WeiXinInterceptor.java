@@ -1,5 +1,6 @@
 package com.mycompany.interceptor;
 
+import com.mycompany.sample.util.CommonUtils;
 import com.mycompany.util.HttpUtil;
 import com.mycompany.util.JsonHelper;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -26,6 +27,8 @@ public class WeiXinInterceptor implements HandlerInterceptor {
     private static final String SALT = new Date().toString();
     private static final Md5PasswordEncoder MD5_ENCODER = new Md5PasswordEncoder();
     private static final ShaPasswordEncoder SHA_ENCODER = new ShaPasswordEncoder();
+    private volatile static int count = 0;
+    private static final int maxTry = 3;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -49,10 +52,11 @@ public class WeiXinInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private HashMap generateTicket() {
+    private synchronized HashMap generateTicket() {
         Date generateDate = new Date();
         long timestamp = generateDate.getTime();
-        String queryStr = "app_key=" + appKey + "&nonce=" + timestamp + "&stat_src=" + staticSrc + "&timestamp=" + timestamp;
+        String nonce = CommonUtils.getRandomStr();
+        String queryStr = "app_key=" + appKey + "&nonce=" + nonce + "&stat_src=" + staticSrc + "&timestamp=" + timestamp;
         String tempStr = queryStr + "&app_secret=" + appSecret;
         String sign = MD5_ENCODER.encodePassword(tempStr, null);
         String url = "http://weixin.cplotus.com/weixin/jsapi_ticket.ashx?" + queryStr + "&sign=" + sign;
@@ -60,11 +64,18 @@ public class WeiXinInterceptor implements HandlerInterceptor {
         HashMap ticket = JsonHelper.toObject(result, HashMap.class);
         if (ticket.get("errcode").equals(0)) {
             ticket.put("timestamp", timestamp);
-            ticket.put("nonce", timestamp);
+            ticket.put("nonce", nonce);
             ticket.put("generateDate", generateDate);
             ticket.put("appId", appId);
         } else {
-            throw new RuntimeException("生成ticket失败,详细信息：" + ticket.toString());
+            //尝试多次获取ticket
+            if (count < maxTry) {
+                generateTicket();
+                count++;
+            } else {
+
+                throw new RuntimeException("生成ticket失败,详细信息：" + ticket.toString());
+            }
         }
         return ticket;
     }
@@ -73,14 +84,15 @@ public class WeiXinInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         ServletContext servletContext = request.getSession().getServletContext();
         HashMap<String, Object> ticketMap = (HashMap<String, Object>) servletContext.getAttribute("ticketMap");
-        long nonce = (long) ticketMap.get("nonce");
+        String nonce = (String) ticketMap.get("nonce");
         long timestamp = (long) ticketMap.get("timestamp");
         String ticket = (String) ticketMap.get("ticket");
         String url = request.getRequestURL().toString();
-        //$string = "jsapi_ticket=$jsapiTicket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";
+
         String tempStr = "jsapi_ticket=" + ticket + "&noncestr=" + nonce + "&timestamp=" + timestamp + "&url=" + url;
-//        String signature = SHA_ENCODER.encodePassword(tempStr, null);
+        //生成签名
         String signature = DigestUtils.sha1Hex(tempStr);
+
         ticketMap.put("signature", signature);
         request.setAttribute("ticketMap", ticketMap);
         //分享相关
