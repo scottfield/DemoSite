@@ -50,7 +50,7 @@ public class PickupController {
         Order order = orderService.findOrderById(infoForm.getOrderId());
         //检测货物是否已经被提取
         if (order.getStatus().getType().equals("CONSUMED")) {
-            result.put("code", -1000);
+            result.put("code", 1000);
             result.put("message", "已提取");
             return result;
         }

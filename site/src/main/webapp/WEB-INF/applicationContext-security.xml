@@ -28,7 +28,7 @@
     <sec:http pattern="/**/${asset.server.url.prefix.internal}/**" security="none" />
     <sec:http pattern="/favicon.ico" security="none" />       
     <sec:http pattern="/login" security="none" />
-    <sec:http pattern="/login/process" security="none" />
+    <sec:http pattern="/" security="none" />
 
     <!-- Set up Spring security for the application -->
     <sec:http auto-config="false" authentication-manager-ref="blAuthenticationManager" disable-url-rewriting="true">
@@ -51,14 +51,14 @@
         <!--<sec:intercept-url pattern="/cart/**" requires-channel="any" />-->
         
         <!-- All URLs not explicitly specified as https will be served under http -->
-        <sec:intercept-url pattern="/" requires-channel="http" access="ROLE_USER"/>
+        <sec:intercept-url pattern="/" requires-channel="http"/>
         <sec:intercept-url pattern="/**" requires-channel="http" access="ROLE_USER"/>
         <!--<sec:http-basic/>-->
          <!--Define the login form along with the success and failure handlers -->
         <sec:form-login login-page='/login'
             authentication-success-handler-ref="blAuthenticationSuccessHandler"
             authentication-failure-handler-ref="blAuthenticationFailureHandler"
-            login-processing-url="/login/process"
+            login-processing-url="/"
         />
         
         <!-- Provide the logout handler -->

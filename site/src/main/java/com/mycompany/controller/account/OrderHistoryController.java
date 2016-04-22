@@ -17,6 +17,8 @@
 package com.mycompany.controller.account;
 
 import com.mycompany.service.CustomOrderService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.web.controller.account.BroadleafOrderHistoryController;
@@ -30,17 +32,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Controller
 @RequestMapping("/account/orders")
 public class OrderHistoryController extends BroadleafOrderHistoryController {
-    //初始化自定义订单状态
-    static {
-        new OrderStatus("UNPAID", "UNPAID");
-        new OrderStatus("PAID", "PAID");
-        new OrderStatus("CONSUMED", "CONSUMED");
-    }
+    private static final Log LOG = LogFactory.getLog(OrderHistoryController.class);
+    /**
+     * 未付款订单有效期(15分钟)
+     */
+    private static final long MAX_ORDER_INTERVAL = 15 * 60 * 1000;
+    /**
+     * 自定义订单状态
+     */
+    /**
+     * 未付款
+     */
+    private static OrderStatus UNPAID = new OrderStatus("UNPAID", "UNPAID");
+    /**
+     * 已付款
+     */
+    private static OrderStatus PAID = new OrderStatus("PAID", "PAID");
+    /**
+     * 已提货
+     */
+    private static OrderStatus CONSUMED = new OrderStatus("CONSUMED", "CONSUMED");
 
     @Resource(name = "blOrderService")
     private CustomOrderService customOrderService;
@@ -49,7 +66,22 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
     public String viewOrderHistory(HttpServletRequest request, Model model) {
         List<Order> orders = customOrderService.findOrdersForCustomer(CustomerState.getCustomer());
         orders.stream().filter(order -> order.getStatus() != OrderStatus.IN_PROCESS);
+        orders.stream().forEach(order -> {
+            /**
+             * 取消过期订单
+             */
+            Date submitDate = new Date(order.getSubmitDate().getTime() + MAX_ORDER_INTERVAL);
+            Date now = new Date();
+            if (order.getStatus().equals(UNPAID) && submitDate.before(now)) {
+                try {
+                    customOrderService.customCancelOrder(order.getId());
+                } catch (WorkflowException e) {
+                    LOG.warn("自动取消订单失败,订单号：" + order.getId());
+                }
+            }
+        });
         model.addAttribute("orders", orders);
+        model.addAttribute("now", new Date());
         return getOrderHistoryView();
     }
 

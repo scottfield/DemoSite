@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * Created by jackie on 4/22/2016.
@@ -22,10 +22,10 @@ public class CustomerAttributeDaoImpl implements CustomerAttributeDao {
         Query query = em.createQuery("select attribute from org.broadleafcommerce.profile.core.domain.CustomerAttribute attribute where attribute.value = :value ");
         query.setParameter("value", value);
         query.setHint(QueryHints.HINT_CACHEABLE, true);
-        Object attribute = query.getSingleResult();
-        if (Objects.isNull(attribute)) {
+        List resultList = query.getResultList();
+        if (resultList.isEmpty()) {
             return null;
         }
-        return (CustomerAttribute) attribute;
+        return (CustomerAttribute) resultList.get(0);
     }
 }

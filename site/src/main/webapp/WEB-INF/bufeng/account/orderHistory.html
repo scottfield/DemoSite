@@ -55,7 +55,7 @@
             </div>
         </div>
     </div>
-
+    <div th:if="${order.status.type eq 'UNPAID'}">只剩下[[${15-(now.time - order.submitDate.time)/60000}]]分钟,这个订单就要被取消了,快快付款带我回家吧</div>
     <div class="affirm-sum-money">
         <div class="sum-money">共[[${order.itemCount}]]件商品 合计:￥[[${order.total}]]</div>
         <a th:href="@{'/account/orders/cancel/'+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">取消订单</a>

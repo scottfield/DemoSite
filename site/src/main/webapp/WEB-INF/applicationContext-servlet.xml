@@ -73,6 +73,7 @@
                 <property name="staticSrc" value="lzzyad"/>
                 <property name="appKey" value="5539851609"/>
                 <property name="appSecret" value="6558bc9230ff42d390b744e1a68862f1"/>
+                <property name="appId" value="wx937fba8914a5d9a9"/>
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>

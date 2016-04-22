@@ -46,10 +46,10 @@ public class QRCodeController {
     public Map<String, Object> consumeQRCode(@PathVariable("code") String code) {
         Map<String, Object> result = new HashMap<>();
         result.put("code", 1000);
-        result.put("message", "二维码有效");
+        result.put("message", "二维码兑换成功");
         boolean isAvailable = qrCodeService.verifyCode(code);
         if (!isAvailable) {
-            result.put("message", "该二维码已核销");
+            result.put("message", "该二维码已兑换");
             return result;
         }
         QRCode qrCode = qrCodeService.readByCode(code);

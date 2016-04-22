@@ -26,6 +26,7 @@ import org.broadleafcommerce.core.web.controller.account.ResetPasswordForm;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.core.domain.CustomerAttribute;
 import org.broadleafcommerce.profile.core.domain.CustomerAttributeImpl;
+import org.broadleafcommerce.profile.core.domain.CustomerImpl;
 import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +49,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 /**
  * The controller responsible for all actions involving logging a customer in
@@ -62,11 +62,19 @@ public class LoginController extends BroadleafLoginController {
     private CustomerAttributeService attributeService;
     @Resource(name = "blCustomerService")
     private CustomerService customerService;
+    private String appKey = "5539851609";
+    private String retUrl = "http://discount.lzzyad.com";
 
+    /**
+     * 发起微信授权
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     */
     @RequestMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
-        String appKey = "5539851609";
-        String retUrl = "http://discount.lzzyad.com/index.php";
+
         LOG.info("original url==>" + retUrl);
         try {
             retUrl = URLEncoder.encode(retUrl, "UTF-8");
@@ -75,22 +83,29 @@ public class LoginController extends BroadleafLoginController {
             e.printStackTrace();
         }
         String queryStr = "app_key=" + appKey + "&ret_uri=" + retUrl;
-        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
-//        return "redirect:/login/process?openid=oGrpEuFiufUy-G08zvOCs";
+//        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
+        return "redirect:/?openid=oGrpEuFiufUy-G08zvOCs";
     }
 
-
-    @RequestMapping("/login/process")
+    /**
+     * 处理用户授权(微信的回调地址)
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     */
+    @RequestMapping("/ ")
     public String loginProcess(HttpServletRequest request, HttpServletResponse response, Model model) {
-        //check open id
+        //检测请求参数中是否包含open id
         String openId = request.getParameter("openid");
         if (StringUtils.isBlank(openId)) {
             return "redirect:/login";
         }
-        //register open id if not exist in db
+        //检测open ID是否已经注册
         CustomerAttribute customerAttribute = attributeService.readCustomerByOpenId(openId);
         if (Objects.isNull(customerAttribute)) {
-            Customer customer = customerService.createCustomer();
+            Customer customer = new CustomerImpl();
+            customer.setUsername(openId);
             customer.setFirstName(openId);
             customer.setLastName(openId);
             customer.setPassword(openId);
@@ -100,10 +115,11 @@ public class LoginController extends BroadleafLoginController {
             CustomerAttribute attribute = new CustomerAttributeImpl();
             attribute.setName("openid");
             attribute.setValue(openId);
+            attribute.setCustomer(customer);
             customerAttributes.put("openid", attribute);
-            customerService.saveCustomer(customer);
+            customerService.registerCustomer(customer, openId, openId);
         }
-        //login user account
+        //将用户自动登录
         String username = openId;
         String password = openId;
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
@@ -112,7 +128,7 @@ public class LoginController extends BroadleafLoginController {
         securityContext.setAuthentication(authentication);
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-        return "redirect:/";
+        return "redirect:/index";
     }
 
     @RequestMapping(value = "/login/forgotPassword", method = RequestMethod.GET)

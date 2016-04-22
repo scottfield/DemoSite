@@ -22,6 +22,7 @@ public class WeiXinInterceptor implements HandlerInterceptor {
     private String staticSrc;
     private String appKey;
     private String appSecret;
+    private String appId;
     private static final String SALT = new Date().toString();
     private static final Md5PasswordEncoder MD5_ENCODER = new Md5PasswordEncoder();
     private static final ShaPasswordEncoder SHA_ENCODER = new ShaPasswordEncoder();
@@ -61,6 +62,7 @@ public class WeiXinInterceptor implements HandlerInterceptor {
             ticket.put("timestamp", timestamp);
             ticket.put("nonce", timestamp);
             ticket.put("generateDate", generateDate);
+            ticket.put("appId", appId);
         } else {
             throw new RuntimeException("生成ticket失败,详细信息：" + ticket.toString());
         }
@@ -81,6 +83,11 @@ public class WeiXinInterceptor implements HandlerInterceptor {
         String signature = DigestUtils.sha1Hex(tempStr);
         ticketMap.put("signature", signature);
         request.setAttribute("ticketMap", ticketMap);
+        //分享相关
+        request.setAttribute("shareTitle", "分享到朋友圈");
+        request.setAttribute("shareDesc", "分享到朋友圈");
+        request.setAttribute("shareLink", request.getRequestURL());
+        request.setAttribute("shareImageUrl", "http://wwww.baidu.com");
     }
 
     @Override
@@ -110,5 +117,13 @@ public class WeiXinInterceptor implements HandlerInterceptor {
 
     public void setStaticSrc(String staticSrc) {
         this.staticSrc = staticSrc;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 }

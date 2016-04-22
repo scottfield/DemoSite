@@ -19,4 +19,7 @@
     <bean id="com.mycompany.sample.core.catalog.domain.QRCode"
           class="com.mycompany.sample.core.catalog.domain.QRCodeImpl"
           scope="prototype"/>
+    <bean id="org.broadleafcommerce.profile.core.domain.CustomerAttribute"
+          class="org.broadleafcommerce.profile.core.domain.CustomerAttributeImpl"
+          scope="prototype"/>
 </beans>
