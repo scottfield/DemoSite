@@ -3,8 +3,6 @@ package com.mycompany.sample.core.catalog.domain;
 import com.mycompany.sample.util.CommonUtils;
 import org.broadleafcommerce.core.order.domain.Order;
 
-import java.io.PipedReader;
-
 /**
  * Created by jackie on 4/22/2016.
  */
