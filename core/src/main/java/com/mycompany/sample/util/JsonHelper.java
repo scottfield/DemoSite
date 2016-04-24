@@ -1,4 +1,4 @@
-package com.mycompany.util;
+package com.mycompany.sample.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Objects;
 
 /**
  * Created by jackie on 2016/3/16.
@@ -33,6 +35,9 @@ public class JsonHelper {
     public static <R> R toObject(String source, Class<R> clazz) {
         ObjectMapper mapper = createMapper();
         R result = null;
+        if (Objects.isNull(source)) {
+            return null;
+        }
         try {
             result = mapper.readValue(source, clazz);
         } catch (IOException e) {

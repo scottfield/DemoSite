@@ -1,4 +1,4 @@
-package com.mycompany.util;
+package com.mycompany.sample.util;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -15,6 +15,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class HttpUtil {
 //			}
             // 定义 BufferedReader输入流来读取URL的响应
             in = new BufferedReader(new InputStreamReader(
-                    connection.getInputStream()));
+                    connection.getInputStream(), Charset.forName("utf-8")));
             String line;
             while ((line = in.readLine()) != null) {
                 result += line;

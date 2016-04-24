@@ -32,7 +32,7 @@ public class OrderParam {
         param.setOpenId(order.getCustomer().getUsername());
         param.setNotifyUrl("");
         param.setTradeType("JSAPI");
-        param.setTimeStart(CommonUtils.currentDate());
+        param.setTimeStart(CommonUtils.currentDateStr());
         param.setTimeExpire(CommonUtils.expireDate());
         param.setOutTradeNo(order.getOrderNumber());
         param.setTotalFee(order.getTotal().toString());

@@ -28,10 +28,9 @@ public class ShopImpl implements Shop {
     private String name;
     @AdminPresentation(friendlyName = "地址")
     private String address;
-
-    private String appId;
-    private String mchid;
-
+    @ManyToOne(targetEntity = ShopAccountImpl.class)
+    @JoinColumn(name = "shop_account_id", referencedColumnName = "id")
+    private ShopAccount shopAccount;
 
     public String getAddress() {
         return address;
@@ -91,21 +90,29 @@ public class ShopImpl implements Shop {
 
     @Override
     public String getAppId() {
-        return appId;
+        return this.shopAccount.getAppid();
     }
 
     @Override
     public void setAppId(String appId) {
-        this.appId = appId;
+        this.shopAccount.setAppid(appId);
     }
 
     @Override
     public String getMchid() {
-        return mchid;
+        return this.shopAccount.getMchid();
     }
 
     @Override
     public void setMchid(String mchid) {
-        this.mchid = mchid;
+        this.shopAccount.setMchid(mchid);
+    }
+
+    public ShopAccount getShopAccount() {
+        return shopAccount;
+    }
+
+    public void setShopAccount(ShopAccount shopAccount) {
+        this.shopAccount = shopAccount;
     }
 }

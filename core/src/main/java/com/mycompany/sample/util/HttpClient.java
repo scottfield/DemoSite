@@ -1,4 +1,4 @@
-package com.mycompany.util;
+package com.mycompany.sample.util;
 
 import org.apache.log4j.Logger;
 

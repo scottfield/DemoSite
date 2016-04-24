@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.exception.ServiceException;
+import org.broadleafcommerce.common.persistence.EntityConfiguration;
 import org.broadleafcommerce.core.web.controller.account.BroadleafLoginController;
 import org.broadleafcommerce.core.web.controller.account.ResetPasswordForm;
 import org.broadleafcommerce.profile.core.domain.Customer;
@@ -64,9 +65,12 @@ public class LoginController extends BroadleafLoginController {
     private CustomerService customerService;
     private String appKey = "5539851609";
     private String retUrl = "http://discount.lzzyad.com";
+    @Resource(name = "blEntityConfiguration")
+    private EntityConfiguration entityConfiguration;
 
     /**
      * 发起微信授权
+     *
      * @param request
      * @param response
      * @param model
@@ -76,19 +80,21 @@ public class LoginController extends BroadleafLoginController {
     public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
 
         LOG.info("original url==>" + retUrl);
+        String encodedUrl = null;
         try {
-            retUrl = URLEncoder.encode(retUrl, "UTF-8");
+            encodedUrl = URLEncoder.encode(retUrl, "UTF-8");
             LOG.info("encoded url==>" + retUrl);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        String queryStr = "app_key=" + appKey + "&ret_uri=" + retUrl;
+        String queryStr = "app_key=" + appKey + "&ret_uri=" + encodedUrl;
 //        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
-        return "redirect:/?openid=oGrpEuFiufUy-G08zvOCs";
+        return "redirect:/?openid=o1Py0t7UnGihjJqCfZz2bigtkTu4";
     }
 
     /**
      * 处理用户授权(微信的回调地址)
+     *
      * @param request
      * @param response
      * @param model
@@ -104,7 +110,7 @@ public class LoginController extends BroadleafLoginController {
         //检测open ID是否已经注册
         CustomerAttribute customerAttribute = attributeService.readCustomerByOpenId(openId);
         if (Objects.isNull(customerAttribute)) {
-            Customer customer = new CustomerImpl();
+            Customer customer = (Customer) entityConfiguration.createEntityInstance("org.broadleafcommerce.profile.core.domain.Customer");
             customer.setUsername(openId);
             customer.setFirstName(openId);
             customer.setLastName(openId);
@@ -128,6 +134,11 @@ public class LoginController extends BroadleafLoginController {
         securityContext.setAuthentication(authentication);
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+        //检测用户是否是通过分享页面访问网站
+        Object referrer = session.getAttribute("referrer");
+        if (Objects.nonNull(referrer)) {
+            return "redirect:/fiveCard/issue";
+        }
         return "redirect:/index";
     }
 

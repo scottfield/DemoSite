@@ -1,5 +1,4 @@
-import com.mycompany.util.HttpUtil;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import com.mycompany.sample.util.HttpUtil;
 
 /**
  * Created by jackie on 4/21/2016.

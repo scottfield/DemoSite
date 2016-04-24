@@ -22,4 +22,12 @@
     <bean id="org.broadleafcommerce.profile.core.domain.CustomerAttribute"
           class="org.broadleafcommerce.profile.core.domain.CustomerAttributeImpl"
           scope="prototype"/>
+    <bean id="com.mycompany.sample.core.catalog.domain.ShopAccount"
+          class="com.mycompany.sample.core.catalog.domain.ShopAccountImpl" scope="prototype"/>
+    <bean id="com.mycompany.sample.core.catalog.domain.FiveCard"
+          class="com.mycompany.sample.core.catalog.domain.FiveCardImpl" scope="prototype"/>
+    <bean id="org.broadleafcommerce.profile.core.domain.Customer"
+          class="com.mycompany.sample.core.catalog.domain.CustomCustomerImpl" scope="prototype"/>
+    <bean id="com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref"
+          class="com.mycompany.sample.core.catalog.domain.CustomerFiveCardXrefImpl" scope="prototype"/>
 </beans>

@@ -17,10 +17,16 @@
 package com.mycompany.controller.account;
 
 import com.mycompany.controller.form.CustomCustomerAddressForm;
+import com.mycompany.interceptor.WeiXinInterceptor;
+import com.mycompany.sample.core.WeiXinConstants;
 import com.mycompany.sample.core.catalog.domain.CustomAddress;
 import com.mycompany.sample.core.catalog.domain.CustomAddressImpl;
+import com.mycompany.sample.core.catalog.domain.CustomCustomer;
 import com.mycompany.sample.core.catalog.domain.Shop;
+import com.mycompany.sample.service.FiveCardService;
 import com.mycompany.sample.service.ShopService;
+import com.mycompany.sample.service.WeixinService;
+import com.mycompany.sample.util.CommonUtils;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafManageCustomerAddressesController;
 import org.broadleafcommerce.profile.core.domain.*;
@@ -36,6 +42,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
@@ -48,6 +55,11 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
 
     @Resource(name = "blCustomerAddressService")
     private CustomerAddressService customerAddressService;
+    @Resource
+    private WeixinService weixinService;
+
+    public static final String followedAddressName = "关注门店";
+    private static final String referer = "http://weixin.cplotus.com/min_store/store.aspx";
 
     @InitBinder
     protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
@@ -73,13 +85,24 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
     @RequestMapping(method = RequestMethod.GET)
     public String viewCustomerAddresses(HttpServletRequest request, Model model) {
         Customer customer = CustomerState.getCustomer();
-        //将关注名店设置为默认收货地址
+
         List<CustomerAddress> addressList = customer.getCustomerAddresses();
         if (Objects.nonNull(addressList) && addressList.size() > 0) {
-            CustomerAddress customerAddress = addressList.get(0);
-            CustomAddress address = (CustomAddress) customerAddress.getAddress();
-            Shop shop = address.getShop();
-            model.addAttribute("defaultShop", shop);
+            Shop defaultShop = null;
+            for (CustomerAddress customerAddress : addressList) {
+                if (customerAddress.getAddressName().equals("收货地址")) {
+                    CustomAddress address = (CustomAddress) customerAddress.getAddress();
+                    defaultShop = address.getShop();
+                    break;
+                }
+
+            }
+            //将关注名店设置为默认收货地址
+            if (Objects.isNull(defaultShop)) {
+                CustomAddress address = (CustomAddress) customer.getCustomerAddresses().get(0).getAddress();
+                defaultShop = address.getShop();
+            }
+            model.addAttribute("defaultShop", defaultShop);
         }
         //获取门店列表
         Set<Shop> shops = shopService.getAllShop();
@@ -95,6 +118,11 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             }
         }
         model.addAttribute("areas", shopMap);
+        String activeFiveCard = request.getParameter("activeFiveCard");
+        if (Objects.nonNull(activeFiveCard)) {
+            request.getSession().setAttribute("activeFiveCard", true);
+            return "fivecard/active_form";
+        }
         return "account/addressForm";
     }
 
@@ -122,6 +150,12 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             customerAddress.setCustomer(CustomerState.getCustomer());
             customerAddressService.saveCustomerAddress(customerAddress);
         }
+        //如果是激活B类五折卡则跳转到激活链接
+        HttpSession session = request.getSession();
+        if (Objects.nonNull(session.getAttribute("activeFiveCard"))) {
+            return "redirect:/fiveCard/activate";
+        }
+
         return "redirect:/checkout";
     }
 
@@ -152,5 +186,50 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
         return super.removeCustomerAddress(request, model, customerAddressId, redirectAttributes);
     }
 
+    @RequestMapping("/followShop")
+    public String followShop(HttpServletRequest request) {
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        String url = request.getRequestURL().toString();
+        String openId = customer.getUsername();
+        String src = url + "/callBack?openid=" + openId;
+        src = CommonUtils.encodeUrl(src);
+        String queryStr = "app_key=" + WeiXinConstants.APP_KEY + "&openid=" + openId + "&src=" + src;
+        return "redirect:http://weixin.cplotus.com/min_store/store.aspx?" + queryStr;
+    }
+
+    @RequestMapping("/followShop/callBack")
+    public String followShopCallBack(HttpServletRequest request, String openid) {
+        String referer = request.getHeader("Referer");
+        //关注门店成功,添加关注门店地址
+        if (Objects.nonNull(openid) && Objects.nonNull(referer) &&(referer.contains(ManageCustomerAddressesController.referer)||referer.contains("/fiveCard/activate"))) {
+            //todo 无法获取到用户关注的门店
+            Map<String, Object> vipInfo = weixinService.getVipInfo(openid);
+            //模拟数据
+//            Map<String, Object> vipInfo = new HashMap<>();
+//            vipInfo.put("unit_code", "097");
+//            vipInfo.put("unit_name", "乐从店");
+
+            //添加关注门店地址
+            CustomAddress address = new CustomAddressImpl();
+            address.setAddressLine1("default");
+            address.setPostalCode("default");
+            address.setLastName("default");
+            address.setCity("default");
+            address.setFirstName("none");
+            Phone phone = new PhoneImpl();
+            phone.setPhoneNumber("none");
+            address.setPhonePrimary(phone);
+            Shop shop = shopService.readShopByCode((String) vipInfo.get("unit_code"));
+            address.setShop(shop);
+            Address savedAddress = addressService.saveAddress(address);
+
+            CustomerAddress customerAddress = customerAddressService.create();
+            customerAddress.setAddress(savedAddress);
+            customerAddress.setAddressName(followedAddressName);
+            customerAddress.setCustomer(CustomerState.getCustomer());
+            customerAddressService.saveCustomerAddress(customerAddress);
+        }
+        return "redirect:/fiveCard/activate";
+    }
 
 }

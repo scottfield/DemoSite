@@ -28,6 +28,7 @@
     <sec:http pattern="/**/${asset.server.url.prefix.internal}/**" security="none" />
     <sec:http pattern="/favicon.ico" security="none" />       
     <sec:http pattern="/login" security="none" />
+    <sec:http pattern="/fiveCard/share" security="none" />
     <sec:http pattern="/" security="none" />
 
     <!-- Set up Spring security for the application -->

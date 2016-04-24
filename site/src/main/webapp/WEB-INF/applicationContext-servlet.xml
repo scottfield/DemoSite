@@ -69,12 +69,7 @@
             <mvc:exclude-mapping path="/images/**"/>
             <mvc:exclude-mapping path="/cmsstatic/**"/>
             <!--interceptor for weixin-->
-            <bean class="com.mycompany.interceptor.WeiXinInterceptor">
-                <property name="staticSrc" value="lzzyad"/>
-                <property name="appKey" value="5539851609"/>
-                <property name="appSecret" value="6558bc9230ff42d390b744e1a68862f1"/>
-                <property name="appId" value="wx937fba8914a5d9a9"/>
-            </bean>
+            <bean class="com.mycompany.interceptor.WeiXinInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
@@ -107,26 +102,26 @@
     </bean>
 
     <!-- Set up the view resolver to be used by Spring -->
-   <!-- <bean class="org.broadleafcommerce.common.web.BroadleafThymeleafViewResolver">
-        <property name="templateEngine" ref="blWebTemplateEngine"/>
-        <property name="order" value="1"/>
-        <property name="cache" value="${thymeleaf.view.resolver.cache}"/>
-        &lt;!&ndash;<property name="fullPageLayout" value="layout/fullPageLayout"/>&ndash;&gt;
-        <property name="characterEncoding" value="UTF-8"/>
-        <property name="layoutMap">
-            <map>
-                <entry key="account/" value="checkout/checkout"/>
-                <entry key="catalog/" value="NONE"/>
-                <entry key="checkout/" value="layout/checkoutLayout"/>
-                <entry key="checkout/confirmation" value="layout/fullPageNoNavLayout"/>
-                <entry key="layout/" value="NONE"/>
-                <entry key="content/NONE" value="NONE"/>
-                <entry key="cart/" value="cart/cart"/>
-                <entry key="account/addressForm" value="account/addressForm"/>
-                <entry key="account/addressForm" value="account/addressForm"/>
-            </map>
-        </property>
-    </bean>-->
+    <!-- <bean class="org.broadleafcommerce.common.web.BroadleafThymeleafViewResolver">
+         <property name="templateEngine" ref="blWebTemplateEngine"/>
+         <property name="order" value="1"/>
+         <property name="cache" value="${thymeleaf.view.resolver.cache}"/>
+         &lt;!&ndash;<property name="fullPageLayout" value="layout/fullPageLayout"/>&ndash;&gt;
+         <property name="characterEncoding" value="UTF-8"/>
+         <property name="layoutMap">
+             <map>
+                 <entry key="account/" value="checkout/checkout"/>
+                 <entry key="catalog/" value="NONE"/>
+                 <entry key="checkout/" value="layout/checkoutLayout"/>
+                 <entry key="checkout/confirmation" value="layout/fullPageNoNavLayout"/>
+                 <entry key="layout/" value="NONE"/>
+                 <entry key="content/NONE" value="NONE"/>
+                 <entry key="cart/" value="cart/cart"/>
+                 <entry key="account/addressForm" value="account/addressForm"/>
+                 <entry key="account/addressForm" value="account/addressForm"/>
+             </map>
+         </property>
+     </bean>-->
     <bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
         <property name="templateEngine" ref="blWebTemplateEngine"/>
         <property name="order" value="1"/>

@@ -1,8 +1,11 @@
 package com.mycompany.sample.util;
 
-import javax.xml.crypto.Data;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by jackie on 4/22/2016.
@@ -42,15 +45,76 @@ public class CommonUtils {
         return formatDate(date, "yyyyMMddHHmmss");
     }
 
-    public static String currentDate() {
-        return formatDate(new Date());
+    public static String currentDateStr() {
+        return formatDate(currentDate());
+    }
+
+    public static Date currentDate() {
+        return new Date();
     }
 
     public static String expireDate() {
         return formatDate(new Date(System.currentTimeMillis() + 15 * 60 * 1000));
     }
 
+    public static String encodeUrl(String url) {
+        String encodeUrl = null;
+        try {
+            encodeUrl = URLEncoder.encode(url, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return encodeUrl;
+    }
+
+    public static String sha1Sign(String queryStr, String appSecret) {
+        if (Objects.nonNull(appSecret)) {
+            queryStr = queryStr + "&app_secret=" + appSecret;
+        }
+        return DigestUtils.sha1Hex(queryStr);
+    }
+
+    public static String sha1Sign(String queryStr) {
+        return sha1Sign(queryStr, null);
+    }
+
+    public static String md5Sign(String queryStr, String appSecret) {
+        if (Objects.nonNull(appSecret)) {
+            queryStr = queryStr + "&app_secret=" + appSecret;
+        }
+        return DigestUtils.md5Hex(queryStr);
+    }
+
+    public static String md5Sign(String queryStr) {
+        return md5Sign(queryStr, null);
+    }
+
+    public static String getSortedStr(Map<String, Object> param) {
+        Set<String> keySet = param.keySet();
+        List<String> keyList = new ArrayList<>(keySet);
+        Collections.sort(keyList);
+        StringBuilder builder = new StringBuilder();
+        for (String key : keyList) {
+            Object value = param.get(key);
+            builder.append(key).append("=").append(value).append("&");
+        }
+        //删除最末尾的&
+        builder.deleteCharAt(builder.lastIndexOf("&"));
+        return builder.toString();
+    }
+
+    public static long currentTimeStamp() {
+        return System.currentTimeMillis();
+    }
+
     public static void main(String[] args) {
-        System.out.println(currentDate());
+        Map<String, Object> param = new HashMap<>();
+        param.put("name", "jackei");
+        param.put("xx", "jackei");
+        param.put("ee", "jackei");
+        param.put("fdf", "jackei");
+        param.put("dd", "jackei");
+        String sortedStr = getSortedStr(param);
+        System.out.println(md5Sign(sortedStr, "fdafda"));
     }
 }
