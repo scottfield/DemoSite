@@ -16,7 +16,9 @@
 
 package com.mycompany.controller.account;
 
+import com.mycompany.sample.core.WeiXinConstants;
 import com.mycompany.sample.service.CustomerAttributeService;
+import com.mycompany.sample.service.WeixinService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,7 +29,6 @@ import org.broadleafcommerce.core.web.controller.account.ResetPasswordForm;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.core.domain.CustomerAttribute;
 import org.broadleafcommerce.profile.core.domain.CustomerAttributeImpl;
-import org.broadleafcommerce.profile.core.domain.CustomerImpl;
 import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,6 +51,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * The controller responsible for all actions involving logging a customer in
@@ -63,10 +65,11 @@ public class LoginController extends BroadleafLoginController {
     private CustomerAttributeService attributeService;
     @Resource(name = "blCustomerService")
     private CustomerService customerService;
-    private String appKey = "5539851609";
     private String retUrl = "http://discount.lzzyad.com";
     @Resource(name = "blEntityConfiguration")
     private EntityConfiguration entityConfiguration;
+    @Resource
+    private WeixinService weixinService;
 
     /**
      * 发起微信授权
@@ -87,7 +90,7 @@ public class LoginController extends BroadleafLoginController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        String queryStr = "app_key=" + appKey + "&ret_uri=" + encodedUrl;
+        String queryStr = "app_key=" + WeiXinConstants.APP_KEY + "&ret_uri=" + encodedUrl;
 //        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
         return "redirect:/?openid=o1Py0t7UnGihjJqCfZz2bigtkTu4";
     }
@@ -111,18 +114,33 @@ public class LoginController extends BroadleafLoginController {
         CustomerAttribute customerAttribute = attributeService.readCustomerByOpenId(openId);
         if (Objects.isNull(customerAttribute)) {
             Customer customer = (Customer) entityConfiguration.createEntityInstance("org.broadleafcommerce.profile.core.domain.Customer");
+            Map<String, Object> userInfo = weixinService.getUserInfo(openId);
             customer.setUsername(openId);
-            customer.setFirstName(openId);
+            customer.setFirstName(userInfo.get("nickname").toString());
             customer.setLastName(openId);
             customer.setPassword(openId);
             customer.setRegistered(true);
             customer.setEmailAddress("default");
             Map<String, CustomerAttribute> customerAttributes = customer.getCustomerAttributes();
-            CustomerAttribute attribute = new CustomerAttributeImpl();
-            attribute.setName("openid");
-            attribute.setValue(openId);
-            attribute.setCustomer(customer);
-            customerAttributes.put("openid", attribute);
+            userInfo.remove("errcode");
+            userInfo.remove("errmsg");
+            userInfo.remove("nonce");
+            userInfo.remove("app_key");
+            userInfo.remove("stat_src");
+            userInfo.remove("timestamp");
+            userInfo.remove("queryStr");
+            Set<String> keySet = userInfo.keySet();
+            for (String key : keySet) {
+                CustomerAttribute attribute = new CustomerAttributeImpl();
+                attribute.setName(key);
+                Object value = userInfo.get(key);
+                if (Objects.nonNull(value)) {
+                    attribute.setValue(value.toString());
+                }
+                attribute.setCustomer(customer);
+                customerAttributes.put(key, attribute);
+            }
+
             customerService.registerCustomer(customer, openId, openId);
         }
         //将用户自动登录

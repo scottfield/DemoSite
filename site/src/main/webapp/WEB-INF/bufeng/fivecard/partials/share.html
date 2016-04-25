@@ -3,7 +3,8 @@
     <script type="text/javascript">
         $(function () {
             $(function () {
-                $("#shareFiveCardBtn").click(function () {
+                $("#shareFiveCardBtn").click(function (e) {
+                    e.preventDefault();
                     alert("点击分享按钮进行分享");
                 });
             });

@@ -16,12 +16,18 @@
 
 package com.mycompany.controller.catalog;
 
+import org.broadleafcommerce.core.catalog.domain.Product;
+import org.broadleafcommerce.core.catalog.service.CatalogService;
 import org.broadleafcommerce.core.web.controller.catalog.BroadleafProductController;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * This class works in combination with the CategoryHandlerMapping which finds a category based upon
@@ -29,10 +35,19 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller("blProductController")
 public class ProductController extends BroadleafProductController {
-    
+    @Resource
+    private CatalogService catalogService;
+
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return super.handleRequest(request, response);
+    }
+
+    @RequestMapping("/product/all")
+    @ResponseBody
+    public Object getAllProducts() {
+        List<Product> productList = catalogService.findAllProducts();
+        return productList;
     }
 
 }

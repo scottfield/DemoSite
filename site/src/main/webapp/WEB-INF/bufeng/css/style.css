@@ -1,4 +1,4 @@
-body,html{ width:100%; height:100%; color:#333333; font-family: "微软雅黑"; line-height:1.4;}
+body,html{min-width:100%; min-height:100%; color:#333333; font-family: "微软雅黑"; line-height:1.4;}
 *{ margin:0; padding:0; list-style:none;}
 a{ text-decoration:none; color:#333333;}
 a:hover{ color:;}
@@ -17,18 +17,15 @@ img{ vertical-align:middle;}
 	padding:0 10px;
 }
 
-.header{
-	height:50px;
-}
 header{
 	width:100%;
-	height:50px;
-	background:url(../images/in_01.png) repeat-x;
-	background-size:auto 50px;
+	padding:6.3% 0;
+	background:url(../images/new/navbar-bg.jpg);
+	background-size:contain;
 	position:fixed;
-	left:0;
-	top:0;
+	left:0;top:0;
 	z-index:1000;
+	background-position:center;
 }
 header .l-img{
 	position:absolute;
@@ -73,20 +70,17 @@ header .text{
 }
 
 .card-5{
-	padding:0 10px 10px;
 }
 
 .home-hot{
-	padding:0 10px;
-	height:120px;
-	overflow:hidden;
+	padding:20px 10px 0 10px;
 }
 .home-hot .swiper-container{
 	height:100px;
 }
 .home-hot .bottom-box{
+	margin-top:5px;
 	width:100%;
-	height:30px;
 	/*position:absolute;
 	left:0;
 	bottom:0;
@@ -117,20 +111,19 @@ header .text{
 }
 .home-hot .swiper-slide .text{
 	-webkit-box-flex:1;
+	padding:10px 0 0 10px;
+	font-size:12px;
 }
 .home-hot .swiper-slide .t{
-	height:40px;
 	font-size:.8rem;
 	color:#5d5d5d;
-	line-height:1.4;
 }
 .home-hot .swiper-slide .pice{
 	height:20px;
-	line-height:20px;
+	margin-top:6px;
 }
 .home-hot .swiper-slide .pice span{
 	color:#000000;
-	font-size:1.2rem;
 }
 .home-hot .swiper-slide .pice font{
 	font-size:.8rem;
@@ -138,20 +131,25 @@ header .text{
 	text-decoration:line-through;
 }
 .home-hot .swiper-slide .btn{
-	padding-top:10px;
+	margin-top:6px;
 }
 .home-hot .swiper-slide .img{
-	padding:0 10px 0 50px;
+	margin-left:20%;
 }
 .home-hot .swiper-slide .explosive{
 	position:absolute;
 	left:0;
 	top:0;
-	height:100px;
-	line-height:100px;
+	height:100%;
+	width:26%;
+	background-image:url(../images/in_06.png);
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
 }
 .five-card{
-	padding-right:10px;
+	padding-top:10px;
+	background-color:#f6f0e4;
 }
 .card-box{
 	float:left;
@@ -362,9 +360,9 @@ header .text{
 }
 
 .sale-hot{
-	padding:0 10px;
+	padding:10px 10px 0 10px;
 	overflow:hidden;
-	margin-top:10px;
+	background-color:#f6f0e4;
 }
 .sale-hot .swiper-container{
 }
@@ -404,6 +402,7 @@ header .text{
 	margin:0 5px 0 0;
 	border-radius:5px;
 	padding-bottom:.7rem;
+	background-color:#fff;
 }
 .sale-hot .card-box .unlock{
 	top:40%;
@@ -431,6 +430,7 @@ header .text{
 
 .offline{
 	padding:0 10px;
+	background-color:#f6f0e4;
 }
 .offline .box{
 	height:60px;
@@ -469,27 +469,42 @@ header .text{
 }
 footer{
 	width:100%;
-	height:50px;
+	padding:6.5% 0;
 	position:fixed;
 	left:0;
 	bottom:0;
-	background:url(../images/5_c_23.png) repeat-x;
-	background-size:auto 100%;
+	background-color:#e74970;
 	z-index:1000;
+}
+footer .container{
 	display:-webkit-box;
 	-webkit-box-orient:horizontal;
-	overflow:hidden;
-	line-height:55px;
+	position:absolute;
+	top:0;left:0;
+	width:100%;height:100%;
 }
+footer .container .tab1{background-image:url(../images/new/tab1.png);}
+footer .container .tab2{background-image:url(../images/new/tab2.png);}
+footer .container .tab3{position:relative;}
+footer .container .tab3 span{
+	background:url(../images/new/tab3.png) no-repeat;
+	position:absolute;
+	left:0;bottom:0;
+	width:100%;height:140%;
+	background-size:auto 90%;
+	background-position:center top;
+}
+footer .container .tab4{background-image:url(../images/new/tab4.png);}
+footer .container .tab5{background-image:url(../images/new/tab5.png);}
+footer .container .add-cart{background-image:url(../images/new/tabbar-addcart.png);background-size:auto 45%;background-position:right center;}
+footer .container .buy{background-image:url(../images/new/tabbar-buy.png);background-size:auto 45%;}
 footer a{
 	display:block;
 	-webkit-box-flex:1;
 	text-align:center;
-	background:url(../images/fb_09.jpg) no-repeat right 22px;
-	background-size:auto 18px;
-}
-footer a:last-child{
-	background:none;
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:auto 75%;
 }
 
 .countdown{
@@ -826,7 +841,6 @@ footer a:last-child{
 }
 
 .goods-img{
-	height:220px;
 }
 .goods-img .swiper-container{
 	height:200px;
@@ -1281,4 +1295,60 @@ footer a:last-child{
 	left:0;
 	top:30%;
 	text-align:center;
+}
+
+/*-----新版本新增首页----*/
+.img-panel{position:relative;text-align:center;}
+.img-panel img{width:100%;}
+.img-panel .link{position:absolute;text-align:left;}
+.text-singleline{white-space:no-warp;text-overflow:ellipsis}
+.has-tabbar{padding:0 0 13% 0;}
+.has-navbar{padding:12.6% 0 0 0;}
+.has-navbar.has-tabbar{padding:12.6% 0 13% 0;}
+header .left{background:url(../images/5_ct_04.png) no-repeat left center;background-size:auto 50%;height:100%;margin-left:4%;padding-left:6%;}
+header .container{position:absolute;top:0;left:0;width:100%;height:100%;display:-webkit-box;-webkit-box-orient:horizontal;line-height:12vw;color:#fff;}
+header .container >*{-webkit-box-flex:1;width:33.3333%;box-sizing:border-box;}
+header .container a{display:inline-block;height:100%;color:#fff;}
+.window{
+	background-color:rgba(0,0,0,.5);
+	position:fixed;
+	top:0;width:0;
+	height:100%;width:100%;
+	font-size:0;
+	z-index:1000;
+}
+.window:before{
+	content:'';
+	display:inline-block;
+	width:1px;height:100%;
+	vertical-align:middle;
+}
+.window-content{
+	background-color:#ffffff;
+	border-radius:10px;
+	border:1px #e87884 solid;
+	vertical-align:middle;
+	display:inline-block;
+	width:90%;margin-left:5%;
+	font-size:14px;
+	padding-bottom:5%;
+}
+.window-content img{max-width:100%;}
+.window-content .head{
+	text-align:center;background-image:url(../images/new/window-head.png);position:relative;
+	background-repeat:no-repeat;background-position:center;padding:9.5% 0;background-size:contain;margin-top:-9%;
+}
+.window-content .head .container{width:100%;height:100%;color:#fff;font-size:5.5vw;position:absolute;top:0;left:0;}
+.window-content .middle{text-align:center;}
+.window-content .middle img{margin-top:5%;}
+.window-content .middle .text{margin-top:5%;}
+.window-content .middle .text .num{color:red;font-size:18px;}
+.window-content .middle .text a{text-decoration:underline;color:#e46e79;}
+.window-content .bottom{text-align:center;margin-top:5%;}
+.window-content .bottom img{height:30px;}
+
+.card-box .sold-out{
+	background-image:url(../images/new/sold-out.png);width:60%;height:80%;
+	position:absolute;
+	top:0;right:0;background-size:contain;background-repeat:no-repeat;background-position:center bottom;
 }

@@ -1,10 +1,13 @@
 package com.mycompany.sample.dao;
 
 import com.mycompany.sample.core.catalog.domain.QRCode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.ejb.QueryHints;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -13,6 +16,7 @@ import javax.persistence.Query;
  */
 @Repository("qrcodeDao")
 public class QRCodeDaoImpl implements QRCodeDao {
+    private static final Log LOG = LogFactory.getLog(QRCodeDaoImpl.class);
     @PersistenceContext(unitName = "blPU")
     private EntityManager em;
 
@@ -21,8 +25,13 @@ public class QRCodeDaoImpl implements QRCodeDao {
         Query query = em.createQuery("SELECT qrcode FROM com.mycompany.sample.core.catalog.domain.QRCode qrcode where qrcode.code = :code");
         query.setParameter("code", code);
         query.setHint(QueryHints.HINT_CACHEABLE, true);
-        QRCode qrCode = (QRCode) query.getSingleResult();
-        return qrCode;
+        try {
+            Object qrCode = query.getSingleResult();
+            return (QRCode) qrCode;
+        } catch (NoResultException e) {
+            LOG.info("--------qr code:" + code + " not exist.---------");
+        }
+        return null;
     }
 
     @Override

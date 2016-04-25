@@ -34,6 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/account/orders")
@@ -65,7 +66,7 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
     @RequestMapping(method = RequestMethod.GET)
     public String viewOrderHistory(HttpServletRequest request, Model model) {
         List<Order> orders = customOrderService.findOrdersForCustomer(CustomerState.getCustomer());
-        orders.stream().filter(order -> order.getStatus() != OrderStatus.IN_PROCESS);
+        orders = orders.stream().filter(order -> order.getStatus() != OrderStatus.IN_PROCESS).collect(Collectors.toList());
         orders.stream().forEach(order -> {
             /**
              * 取消过期订单

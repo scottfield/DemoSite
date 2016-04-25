@@ -29,19 +29,21 @@
         })
     </script>
 </head>
-<body th:inline="text">
+<body th:inline="text" class="has-tabbar">
 <!-- header -->
-<div class="header"></div>
+<!--
 <header>
     <div class="l-img">
         <a th:href="@{/}"><img src="images/5_ct_04.png" height="15"/> [[${category.name}]]</a>
     </div>
     <div class="r-img"><img src="images/5_ct_02.png" height="30"/></div>
 </header>
-
+-->
 <!--  -->
-
-<div class="hidden"><img src="images/in_45.png" width="100%"/></div>
+<div class="img-panel">
+	<img src="images/new/index/head.jpg"/>
+	<a class="link" href="请写入规则页面地址" style="width:12%;height:19%;top:10%;right:2%;"></a>
+</div>
 <div class="home-hot">
     <div th:replace="layout/partials/slider::slider"></div>
 </div>
@@ -58,12 +60,16 @@
 
 <!-- menu -->
 <div th:replace="/layout/partials/menu::menu"></div>
+<div class="card-5"><img src="../images/in_42.jpg" width="100%"/></div>
+<!--
 <div class="hidden fenlei-title">
     <div class="txt" th:text="${category.name}">可劲儿喝</div>
     <img src="images/kejin_02.jpg" width="100%"/>
 </div>
+-->
+<!--这里根据不同的类型加载不同的图片，图已经切好，对应 eat.jpg fun.jpg drink.jpg-->
+<div class="hidden"><img src="../images/new/happy.jpg" width="100%"/></div>
 <div th:replace="/catalog/partials/productList::productList"></div>
-<div class="footer"></div>
 <div th:replace="partials/footer::footer"></div>
 <!-- 浮层 -->
 <div class="float-layer none">

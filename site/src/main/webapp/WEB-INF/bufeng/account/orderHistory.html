@@ -12,13 +12,16 @@
         }, false);
     </script>
 </head>
-<body th:inline="text" >
+<body th:inline="text" class="has-navbar has-tabbar">
 <!-- header -->
-<div class="header"></div>
 <header>
-    <div class="l-img"><img th:src="@{/images/in_1_01.png}" height="30"/></div>
-    <div class="r-img"><img th:src="@{/images/in_1_03.png}" height="30"/></div>
-    <div class="text">我的订单</div>
+    <div class="container">
+		<div class="left">
+		</div>
+		
+		<div class="center">我的订单</div>
+		<div class="right"></div>
+	</div>
 </header>
 
 <!--info-->
@@ -55,11 +58,11 @@
             </div>
         </div>
     </div>
-    <div th:if="${order.status.type eq 'UNPAID'}">只剩下[[${15-(now.time - order.submitDate.time)/60000}]]分钟,这个订单就要被取消了,快快付款带我回家吧</div>
+
     <div class="affirm-sum-money">
         <div class="sum-money">共[[${order.itemCount}]]件商品 合计:￥[[${order.total}]]</div>
         <a th:href="@{'/account/orders/cancel/'+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">取消订单</a>
-        <a th:href="@{'/pickup?orderId='+${order.id}}" th:if="${order.status.type eq 'PAID'}">领取</a>
+        <a th:href="@{/pickup}" th:if="${order.status.type eq 'PAID'}">领取</a>
         <a th:href="@{/}" th:if="${order.status.type eq 'UNPAID'}">付款</a>
     </div>
 </div>

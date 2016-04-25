@@ -31,15 +31,22 @@
         })
     </script>
 </head>
-<body>
+<body class="has-navbar">
 <!-- header -->
 <div class="header"></div>
 <header>
-    <div class="l-img">
-        <a th:href="@{${#httpServletRequest.getHeader('Referer')}}"><img th:src="@{/images/5_ct_04.png}" height="15"/>
-            商品详情</a>
+	<div class="container">
+		<div class="left">
+			<a th:href="@{${#httpServletRequest.getHeader('Referer')}}">商品详情</a>
+		</div>
+		
+		<div class="center"></div>
+		<div class="right"></div>
+	</div>
+    <!--<div class="l-img">
+        <a th:href="@{${#httpServletRequest.getHeader('Referer')}}"><img th:src="@{/images/5_ct_04.png}" height="15"/>商品详情</a>
     </div>
-    <div class="r-img"><img th:src="@{/images/5_ct_02.png}" height="30"/></div>
+    <div class="r-img"><img th:src="@{/images/5_ct_02.png}" height="30"/></div>-->
 </header>
 
 <!--产品图片-->
@@ -100,7 +107,6 @@
 </div>
 
 
-<div class="footer"></div>
 <footer>
     <blc:form method="POST" id="addToCartForm" th:action="@{/cart/add}" th:object="${product}">
         <input type="hidden" name="productId" th:value="*{id}"/>
@@ -111,8 +117,10 @@
         <!--*/-->
         <input type="hidden" name="quantity" value="1"/>
     </blc:form>
-    <a href="#" title="加入购物车" id="addToCartBtn"><img th:src="@{/images/gd_14.png}" height="25"/></a>
-    <a href="#" title="立即购买"><img th:src="@{/images/gd_16.png}" height="25"/></a>
+	<div class="container">
+		<a class="add-cart" href="#" title="加入购物车" id="addToCartBtn"></a>
+		<a class="buy" href="#" title="立即购买"></a>
+	</div>
 </footer>
 
 </body>

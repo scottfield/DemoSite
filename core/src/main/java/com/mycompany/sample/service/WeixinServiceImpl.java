@@ -63,8 +63,8 @@ public class WeixinServiceImpl implements WeixinService {
 
     public static void main(String[] args) {
         WeixinService service = new WeixinServiceImpl();
-        System.out.println(service.getVipInfo("o1Py0t7UnGihjJqCfZz2bigtkTu4"));
+//        System.out.println(service.getVipInfo("o1Py0t7UnGihjJqCfZz2bigtkTu4"));
 //        System.out.println(service.getTicket());
-//        System.out.println(service.getUserInfo("o1Py0t7UnGihjJqCfZz2bigtkTu4"));
+        System.out.println(service.getUserInfo("o1Py0t7UnGihjJqCfZz2bigtkTu4"));
     }
 }

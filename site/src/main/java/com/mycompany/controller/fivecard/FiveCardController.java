@@ -1,19 +1,19 @@
 package com.mycompany.controller.fivecard;
 
 import com.mycompany.controller.account.ManageCustomerAddressesController;
-import com.mycompany.sample.core.catalog.domain.CustomCustomer;
-import com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref;
-import com.mycompany.sample.core.catalog.domain.CustomerFiveCardXrefImpl;
-import com.mycompany.sample.core.catalog.domain.FiveCard;
+import com.mycompany.sample.core.catalog.domain.*;
 import com.mycompany.sample.service.FiveCardService;
+import com.mycompany.sample.service.ShopService;
 import com.mycompany.sample.service.WeixinService;
 import com.mycompany.sample.util.CommonUtils;
+import org.broadleafcommerce.profile.core.domain.Address;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.core.domain.CustomerAddress;
+import org.broadleafcommerce.profile.core.service.AddressService;
+import org.broadleafcommerce.profile.core.service.CustomerAddressService;
 import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +31,7 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/fiveCard")
 public class FiveCardController {
+    private final String retView = "fivecard/5zheka_new";
     @Resource
     private FiveCardService fiveCardService;
     @Resource(name = "blCustomerService")
@@ -38,9 +39,22 @@ public class FiveCardController {
     @Resource
     private WeixinService weixinService;
 
-    @RequestMapping("/{type}")
-    public String getFiveCardPage(@PathVariable("type") Integer type) {
-        return "fivecard/inactive_fivecard_" + type;
+    @Resource(name = "blAddressService")
+    private AddressService addressService;
+    @Resource(name = "blCustomerAddressService")
+    private CustomerAddressService customerAddressService;
+    @Resource
+    private ShopService shopService;
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String getFiveCardPage(HttpServletRequest request,String shopOutOfRange) {
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        CustomerFiveCardXref cardXref = customer.getFiveCardXref();
+        request.setAttribute("cardType", cardXref.getType());
+        request.setAttribute("cardStatus", cardXref.getStatus());
+        request.setAttribute("referrer", cardXref.getReferer());
+        request.setAttribute("shopOutRange",Objects.nonNull(shopOutOfRange));
+        return retView;
     }
 
     /**
@@ -52,12 +66,13 @@ public class FiveCardController {
     @RequestMapping(value = "/issue", method = RequestMethod.GET)
     public String issueFiveCard(HttpServletRequest request, HttpSession session) {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
-        String retView = "redirect:/fiveCard/";
+        String retView = "redirect:/fiveCard";
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
         //判断用户是否已经拥有五张卡
         if (Objects.nonNull(fiveCardXref)) {
-            Integer type = fiveCardXref.getType();
-            return retView + type;
+            //防止用户自己点击自己分享的连接地址来分享五折卡
+            session.getAttribute("referrer");
+            return retView;
         }
         //判断五折卡类型
         Object referrer = session.getAttribute("referrer");
@@ -83,7 +98,9 @@ public class FiveCardController {
         }
         customer.setFiveCardXref(cardXref);
         customerService.saveCustomer(customer);
-        return retView + type;
+        //派卡完成后移除session中的推荐人
+        session.getAttribute("referrer");
+        return retView;
     }
 
     @RequestMapping("/unavailable")
@@ -98,7 +115,6 @@ public class FiveCardController {
      */
     @RequestMapping("/activate")
     public String activateFiveCard(HttpSession session) {
-        String prefix = "fivecard/active_fivecard_";
         //判断是否已经领取五折卡
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
@@ -108,12 +124,12 @@ public class FiveCardController {
         }
         //检测五折卡是否已激活
         if (cardXref.getStatus()) {
-            return prefix + cardXref.getType();
+            return "redirect:/fiveCard";
         }
         //检查五折卡类型,B卡则需要填写收货地址则可以激活卡
         if (cardXref.getType() == FiveCard.CARD_TYPE_B && (Objects.isNull((customer.getCustomerAddresses())) || customer.getCustomerAddresses().size() == 0)) {
             return "redirect:/account/addresses?activeFiveCard=true";
-        } else if(cardXref.getType()==FiveCard.CARD_TYPE_A){
+        } else if (cardXref.getType() == FiveCard.CARD_TYPE_A) {
             //检测是否关注门店
 
             //1检测本地数据库是否有门店记录
@@ -127,8 +143,27 @@ public class FiveCardController {
             //2调用接口查看是否有关注门店
             if (Objects.isNull(followedAddress)) {
                 Map<String, Object> vipInfo = weixinService.getVipInfo(customer.getUsername());
+                //将用户关注的门店写入数据库
                 if (Objects.nonNull(vipInfo)) {
-                    return "redirect:/account/addresses/followShop/callBack?openid="+customer.getUsername();
+                    Shop shop = shopService.readShopByCode((String) vipInfo.get("unit_code"));
+                    if (Objects.nonNull(shop)) {
+                        CustomAddressImpl address = new CustomAddressImpl();
+                        address.setAddressLine1("default");
+                        address.setPostalCode("default");
+                        address.setLastName("default");
+                        address.setCity("default");
+                        address.setShop(shop);
+                        Address savedAddress = addressService.saveAddress(address);
+                        CustomerAddress customerAddress = customerAddressService.create();
+                        customerAddress.setAddress(savedAddress);
+                        customerAddress.setAddressName(ManageCustomerAddressesController.followedAddressName);
+                        customerAddress.setCustomer(CustomerState.getCustomer());
+                        customerAddressService.saveCustomerAddress(customerAddress);
+                        followedAddress = customerAddress;
+                    }else {
+                        //关注门店不在本次活动范围内
+                        return "redirect:/fiveCard?shopOutOfRange=true";
+                    }
                 }
             }
             //未关注门店跳转到关注门店
@@ -145,7 +180,7 @@ public class FiveCardController {
         cardXref.setStatus(FiveCard.CARD_STATUS_ACTIVE);
         cardXref.setActiveDate(CommonUtils.currentDate());
         customerService.saveCustomer(customer);
-        return prefix + type;
+        return "redirect:/fiveCard";
     }
 
     @RequestMapping(value = "/share", method = RequestMethod.GET)
@@ -158,5 +193,10 @@ public class FiveCardController {
         }
         //跳转到首页，如果用户没有授权则会先进行授权
         return "redirect:/";
+    }
+
+    @RequestMapping("/guide")
+    public String getRulePage() {
+        return "fivecard/activity-guide";
     }
 }

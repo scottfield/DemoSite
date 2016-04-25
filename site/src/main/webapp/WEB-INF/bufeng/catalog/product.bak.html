@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <div th:replace="/partials/header::header"></div>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            FastClick.attach(document.body);
+        }, false);
+
+    </script>
+    <script type="text/javascript">
+        $(function () {
+
+            function win_load() {
+                var win_h = $(window).width();
+                var con_w = (win_h - 36) / 3;
+                $(".card-box").width(con_w);
+                $(".card-box .img").height(con_w);
+            }
+
+            win_load();
+
+            $(window).resize(function () {
+                win_load();
+            });
+
+        })
+    </script>
+</head>
+<body>
+<!-- header -->
+<div class="header"></div>
+<header>
+    <div class="l-img">
+        <a th:href="@{${#httpServletRequest.getHeader('Referer')}}"><img th:src="@{/images/5_ct_04.png}" height="15"/>
+            商品详情</a>
+    </div>
+    <div class="r-img"><img th:src="@{/images/5_ct_02.png}" height="30"/></div>
+</header>
+
+<!--产品图片-->
+<div class="home-hot goods-img">
+    <div th:replace="/catalog/partials/productImages::productImages"></div>
+</div>
+<script type="text/javascript" src="js/swiper.min.js"></script>
+<script language="javascript">
+    var mySwiper = new Swiper('.swiper-container', {
+        prevButton: '.swiper-button-prev',
+        nextButton: '.swiper-button-next',
+        pagination: '.swiper-pagination',
+        loop: true,
+        loopAdditionalSlides: 1,
+    })
+</script>
+
+<!--购物车物品数量-->
+<div class="goods-shopcar">
+    <a th:href="@{/cart}">
+        <img th:src="@{/images/gd_03.png}" height="25"/>
+        <span th:text="${cart.itemCount}"></span>
+    </a>
+</div>
+
+<!--商品信息-->
+<div class="goods-tab">
+    <a href="#" class="active">基本信息</a>
+    <a href="#">图文详情</a>
+</div>
+
+<div class="goods-info">
+    <!--基本信息-->
+    <div class="con" th:inline="text" th:object="${product}">
+
+        <h3 th:text="${product.defaultSku.description}">香奈儿清香黛尔香氛50ml香奈儿清香黛尔香氛50ml香奈儿清香黛尔香氛50ml</h3>
+        <!--产品参数-->
+        <p th:each="attr:*{productAttributes}" th:if="${#maps.size(product.productAttributes) gt 0}">
+            [[${attr.key}]]：<span
+                th:remove="tag" th:text="${attr.value}"></span></p>
+
+        <p>库存：[[${product.defaultSku.quantityAvailable?:'货源充足'}]]</p>
+        <p>售出数量：[[${product.sales}]]</p>
+        <p th:if="${product.promoMessage}">促销：<font>[[${product.promoMessage}]]</font></p>
+        <div class="num">
+            <div class="box">
+                <span class="mnus"><img th:src="@{/images/gd_07.png}" height="20"/></span>
+                <span class="number"><input type="text" id="number" value="1"/></span>
+                <span class="add"><img th:src="@{/images/gd_09.png}" height="20"/></span>
+            </div>
+        </div>
+        <div class="pice"><span>￥[[*{defaultSku.retailPrice}]]</span> <font>￥[[*{defaultSku.salePrice}]]</font></div>
+    </div>
+    <!--图文详情-->
+    <div class="con xq none" th:utext="${product.longDescription}">
+        保湿效果很好，上次双十一买的，用了挺好的，这次又买了两套送给姐姐，只是没有上次的赠品多，上次送了三套赠品，这次为啥只有一个小套装呢？为什么没人回答赠品的事情，每次赠品都不一样吗？
+    </div>
+</div>
+
+
+<div class="footer"></div>
+<footer>
+    <blc:form method="POST" id="addToCartForm" th:action="@{/cart/add}" th:object="${product}">
+        <input type="hidden" name="productId" th:value="*{id}"/>
+        <!--/*-->
+        <input type="hidden" th:each="option:*{productOptions}" th:if="${#lists.size(option.allowedValues)>0}"
+               th:name="'itemAttributes['+${option.attributeName}+']'"
+               th:value="${option.allowedValues[0].attributeValue}"/>
+        <!--*/-->
+        <input type="hidden" name="quantity" value="1"/>
+    </blc:form>
+    <a href="#" title="加入购物车" id="addToCartBtn"><img th:src="@{/images/gd_14.png}" height="25"/></a>
+    <a href="#" title="立即购买"><img th:src="@{/images/gd_16.png}" height="25"/></a>
+</footer>
+
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        $(".goods-tab a").on("click", function () {
+            var i = $(this).index();
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".goods-info .con").eq(i).show().siblings().hide();
+            return false
+        });
+        $(".mnus").on("click", function () {
+            var num = parseInt($("#number").val());
+            if (num > 1) {
+                num--
+                $("#number").val(num);
+                $('input[name="quantity"]').val(num);
+            }
+        });
+        $(".add").on("click", function () {
+            var num = parseInt($("#number").val());
+            num++
+            $("#number").val(num);
+            $('input[name="quantity"]').val(num);
+        });
+        //添加购物车绑定事件
+        $("#addToCartBtn").click(function (e) {
+            e.preventDefault();
+            var url = $("#addToCartForm").attr("action");
+            var productId = $('input[name="productId"]').val();
+            var quantity = $('input[name="quantity"]').val();
+            var csrfToken = $('input[name="csrfToken"]').val();
+            $.ajax({
+                method: "post",
+                url: url,
+                data: {
+                    productId: productId,
+                    quantity: quantity,
+                    csrfToken: csrfToken
+                },
+                dataType: 'json'
+            }).done(function (data) {
+                //修改购物车中显示的物品数量
+                $(".goods-shopcar").find("span").text(data.cartItemCount);
+                console.log(data);
+            }).fail(function (data) {
+                console.log(data);
+                location.reload();
+            });
+        });
+    });
+</script>
