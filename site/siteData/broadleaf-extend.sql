@@ -1,6 +1,6 @@
 ALTER TABLE shop ADD shop_account_id BIGINT UNSIGNED;
 DROP TABLE IF EXISTS shop_account;
---商店微信支付账号信息
+/*商店微信支付账号信息*/
 CREATE TABLE shop_account(
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   appid VARCHAR(100) NOT NULL,
@@ -28,7 +28,7 @@ INSERT INTO fivecard(`name`,`desc`,`no`) VALUES('五折卡','自主领取五折�
 INSERT INTO fivecard(`name`,`desc`,`no`) SELECT '五折卡','自主领取五折卡',member_no FROM sheet2$;
 SELECT * FROM fivecard;
 SELECT * FROM fivecard WHERE id>30000;
-UPDATE fivecard SET `desc`='分享五张卡',`type`=1 WHERE id>30000; 
+UPDATE fivecard SET `desc`='分享五张卡',`type`=1 WHERE id>30000;
 DROP TABLE IF EXISTS customer_fivecard_xref;
 CREATE TABLE customer_fivecard_xref(
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -43,9 +43,28 @@ SELECT * FROM customer_fivecard_xref;
 INSERT INTO qrcode(`code`) SELECT `条码` FROM sheet$;
 SELECT * FROM qrcode;
 CREATE TABLE customer_extend(
- customer_id BIGINT UNSIGNED NOT NULL,
- test VARCHAR(30)
+  customer_id BIGINT UNSIGNED NOT NULL,
+  test VARCHAR(30)
 );
 INSERT INTO customer_extend VALUES(4009,'testtete');
 SELECT * FROM customer_extend;
 SELECT * FROM blc_customer WHERE customer_id=4009;
+SELECT * FROM customer_fivecard_xref;
+SELECT * FROM fivecard;
+
+
+/*删除所有会员*/
+DELETE FROM blc_order_attribute;
+DELETE FROM blc_fulfillment_group_item;
+DELETE FROM blc_fulfillment_group;
+DELETE FROM blc_order_item_price_dtl;
+DELETE FROM blc_discrete_order_item;
+DELETE FROM blc_order_item;
+DELETE FROM blc_order;
+DELETE FROM blc_customer_attribute;
+DELETE FROM blc_customer_role;
+DELETE FROM blc_customer_address;
+DELETE FROM blc_address;
+DELETE FROM blc_customer;
+/*结束*/
+
