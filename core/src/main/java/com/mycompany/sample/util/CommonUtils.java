@@ -79,8 +79,12 @@ public class CommonUtils {
     }
 
     public static String md5Sign(String queryStr, String appSecret) {
+        return md5Sign(queryStr, appSecret, "app_secret");
+    }
+
+    public static String md5Sign(String queryStr, String appSecret, String keyName) {
         if (Objects.nonNull(appSecret)) {
-            queryStr = queryStr + "&app_secret=" + appSecret;
+            queryStr = queryStr + "&" + keyName + "=" + appSecret;
         }
         return DigestUtils.md5Hex(queryStr);
     }

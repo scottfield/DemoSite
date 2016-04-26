@@ -15,8 +15,8 @@ public class PromotionServiceImpl implements PromotionService {
     public Promotion getPromotionById(Long id) {
         //todo 完成从数据库获取活动时间
         Promotion promotion = new PromotionImpl();
-        Date startDate = new Date(System.currentTimeMillis() + 10000);
-        Date endDate = new Date(System.currentTimeMillis() + 60 * 60 * 1000);
+        Date startDate = new Date(System.currentTimeMillis() - 60*60*1000);
+        Date endDate = new Date(System.currentTimeMillis() + 10*60 * 60 * 1000);
         promotion.setStartDate(startDate);
         promotion.setEndDate(endDate);
         return promotion;

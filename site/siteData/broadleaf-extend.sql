@@ -64,7 +64,10 @@ DELETE FROM blc_order;
 DELETE FROM blc_customer_attribute;
 DELETE FROM blc_customer_role;
 DELETE FROM blc_customer_address;
+DELETE FROM customaddressimpl;
 DELETE FROM blc_address;
 DELETE FROM blc_customer;
 /*结束*/
 
+UPDATE shop set shop_account_id = null;
+SELECT * FROM shop_account;

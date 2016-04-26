@@ -1,9 +1,6 @@
 package com.mycompany.sample.core.catalog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by jackie on 4/23/2016.
@@ -19,6 +16,8 @@ public class ShopAccountImpl implements ShopAccount {
     private String mchid;
     private String key;
     private String appsecret;
+    @Column(name = "shop_code")
+    private String shopCode;
 
     public Integer getId() {
         return id;
@@ -66,5 +65,13 @@ public class ShopAccountImpl implements ShopAccount {
 
     public void setAppsecret(String appsecret) {
         this.appsecret = appsecret;
+    }
+
+    public String getShopCode() {
+        return shopCode;
+    }
+
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode;
     }
 }

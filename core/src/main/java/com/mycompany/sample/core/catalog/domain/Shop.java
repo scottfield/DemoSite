@@ -39,4 +39,7 @@ public interface Shop {
     String getMchid();
 
     void setMchid(String mchid);
+    ShopAccount getShopAccount();
+
+    void setShopAccount(ShopAccount shopAccount);
 }

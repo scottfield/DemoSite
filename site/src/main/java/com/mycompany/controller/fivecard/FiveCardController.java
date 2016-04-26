@@ -71,8 +71,8 @@ public class FiveCardController {
         //判断用户是否已经拥有五张卡
         if (Objects.nonNull(fiveCardXref)) {
             //防止用户自己点击自己分享的连接地址来分享五折卡
-            session.getAttribute("referrer");
-            return retView;
+            session.removeAttribute("referrer");
+            return "redirect:/";
         }
         //判断五折卡类型
         Object referrer = session.getAttribute("referrer");

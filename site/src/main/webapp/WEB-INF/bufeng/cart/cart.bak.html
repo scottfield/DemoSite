@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <div th:replace="/partials/header::header"></div>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            FastClick.attach(document.body);
+        }, false);
+    </script>
+</head>
+<body th:inline="text">
+<!-- header -->
+<!--<div class="header"></div>
+<header>
+    <div class="l-img"><img th:src="@{/images/in_1_01.png}" height="30"/></div>
+    <div class="r-img"><img th:src="@{/images/in_1_03.png}" height="30"/></div>
+    <div class="text">我的购物车</div>
+</header>-->
+<header>
+    <div class="container">
+        <div class="left">
+        </div>
+
+        <div class="center">我的购物车</div>
+        <div class="right"></div>
+    </div>
+</header>
+
+<!--空购物车提示信息-->
+<div th:unless="${(cart.total ne null) and (cart.total.amount gt 0)}" th:remove="tag">
+    <div class="card-volume-empty">
+        <img th:src="@{/images/gwc_empty_03.jpg}" width="50%"/>
+    </div>
+    <div class="card-volume-empty">
+        <a th:href="@{/index}">马上去购买</a>
+    </div>
+</div>
+<!--购物车详细信息-->
+<div th:if="${(cart.total ne null) and (cart.total.amount gt 0)}" th:remove="tag">
+    <div class="shop-car-list hidden">
+        <div class="box" th:each="item:${cart.orderItems}" th:object="${item}">
+            <div class="img"><img th:src="@{*{sku.skuMedia['primary'].url}}"/></div>
+            <div class="text">
+                <div class="title" th:text="*{name}">香奈儿清香黛尔香氛香奈儿清香黛尔香氛香奈儿清香黛尔香氛</div>
+                <div class="spec">
+                    <div th:each="attr:*{product.productAttributes}" th:remove="tag">[[${attr.key}]]:[[${attr.value}]]
+                    </div>
+                </div>
+                <div class="pice">¥[[*{price}]]</div>
+                <div class="num">
+                    <div class="bx" th:attr="data-itemId=${item.id},data-csrfToken=${csrfToken}">
+                        <span class="mnus"><img th:src="@{/images/gd_07.png}" height="10"/></span>
+                        <span class="number"><input type="text" id="number" th:value="*{quantity}"/></span>
+                        <span class="add"><img th:src="@{/images/gd_09.png}" height="10"/></span>
+                    </div>
+                </div>
+            </div>
+            <a th:href="@{'/cart/remove?orderItemId='+*{id}}" class="del">删除</a>
+        </div>
+    </div>
+
+
+    <div class="affirm-sum-money">
+        <!--<div class="tishi">-->
+            <!--15分钟未支付将自动取消订单-->
+        <!--</div>-->
+        <div class="sum-money">共[[${cart.itemCount}]]件商品 合计:￥[[${cart.total}]]</div>
+        <a th:href="@{/checkout}">去结算</a>
+        <!--<a th:href="@{/cart/empty}">取消订单</a>-->
+    </div>
+</div>
+<div class="footer"></div>
+<div th:replace="partials/footer::footer"></div>
+<blc:form th:id="updateCartForm" th:action="@{/cart/updateQuantity}" th:method="post">
+    <input type="hidden" name="orderItemId"/>
+    <input type="hidden" name="quantity"/>
+</blc:form>
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        $(".mnus").on("click", function () {
+            var num = parseInt($("#number").val());
+            if (num > 1) {
+                num--
+                $("#number").val(num);
+            }
+        });
+        $(".add").on("click", function () {
+            var num = parseInt($("#number").val());
+            num++
+            $("#number").val(num);
+        });
+        //修改购物车--增加物品数量
+        $(".bx").find(".add").click(function (e) {
+            e.preventDefault();
+            updateCartItem.call(this);
+        });
+        //修改购物车--减少物品数量
+        $(".bx").find(".mnus").click(function (e) {
+            e.preventDefault();
+            updateCartItem.call(this);
+        });
+        //更新购物车数量
+        function updateCartItem() {
+            var orderItemId = $(this).parents(".bx").data("itemid");
+            var cartItemCount = $(this).siblings(".number").find("input").val();
+            $('input[name="orderItemId"]').val(orderItemId);
+            $('input[name="quantity"]').val(cartItemCount);
+            $("#updateCartForm")[0].submit();
+        }
+
+        function getCsrfToken() {
+            var csrfTokenInput = $('input[name="csrfToken"]');
+            if (csrfTokenInput.length == 0) {
+                return null;
+            }
+
+            return csrfTokenInput.val();
+        }
+    });
+</script>

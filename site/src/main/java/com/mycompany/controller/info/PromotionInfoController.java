@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PromotionInfoController {
     @RequestMapping("/countdown")
     public String getCountDownPage() {
-        return "info/daojishi";
+        return "daojishi";
     }
 
 }

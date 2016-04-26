@@ -91,7 +91,7 @@
     <div class="img-panel card5-texthead">
         <img src="images/new/card-5/card5-2-1.png"/>
         <span class="link" style="top:1.5vh;left:34%;width:50%;height:15%;font-size:6vw;line-height:6vw;color:#fff;"
-              th:text="${referrer.firstName}">老王abc</span>
+              th:text="${referrer.firstName}" th:if="${referrer!=null}">老王abc</span>
         <a class="link" style="top:50%;left:30%;width:44%;height:27%;" th:id="activateFiveCard" href="开卡连接"></a>
     </div>
     <div class="img-panel" style="margin-top:-1px;">
@@ -105,7 +105,7 @@
     <div class="img-panel card5-texthead">
         <img th:src="@{images/new/card-5/card5.png}"/>
         <img th:src="@{/images/new/card-5/card5-4-1.png}" style="width:80%;margin-top:10px;"/>
-        <a class="link" style="top:82%;left:13%;width:73%;height:15%;" href="购买连接"></a>
+        <a class="link" style="top:82%;left:13%;width:73%;height:15%;" th:href="@{/}"></a>
     </div>
     <div class="img-panel" style="margin-top:-1px;">
         <img src="images/new/card-5/card5-cloud.jpg"/>

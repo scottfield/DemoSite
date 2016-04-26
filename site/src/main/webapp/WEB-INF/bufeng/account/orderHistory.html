@@ -63,7 +63,7 @@
         <div class="sum-money">共[[${order.itemCount}]]件商品 合计:￥[[${order.total}]]</div>
         <a th:href="@{'/account/orders/cancel/'+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">取消订单</a>
         <a th:href="@{/pickup}" th:if="${order.status.type eq 'PAID'}">领取</a>
-        <a th:href="@{/}" th:if="${order.status.type eq 'UNPAID'}">付款</a>
+        <a th:href="@{'/wechatpay?orderId='+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">付款</a>
     </div>
 </div>
 <!---->

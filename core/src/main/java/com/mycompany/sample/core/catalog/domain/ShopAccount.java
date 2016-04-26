@@ -27,4 +27,7 @@ public interface ShopAccount {
     String getAppsecret();
 
     void setAppsecret(String appsecret);
+    String getShopCode();
+
+    void setShopCode(String shopCode);
 }

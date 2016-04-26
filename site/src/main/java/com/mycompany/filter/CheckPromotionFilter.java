@@ -36,13 +36,15 @@ public class CheckPromotionFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        //检查活动是否还在进行
+        Promotion currentPromotion = promotionService.getPromotionById(1L);
+        request.setAttribute("startDate", currentPromotion.getStartDate().getTime());
+        request.setAttribute("endDate", currentPromotion.getEndDate().getTime());
+        Date now = new Date();
         if (!shouldProcessURI(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
-        //检查活动是否还在进行
-        Promotion currentPromotion = promotionService.getPromotionById(1L);
-        Date now = new Date();
         //活动已取消
         if (Objects.isNull(currentPromotion)) {
         } else if (currentPromotion.getStartDate().after(now)) {

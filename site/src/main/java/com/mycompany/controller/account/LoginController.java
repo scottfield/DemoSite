@@ -92,7 +92,7 @@ public class LoginController extends BroadleafLoginController {
         }
         String queryStr = "app_key=" + WeiXinConstants.APP_KEY + "&ret_uri=" + encodedUrl;
 //        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
-        return "redirect:/?openid=o1Py0t7UnGihjJqCfZz2bigtkTu4";
+        return "redirect:/?openid=o1Py0t7UnGihjJqCfZz2bigtkTu5";
     }
 
     /**
@@ -115,8 +115,13 @@ public class LoginController extends BroadleafLoginController {
         if (Objects.isNull(customerAttribute)) {
             Customer customer = (Customer) entityConfiguration.createEntityInstance("org.broadleafcommerce.profile.core.domain.Customer");
             Map<String, Object> userInfo = weixinService.getUserInfo(openId);
+            //重新授权
+            if (!userInfo.get("errcode").equals(0)) {
+                return "redirect:/login";
+            }
             customer.setUsername(openId);
-            customer.setFirstName(userInfo.get("nickname").toString());
+            Object nickname = userInfo.get("nickname");
+            customer.setFirstName(nickname == null ? " " : nickname.toString());
             customer.setLastName(openId);
             customer.setPassword(openId);
             customer.setRegistered(true);

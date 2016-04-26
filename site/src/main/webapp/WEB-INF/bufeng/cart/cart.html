@@ -12,7 +12,7 @@
         }, false);
     </script>
 </head>
-<body th:inline="text">
+<body th:inline="text" class="has-navbar has-tabbar">
 <!-- header -->
 <!--<div class="header"></div>
 <header>
@@ -41,7 +41,7 @@
 </div>
 <!--购物车详细信息-->
 <div th:if="${(cart.total ne null) and (cart.total.amount gt 0)}" th:remove="tag">
-    <div class="shop-car-list hidden">
+    <div class="shop-car-list hidden" style="padding:0;">
         <div class="box" th:each="item:${cart.orderItems}" th:object="${item}">
             <div class="img"><img th:src="@{*{sku.skuMedia['primary'].url}}"/></div>
             <div class="text">
@@ -64,7 +64,7 @@
     </div>
 
 
-    <div class="affirm-sum-money">
+    <div class="affirm-sum-money fixed-bottom">
         <!--<div class="tishi">-->
             <!--15分钟未支付将自动取消订单-->
         <!--</div>-->
