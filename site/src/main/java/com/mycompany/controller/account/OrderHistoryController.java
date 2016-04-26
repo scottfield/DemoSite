@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
+import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafOrderHistoryController;
 import org.broadleafcommerce.core.workflow.WorkflowException;
 import org.broadleafcommerce.profile.web.core.CustomerState;
@@ -33,7 +34,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -84,6 +87,24 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         model.addAttribute("orders", orders);
         model.addAttribute("now", new Date());
         return getOrderHistoryView();
+    }
+
+    @RequestMapping("/update")
+    public Object udpateOrder(long orderId) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "更新订单成功.");
+        result.put("code", 1000);
+        Order order = orderService.findOrderById(orderId);
+        order.setStatus(PAID);
+        try {
+            orderService.save(order, false);
+        } catch (PricingException e) {
+            LOG.error("更新订单失败", e);
+            result.put("message", "更新订单成功.");
+            result.put("code", 1000);
+        }
+        return result;
+
     }
 
     @RequestMapping(value = "/detail/{orderNumber}", method = RequestMethod.GET)

@@ -98,6 +98,10 @@ public class CheckoutController extends BroadleafCheckoutController {
         return "redirect:/account/orders";
     }
 
+    public String updateOrder() {
+
+    }
+
     @RequestMapping(value = "/checkout/savedetails", method = RequestMethod.POST)
     public String saveGlobalOrderDetails(HttpServletRequest request, Model model,
                                          @ModelAttribute("shippingInfoForm") ShippingInfoForm shippingForm,

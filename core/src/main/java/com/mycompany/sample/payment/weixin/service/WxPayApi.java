@@ -45,7 +45,7 @@ public class WxPayApi {
 
     public static void main(String[] args) throws Exception {
         String appid = "wx937fba8914a5d9a9";
-        String mch_id = "1324991401";
+        String mch_id = "10010514";
         String body = "test";
         String out_trade_no = "42254455";
         String spbill_create_ip = "192.168.2.1";

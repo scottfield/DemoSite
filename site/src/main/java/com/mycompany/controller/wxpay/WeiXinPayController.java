@@ -33,12 +33,13 @@ import java.util.Objects;
  * Created by jackie on 4/26/2016.
  */
 @Controller
+@RequestMapping("/wechatpay/index")
 public class WeiXinPayController {
     private static final Log LOG = LogFactory.getLog(WeiXinPayController.class);
     @Resource
     private OrderService orderService;
 
-    @RequestMapping("/wechatpay")
+    @RequestMapping("/pay")
     public String unifyOrder(HttpServletRequest request, Long orderId) {
         String retView = "wxpay/wxpay";
         Order order = orderService.findOrderById(orderId);
@@ -64,7 +65,9 @@ public class WeiXinPayController {
         String body = "测试支付";
         String out_trade_no = order.getOrderNumber();
         String spbill_create_ip = request.getRemoteAddr();
-        String notify_url = requestURI.replace(requestURI, "") + "/wechatpay/notify";
+        String notify_url = requestURL.toString()+"/notify";
+        LOG.info("notify url==>"+notify_url);
+//        String notify_url = "http://discount.lzzyad.com";
         String trade_type = "JSAPI";
         String openId = customer.getUsername();
         Integer total_fee = 1;
@@ -83,20 +86,22 @@ public class WeiXinPayController {
             param.put("appId", result.get("appid"));
             param.put("timeStamp", timeStamp);
             param.put("nonceStr", nonce);
-            param.put("package", "prepay_id=" + result.get("prepay_id"));
+            String packageStr = "prepay_id=" + result.get("prepay_id");
+            param.put("package", packageStr);
             param.put("signType", "MD5");
             String sortedStr = CommonUtils.getSortedStr(param);
             String paySign = CommonUtils.md5Sign(sortedStr, Configure.getKey(mch_id), "key").toUpperCase();
-            LOG.error("-----------------------------------------------------------------------------------");
-            LOG.error(JsonUtil.toJson(param));
-            LOG.error("sign=="+paySign);
-            LOG.error("-----------------------------------------------------------------------------------");
-            request.setAttribute("paySign", paySign);
-            request.setAttribute("appId", result.get("appid"));
-            request.setAttribute("timeStamp", timeStamp);
-            request.setAttribute("nonceStr", nonce);
-            request.setAttribute("package", "prepay_id=" + result.get("prepay_id"));
-            request.setAttribute("signType", "MD5");
+            param.put("paySign", paySign);
+            String jsApiParam = JsonUtil.toJson(param);
+            LOG.info("-----------------------------------------------------------------------------------");
+            LOG.info(jsApiParam);
+            LOG.info("-----------------------------------------------------------------------------------");
+            request.setAttribute("paySign", param.get("paySign"));
+            request.setAttribute("appId", param.get("appId"));
+            request.setAttribute("timeStamp", param.get("timeStamp"));
+            request.setAttribute("nonceStr", param.get("nonceStr"));
+            request.setAttribute("package", param.get("package"));
+            request.setAttribute("signType", param.get("signType"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -107,7 +112,7 @@ public class WeiXinPayController {
         return retView;
     }
 
-    @RequestMapping("/wechatpay/notify")
+    @RequestMapping("/pay/notify")
     public void notifyHandler(HttpServletRequest request) {
         LOG.info("---------------start to handle wechatpay callback------------------");
         Map parameterMap = request.getParameterMap();
