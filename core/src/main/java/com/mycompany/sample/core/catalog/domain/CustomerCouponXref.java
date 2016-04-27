@@ -34,4 +34,7 @@ public interface CustomerCouponXref {
     Date getUpdatedOn();
 
     void setUpdatedOn(Date updatedOn);
+    Shop getExchangeShop();
+
+    void setExchangeShop(Shop exchangeShop);
 }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:blc="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+
+    <div th:replace="/partials/header::header"></div>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            FastClick.attach(document.body);
+        }, false);
+    </script>
+</head>
+<body class="has-navbar">
+<!-- header -->
+<header>
+    <div class="container">
+        <div class="left">
+        </div>
+
+        <div class="center">兑换</div>
+        <div class="right"></div>
+    </div>
+</header>
+
+<!---->
+<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/coupon/exchange}" th:method="post">
+    <div class="take-cargo-sm"><em>1</em> 请填写您的信息</div>
+    <div class="take-cargo-info">
+        <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
+        <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
+        <input type="text" name="reciever"/>
+    </div>
+    <div class="take-cargo-info">
+        <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
+        <span>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：</span>
+        <input type="text" name="recieverPhone"/>
+    </div>
+    <div class="take-cargo-sm"><em>2</em> 请服务台工作人员输入验证码</div>
+    <div class="pb-box">
+        <div class="take-cargo-yz">
+            <span>验证码</span>
+            <input type="text" name="verifyCode"/>
+        </div>
+    </div>
+
+    <!--这里建议下拉列表的样式不要刻意去修改，浏览器默认即可-->
+    <!-- <div class="take-cargo-info adress">
+         <em><img src="../images/qro_08.png" width="20"/></em>
+         <span>提货门店：</span>
+
+         <div class="select" th:each="area:${areas}">
+             <select>
+                 <option th:text="${area.key}">中国大陆</option>
+             </select>
+             <select id="shopList" name="address.shop.id">
+                 <option th:each="shop:${area.value}" th:object="${shop}" th:text="*{province+'/'+city+'/'+name}"
+                         th:attr="data-address=*{address},data-shopid=*{id}" th:value="*{id}"
+                         th:if="${defaultShop ne null and defaultShop.id == shop.id}" th:selected="true">四川省/成都市/青羊区/苏坡街道
+                 </option>
+                 <option th:each="shop:${area.value}" th:object="${shop}" th:text="*{province+'/'+city+'/'+name}"
+                         th:attr="data-address=*{address},data-shopid=*{id}" th:value="*{id}"
+                         th:unless="${defaultShop ne null and defaultShop.id == shop.id}">四川省/成都市/青羊区/苏坡街道
+                 </option>
+             </select>
+             <textarea th:if="${defaultShop}" th:text="${defaultShop.address}">default address</textarea>
+             <textarea th:unless="${defaultShop}"></textarea>
+         </div>
+     </div>-->
+    <div class="take-cargo-btn">
+        <img th:id="submitBtn" th:src="@{/images/new/confirm-info-button.jpg}" width="50%"/>
+        <input type="submit" name="submit" class="none"/>
+    </div>
+    <input type="hidden" name="couponXrefId" th:value="${param.couponXrefId[0]}"/>
+</blc:form>
+<script type="text/javascript">
+    $(function () {
+       /* $("#submitBtn").click(function (e) {
+            e.preventDefault();
+            var $form = $("form");
+            var param = $form.serialize();
+            var reciever = $('[name="reciever"]').val();
+            var recieverPhone = $('[name="recieverPhone"]').val();
+            var verifyCode = $('[name="verifyCode"]').val();
+            var csrfToken = encodeURIComponent($('[name="csrfToken"]').val());
+            var couponXrefId = $('[name="couponXrefId"]').val();
+            var param = {
+                reciever: reciever,
+                recieverPhone: recieverPhone,
+                verifyCode: verifyCode,
+                couponXrefId: couponXrefId
+            };
+            var url = $form.attr("action");
+            var method = $form.attr("method");
+            $.post(url, param).done(function (res) {
+                if (res.code == 1000) {
+                    location.href = '[[@{/manage/couponAndFiveCard}]]';
+                } else {
+                    alert(res.message);
+                }
+            });
+            /!*$.ajax({url: url, method: method, data: {}, dataType: 'json'}).done(function (res) {
+             if (res.code == 1000) {
+             location.href = '[[@{/manage/couponAndFiveCard}]]';
+             } else {
+             alert(res.message);
+             }
+             });*!/
+        });*/
+        $("#submitBtn").click(function (e) {
+            e.preventDefault();
+            var $form = $("form");
+            var queryStr = $form.serialize();
+            var method = $form.attr("method");
+            var url = $form.attr("action");
+            $.ajax({
+                method: method,
+                url: url,
+                data: queryStr
+            })
+                    .done(function (data) {
+                        if (data.code == 1000) {
+                            debugger;
+                            alert(data.message);
+//                            location.href = [[@{/account/orders}]];
+                        } else {
+                            alert(data.message);
+                        }
+                    }).fail(function (data) {
+                        console.log(data);
+
+                    });
+        });
+    });
+</script>
+</body>
+</html>

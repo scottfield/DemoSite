@@ -10,6 +10,7 @@ public class CardWrapper {
     private Integer type;
     private Integer value;
     private Boolean status;
+    private Long id;
 
     private CardWrapper() {
     }
@@ -40,6 +41,15 @@ public class CardWrapper {
     }
 
     public void setValue(Integer value) {
+
         this.value = value;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

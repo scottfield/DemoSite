@@ -1,0 +1,72 @@
+package com.mycompany.interceptor;
+
+import com.mycompany.sample.core.catalog.domain.CustomAddress;
+import com.mycompany.sample.core.catalog.domain.Shop;
+import com.mycompany.sample.service.ShopService;
+import org.broadleafcommerce.profile.core.domain.Customer;
+import org.broadleafcommerce.profile.core.domain.CustomerAddress;
+import org.broadleafcommerce.profile.web.core.CustomerState;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+
+/**
+ * Created by jackie on 4/27/2016.
+ */
+public class ShopInfoInterceptor implements HandlerInterceptor {
+    @Resource(name = "shopService")
+    private ShopService shopService;
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        Customer customer = CustomerState.getCustomer();
+        Map<String, Object> model = modelAndView.getModel();
+        List<CustomerAddress> addressList = customer.getCustomerAddresses();
+        if (Objects.nonNull(addressList) && addressList.size() > 0) {
+            Shop defaultShop = null;
+            for (CustomerAddress customerAddress : addressList) {
+                if (customerAddress.getAddressName().equals("收货地址")) {
+                    CustomAddress address = (CustomAddress) customerAddress.getAddress();
+                    defaultShop = address.getShop();
+                    break;
+                }
+
+            }
+            //将关注名店设置为默认收货地址
+            if (Objects.isNull(defaultShop)) {
+                CustomAddress address = (CustomAddress) customer.getCustomerAddresses().get(0).getAddress();
+                defaultShop = address.getShop();
+            }
+            model.put("defaultShop", defaultShop);
+        }
+        //获取门店列表
+        Set<Shop> shops = shopService.getAllShop();
+        Map<String, Set<Shop>> shopMap = new HashMap<>();
+        for (Shop shop : shops) {
+            String province = shop.getProvince();
+            if (!shopMap.containsKey(province)) {
+                Set<Shop> set = new HashSet<>();
+                shopMap.put(province, set);
+                set.add(shop);
+            } else {
+                shopMap.get(province).add(shop);
+            }
+        }
+        model.put("areas", shopMap);
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+    }
+}

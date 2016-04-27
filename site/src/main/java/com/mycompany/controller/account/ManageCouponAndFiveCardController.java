@@ -39,6 +39,7 @@ public class ManageCouponAndFiveCardController {
             card.setType(CardWrapper.COUPON_TYPE);
             card.setStatus(couponXref.getStatus());
             card.setValue(couponXref.getCoupon().getValue());
+            card.setId(couponXref.getId());
             cards.add(card);
         }
         request.setAttribute("cards", cards);

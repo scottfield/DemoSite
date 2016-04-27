@@ -1,24 +1,25 @@
 package com.mycompany.controller.coupon;
 
-import com.mycompany.sample.core.catalog.domain.Coupon;
-import com.mycompany.sample.core.catalog.domain.CustomCustomer;
-import com.mycompany.sample.core.catalog.domain.CustomerCouponXref;
-import com.mycompany.sample.core.catalog.domain.CustomerCouponXrefImpl;
+import com.mycompany.controller.form.CustomCustomerAddressForm;
+import com.mycompany.controller.form.PickupInfoForm;
+import com.mycompany.controller.wrapper.CardWrapper;
+import com.mycompany.sample.core.catalog.domain.*;
 import com.mycompany.sample.service.CouponService;
 import com.mycompany.sample.service.CustomerCouponXrefService;
+import com.mycompany.sample.service.ShopService;
 import com.mycompany.sample.util.CommonUtils;
 import com.mycompany.sample.util.JsonHelper;
 import com.mycompany.sample.util.JsonResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.broadleafcommerce.profile.core.domain.Address;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,8 @@ public class CouponController {
     private CustomerCouponXrefService couponXrefService;
     @Resource
     private CouponService couponService;
+    @Resource
+    private ShopService shopService;
 
     /**
      * 发放优惠券
@@ -88,6 +91,27 @@ public class CouponController {
     }
 
     /**
+     * 兑换页面
+     *
+     * @param couponXrefId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/exchange/view", method = RequestMethod.GET)
+    public String exchangeCouponPage(@RequestParam(value = "couponXrefId") Long couponXrefId, Model model) {
+        CustomerCouponXref couponXref = couponXrefService.readById(couponXrefId);
+        if (Objects.nonNull(couponXref)) {
+            CardWrapper card = CardWrapper.getInstance();
+            card.setType(CardWrapper.COUPON_TYPE);
+            card.setStatus(couponXref.getStatus());
+            card.setValue(couponXref.getCoupon().getValue());
+            card.setId(couponXref.getId());
+            model.addAttribute("card", card);
+        }
+        return "duihuan";
+    }
+
+    /**
      * 兑换优惠券
      *
      * @param couponXrefId
@@ -95,16 +119,42 @@ public class CouponController {
      */
     @RequestMapping(value = "/exchange", method = RequestMethod.POST)
     @ResponseBody
-    public Object exchangeCoupon(@RequestParam(value = "couponXrefId") Long couponXrefId) {
+    public Object exchangeCoupon(@RequestParam(value = "couponXrefId") Long couponXrefId, PickupInfoForm form) {
         //检测优惠券是否存在
+        CustomerCouponXref couponXref = couponXrefService.readById(couponXrefId);
+        JsonResponse result = JsonResponse.response("兑换优惠券成功.");
+        if (Objects.isNull(couponXref)) {
+            result.setCode(JsonResponse.FAIL_CODE);
+            result.setMessage("优惠券不存在");
+            return result;
+        }
         //检查优惠券是否兑换
+        if (couponXref.getStatus()) {
+            result.setCode(JsonResponse.FAIL_CODE);
+            result.setMessage("优惠券已兑换");
+            return result;
+        }
         //校验提货码(789+门店编号)
+        String verifyCode = form.getVerifyCode();
+        //检测门店编号是否存在
+        String shopCode = verifyCode.substring(3);
+        Shop shop = shopService.readShopByCode(shopCode);
+        if (Objects.isNull(shop)) {
+            result.setCode(JsonResponse.FAIL_CODE);
+            result.setMessage("提货验证码错误");
+            return result;
+        }
         //记录兑换门店
+        couponXref.setExchangeShop(shop);
         //保存优惠券
-        Map<String, Object> result = CommonUtils.response("兑换优惠券成功.");
-        CustomerCouponXref customerCouponXref = couponXrefService.readById(couponXrefId);
-        customerCouponXref.setStatus(CustomerCouponXref.STATUS_USED);
-        couponXrefService.saveCustomerXref(customerCouponXref);
+        couponXref.setStatus(CustomerCouponXref.STATUS_USED);
+        couponXref.setUpdatedOn(CommonUtils.currentDate());
+        couponXrefService.saveCustomerXref(couponXref);
         return result;
+    }
+
+    @RequestMapping(value = "/exchange", method = RequestMethod.GET)
+    public String exchangeCouponForm(@RequestParam(value = "couponXrefId") Long couponXrefId) {
+        return "coupon/coupon_exchange_form";
     }
 }

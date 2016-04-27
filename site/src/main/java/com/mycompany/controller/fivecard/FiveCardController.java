@@ -47,14 +47,20 @@ public class FiveCardController {
     private ShopService shopService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String getFiveCardPage(HttpServletRequest request,String shopOutOfRange) {
+    public String getFiveCardPage(HttpServletRequest request, String shopOutOfRange) {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
         request.setAttribute("cardType", cardXref.getType());
         request.setAttribute("cardStatus", cardXref.getStatus());
         request.setAttribute("referrer", cardXref.getReferer());
-        request.setAttribute("shopOutRange",Objects.nonNull(shopOutOfRange));
+        request.setAttribute("shopOutRange", Objects.nonNull(shopOutOfRange));
         return retView;
+    }
+
+    @RequestMapping(value = "/sharePage", method = RequestMethod.GET)
+    public String getFiveCardSharePage() {
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        return "card5_share";
     }
 
     /**
@@ -160,7 +166,7 @@ public class FiveCardController {
                         customerAddress.setCustomer(CustomerState.getCustomer());
                         customerAddressService.saveCustomerAddress(customerAddress);
                         followedAddress = customerAddress;
-                    }else {
+                    } else {
                         //关注门店不在本次活动范围内
                         return "redirect:/fiveCard?shopOutOfRange=true";
                     }

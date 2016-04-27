@@ -71,6 +71,12 @@
             <!--interceptor for weixin-->
             <bean class="com.mycompany.interceptor.WeiXinInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/account/addresses"/>
+            <mvc:mapping path="/coupon/exchange"/>
+            <!--interceptor for address form-->
+            <bean class="com.mycompany.interceptor.ShopInfoInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <!-- Default locale set -->

@@ -29,6 +29,9 @@ public class CustomerCouponXrefImpl implements CustomerCouponXref {
 
     @Column(name = "createdOn")
     private Date createdOn;
+    @ManyToOne(targetEntity = ShopImpl.class)
+    @JoinColumn(name = "shop_id",referencedColumnName = "id")
+    private Shop exchangeShop;
 
     public CustomerCouponXrefImpl() {
     }
@@ -79,5 +82,13 @@ public class CustomerCouponXrefImpl implements CustomerCouponXref {
 
     public void setUpdatedOn(Date updatedOn) {
         this.updatedOn = updatedOn;
+    }
+
+    public Shop getExchangeShop() {
+        return exchangeShop;
+    }
+
+    public void setExchangeShop(Shop exchangeShop) {
+        this.exchangeShop = exchangeShop;
     }
 }

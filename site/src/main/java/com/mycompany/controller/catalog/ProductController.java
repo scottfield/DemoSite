@@ -16,10 +16,12 @@
 
 package com.mycompany.controller.catalog;
 
+import com.mycompany.controller.wrapper.ProductWrapper;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.catalog.service.CatalogService;
 import org.broadleafcommerce.core.web.controller.catalog.BroadleafProductController;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,6 +43,14 @@ public class ProductController extends BroadleafProductController {
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return super.handleRequest(request, response);
+    }
+
+    @RequestMapping("/product/{id}")
+    @ResponseBody
+    public ProductWrapper findProductById(@PathVariable Long id) {
+        ProductWrapper wrapper = new ProductWrapper();
+        wrapper.setLimit(1);
+        return wrapper;
     }
 
     @RequestMapping("/product/all")

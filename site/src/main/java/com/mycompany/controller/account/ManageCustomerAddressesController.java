@@ -84,40 +84,6 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
 
     @RequestMapping(method = RequestMethod.GET)
     public String viewCustomerAddresses(HttpServletRequest request, Model model) {
-        Customer customer = CustomerState.getCustomer();
-
-        List<CustomerAddress> addressList = customer.getCustomerAddresses();
-        if (Objects.nonNull(addressList) && addressList.size() > 0) {
-            Shop defaultShop = null;
-            for (CustomerAddress customerAddress : addressList) {
-                if (customerAddress.getAddressName().equals("收货地址")) {
-                    CustomAddress address = (CustomAddress) customerAddress.getAddress();
-                    defaultShop = address.getShop();
-                    break;
-                }
-
-            }
-            //将关注名店设置为默认收货地址
-            if (Objects.isNull(defaultShop)) {
-                CustomAddress address = (CustomAddress) customer.getCustomerAddresses().get(0).getAddress();
-                defaultShop = address.getShop();
-            }
-            model.addAttribute("defaultShop", defaultShop);
-        }
-        //获取门店列表
-        Set<Shop> shops = shopService.getAllShop();
-        Map<String, Set<Shop>> shopMap = new HashMap<>();
-        for (Shop shop : shops) {
-            String province = shop.getProvince();
-            if (!shopMap.containsKey(province)) {
-                Set<Shop> set = new HashSet<>();
-                shopMap.put(province, set);
-                set.add(shop);
-            } else {
-                shopMap.get(province).add(shop);
-            }
-        }
-        model.addAttribute("areas", shopMap);
         String activeFiveCard = request.getParameter("activeFiveCard");
         if (Objects.nonNull(activeFiveCard)) {
             request.getSession().setAttribute("activeFiveCard", true);

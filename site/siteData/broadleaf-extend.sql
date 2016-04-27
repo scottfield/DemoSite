@@ -81,7 +81,7 @@ CREATE TABLE coupon(
   coupon_value INT NOT NULL COMMENT '优惠券金额',
   coupon_amount INT NOT NULL DEFAULT 0 COMMENT '优惠券数量',
   updatedOn DATETIME NOT NULL ,
-  createdOn  DATETIME NOT NULL DEFAULT NOW(),
+  createdOn  DATETIME NOT NULL,
   PRIMARY KEY (coupon_id)
 );
 DROP TABLE IF EXISTS customer_coupon_xref;
@@ -90,8 +90,9 @@ CREATE TABLE customer_coupon_xref(
   coupon_id BIGINT,
   customer_id BIGINT,
   coupon_status TINYINT DEFAULT 0 COMMENT '优惠券使用状态,默认未使用',
-  updatedOn  TIMESTAMP NOT NULL ,
-  createdOn  DATETIME NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (customer_coupon_xref_id)
+  updatedOn  DATETIME NOT NULL,
+  createdOn  DATETIME NOT NULL,
+  shop_id BIGINT COMMENT '优惠券兑换门店',
+  PRIMARY KEY (customer_coupon_xref_id)
 );
 /*结束*/
