@@ -69,6 +69,7 @@ public class PickupController {
             result.put("message", "提货验证码错误");
             return result;
         }
+        //todo 检测订单的收货门店是否与工作人员输入的门店编号相同
         //提取货物
         Map<String, OrderAttribute> orderAttributes = order.getOrderAttributes();
         OrderAttribute receiver = new OrderAttributeImpl();

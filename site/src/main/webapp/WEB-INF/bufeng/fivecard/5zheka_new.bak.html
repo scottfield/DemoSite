@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <div th:replace="/partials/header::header"></div>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            FastClick.attach(document.body);
+        }, false);
+
+    </script>
+    <script type="text/javascript">
+        $(function () {
+
+            function win_load() {
+                var win_h = $(window).width();
+                var con_w = (win_h - 36) / 3;
+                $(".card-box").width(con_w);
+                $(".card-box .img").height(con_w);
+            }
+
+            win_load();
+
+            $(window).resize(function () {
+                win_load();
+            });
+
+        });
+    </script>
+    <style>
+        .card5-texthead {
+            background-color: #e9557c;
+            padding: 10px 10px 1px 10px;
+        }
+
+        .img-panel .tips {
+            background-color: #f6f0e4;
+            display: block;
+            color: #e9557c;
+            text-align: center;
+            padding-top: 4px;
+            font-size: 4vw;
+        }
+    </style>
+</head>
+<body class="has-navbar" th:inline="text" th:attr="data-shopoutrange=${shopOutRange}">
+<!-- header -->
+<header>
+    <div class="container" th:if="${cardType==0}">
+        <div class="left"><a th:href="@{/index}">抢五折卡</a></div>
+        <div class="center"></div>
+        <div class="right"></div>
+    </div>
+</header>
+
+<!--5折卡方式1未激活-->
+<div th:if="${cardType==0 and cardStatus==false}" th:remove="tag">
+    <div class="img-panel">
+        <img src="images/new/card-5/card5-head.jpg"/>
+    </div>
+    <div class="img-panel card5-texthead">
+        <img src="images/new/card-5/card5-1-1.png"/>
+        <a class="link" style="top:45%;left:4%;width:44%;height:32%;" th:id="shareFiveCardBtn" href="送人连接"></a>
+        <a class="link" style="top:45%;left:52%;width:44%;height:32%;" th:id="activateFiveCard" href="激活连接"></a>
+    </div>
+    <div class="img-panel" style="margin-top:-1px;">
+        <img src="images/new/card-5/card5-cloud.jpg"/>
+        <span class="tips">以下商品，一键激活立刻购！</span>
+    </div>
+</div>
+<!--5折卡方式1激活-->
+<div th:if="${cardType==0 and cardStatus==true}" th:remove="tag">
+    <div class="img-panel card5-texthead">
+        <img src="images/new/card-5/card5.png"/>
+        <img src="images/new/card-5/card5-1-2.png"/>
+        <a class="link" style="top:82%;left:48%;width:44%;height:15%;" th:id="shareFiveCardBtn" href="送人连接"></a>
+    </div>
+    <div class="img-panel" style="margin-top:-1px;">
+        <img src="images/new/card-5/card5-cloud.jpg"/>
+        <span class="tips">哎哟，不错哟，爆款已经解锁，立刻购买！</span>
+    </div>
+</div>
+<!--5折卡方式2未激活-->
+<div th:if="${cardType==1 and cardStatus==false}" th:remove="tag">
+    <div class="img-panel">
+        <img src="images/new/card-5/card5-head.jpg"/>
+    </div>
+    <div class="img-panel card5-texthead">
+        <img src="images/new/card-5/card5-2-1.png"/>
+        <span class="link" style="top:1.5vh;left:34%;width:50%;height:15%;font-size:6vw;line-height:6vw;color:#fff;"
+              th:text="${referrer.firstName}" th:if="${referrer!=null}">老王abc</span>
+        <a class="link" style="top:50%;left:30%;width:44%;height:27%;" th:id="activateFiveCard" href="开卡连接"></a>
+    </div>
+    <div class="img-panel" style="margin-top:-1px;">
+        <img src="images/new/card-5/card5-cloud.jpg"/>
+        <span class="tips">以下商品，一键激活立刻购！</span>
+    </div>
+
+</div>
+<!--5折卡方式2激活-->
+<div th:remove="tag" th:if="${cardType==1 and cardStatus}">
+    <div class="img-panel card5-texthead">
+        <img th:src="@{images/new/card-5/card5.png}"/>
+        <img th:src="@{/images/new/card-5/card5-4-1.png}" style="width:80%;margin-top:10px;"/>
+        <a class="link" style="top:82%;left:13%;width:73%;height:15%;" th:href="@{/}"></a>
+    </div>
+    <div class="img-panel" style="margin-top:-1px;">
+        <img src="images/new/card-5/card5-cloud.jpg"/>
+        <span class="tips">哎哟，不错哟，爆款已经解锁，立刻购买！</span>
+    </div>
+</div>
+<!--5折卡被分享者打开这类页面都可以共用-->
+<!---->
+<!--<div th:remove="tag" th:if="${cardType==1 and cardStatus}">
+    <div class="img-panel card5-texthead">
+        <img th:src="@{images/new/card-5/card5.png}"/>
+        <img th:src="@{/images/new/card-5/card5-4-1.png}" style="width:80%;margin-top:10px;"/>
+        <a class="link" style="top:82%;left:13%;width:73%;height:15%;" href="购买连接"></a>
+    </div>
+    <div class="img-panel" style="margin-top:-1px;">
+        <img src="images/new/card-5/card5-cloud.jpg"/>
+        <span class="tips">哎哟，不错哟，爆款已经解锁，立刻购买！</span>
+    </div>
+</div>-->
+
+
+<div class="sale-hot">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <!---->
+            <div class="swiper-slide">
+                <!---->
+                <div class="card-box">
+                    <span class="unlock">解锁预购</span>
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_06.png}" height="20"/></a></div>
+                </div>
+                <!---->
+                <div class="card-box">
+                    <span class="unlock">解锁预购</span>
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_06.png}" height="20"/></a></div>
+                </div>
+                <!---->
+                <div class="card-box">
+                    <span class="unlock">解锁预购</span>
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_06.png}" height="20"/></a></div>
+                </div>
+            </div>
+            <!---->
+            <div class="swiper-slide">
+                <!---->
+                <div class="card-box">
+                    <span class="unlock">解锁预购</span>
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_06.png}" height="20"/></a></div>
+                </div>
+                <!---->
+                <div class="card-box">
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_03.png}" height="20"/></a></div>
+                </div>
+                <!---->
+                <div class="card-box">
+                    <span class="unlock">解锁预购</span>
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_06.png}" height="20"/></a></div>
+                </div>
+            </div>
+            <!---->
+            <div class="swiper-slide">
+                <!---->
+                <div class="card-box">
+                    <span class="unlock">解锁预购</span>
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_06.png}" height="20"/></a></div>
+                </div>
+                <!---->
+                <div class="card-box">
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_03.png}" height="20"/></a></div>
+                </div>
+                <!---->
+                <div class="card-box">
+                    <span class="unlock">解锁预购</span>
+                    <div class="img" style="background-image:url(images/jjj_03.jpg);"></div>
+                    <div class="t hidden">香奈儿清香黛尔香氛50ml</div>
+                    <div class="pice hidden">
+                        <span>￥909</span>
+                        <font>￥1024</font>
+                    </div>
+                    <div class="hidden btn"><a href="#"><img th:src="@{/images/5_c_06.png}" height="20"/></a></div>
+                </div>
+            </div>
+            <!---->
+        </div>
+    </div>
+    <div class="bottom-box">
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+<script language="javascript">
+    var mySwiper = new Swiper('.swiper-container', {
+        prevButton: '.swiper-button-prev',
+        nextButton: '.swiper-button-next',
+        pagination: '.swiper-pagination',
+        loop: true,
+        loopAdditionalSlides: 1,
+    })
+</script>
+
+<!---->
+<div class="hidden"><img th:src="@{/images/new/card-5/card5-3.jpg}" width="100%"/></div>
+<div class="offline hidden">
+    <div class="box">
+        <div class="img"><img th:src="@{/images/5_c_11.jpg}" height="100%"/></div>
+        <div class="title">香奈儿清香黛尔香氛50ml</div>
+        <div class="pice">
+            <span>￥909</span>
+            <font>￥9092</font>
+        </div>
+    </div>
+    <div class="box">
+        <div class="img"><img th:src="@{/images/5_c_11.jpg}" height="100%"/></div>
+        <div class="title">香奈儿清香黛尔香氛50ml</div>
+        <div class="pice">
+            <span>￥909</span>
+            <font>￥9092</font>
+        </div>
+    </div>
+    <div class="box">
+        <div class="img"><img th:src="@{/images/5_c_11.jpg}" height="100%"/></div>
+        <div class="title">香奈儿清香黛尔香氛50ml</div>
+        <div class="pice">
+            <span>￥909</span>
+            <font>￥9092</font>
+        </div>
+    </div>
+    <div class="box">
+        <div class="img"><img th:src="@{/images/5_c_11.jpg}" height="100%"/></div>
+        <div class="title">香奈儿清香黛尔香氛50ml</div>
+        <div class="pice">
+            <span>￥909</span>
+            <font>￥9092</font>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#activateFiveCard").click(function (e) {
+            e.preventDefault();
+            location.href = '[[@{/fiveCard/activate}]]';
+        });
+        if($("body").data("shopoutrange")) {
+            alert("您关注的门店不在关注范围,请重新关注.");
+            location.href='[[@{/account/addresses/followShop}]]';
+        }
+    });
+</script>
+<div th:replace="fivecard/partials/share::shareFiveCard"></div>
+</body>
+</html>

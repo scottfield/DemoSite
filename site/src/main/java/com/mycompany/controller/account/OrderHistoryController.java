@@ -16,6 +16,7 @@
 
 package com.mycompany.controller.account;
 
+import com.mycompany.sample.util.JsonResponse;
 import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,13 +31,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -89,22 +90,33 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         return getOrderHistoryView();
     }
 
-    @RequestMapping("/update")
-    public Object udpateOrder(long orderId) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("message", "更新订单成功.");
-        result.put("code", 1000);
+    /**
+     * 支付成功后确认订单
+     *
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/confirm")
+    @ResponseBody
+    public Object confirmOrder(long orderId) {
+        JsonResponse result = JsonResponse.response("更新订单成功.");
         Order order = orderService.findOrderById(orderId);
+        if (Objects.isNull(order)) {
+            LOG.info("订单号：" + orderId + "不存在.");
+            result.setMessage("更新订单失败，订单号:" + orderId + " 不存在");
+            result.setCode(JsonResponse.FAIL_CODE);
+            return result;
+        }
         order.setStatus(PAID);
         try {
             orderService.save(order, false);
+            LOG.info("更新订单(单号:" + orderId + ")成功.");
         } catch (PricingException e) {
-            LOG.error("更新订单失败", e);
-            result.put("message", "更新订单成功.");
-            result.put("code", 1000);
+            LOG.error("更新订单(单号:" + orderId + ")失败", e);
+            result.setMessage("更新订单成功.");
+            result.setCode(JsonResponse.FAIL_CODE);
         }
         return result;
-
     }
 
     @RequestMapping(value = "/detail/{orderNumber}", method = RequestMethod.GET)

@@ -111,6 +111,16 @@ public class CommonUtils {
         return System.currentTimeMillis();
     }
 
+    public static Map<String, Object> response() {
+        return response("成功");
+    }
+    public static Map<String, Object> response(String message) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("code", 1000);
+        response.put("message", message);
+        return response;
+    }
+
     public static void main(String[] args) {
         Map<String, Object> param = new HashMap<>();
         param.put("name", "jackei");

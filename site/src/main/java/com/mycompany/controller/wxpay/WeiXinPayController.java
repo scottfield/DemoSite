@@ -6,7 +6,6 @@ import com.mycompany.sample.core.catalog.domain.Shop;
 import com.mycompany.sample.core.catalog.domain.ShopAccount;
 import com.mycompany.sample.payment.weixin.common.Configure;
 import com.mycompany.sample.payment.weixin.common.JsonUtil;
-import com.mycompany.sample.payment.weixin.common.Signature;
 import com.mycompany.sample.payment.weixin.protocol.UnifiedOrderReqData;
 import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.sample.util.CommonUtils;
@@ -65,8 +64,9 @@ public class WeiXinPayController {
         String body = "测试支付";
         String out_trade_no = order.getOrderNumber();
         String spbill_create_ip = request.getRemoteAddr();
-        String notify_url = requestURL.toString()+"/notify";
-        LOG.info("notify url==>"+notify_url);
+        String requestUrl = requestURL.toString();
+        String notify_url = requestUrl.replaceAll("/pay", "") + "/notify";
+        LOG.info("notify url==>" + notify_url);
 //        String notify_url = "http://discount.lzzyad.com";
         String trade_type = "JSAPI";
         String openId = customer.getUsername();
@@ -102,6 +102,7 @@ public class WeiXinPayController {
             request.setAttribute("nonceStr", param.get("nonceStr"));
             request.setAttribute("package", param.get("package"));
             request.setAttribute("signType", param.get("signType"));
+            request.setAttribute("orderId", orderId);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -112,7 +113,7 @@ public class WeiXinPayController {
         return retView;
     }
 
-    @RequestMapping("/pay/notify")
+    @RequestMapping("/notify")
     public void notifyHandler(HttpServletRequest request) {
         LOG.info("---------------start to handle wechatpay callback------------------");
         Map parameterMap = request.getParameterMap();

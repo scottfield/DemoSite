@@ -77,22 +77,7 @@
     </div>
 </div>
 -->
-<!--新弹窗推荐使用新弹窗-->
-<!--恭喜激活五折卡弹窗，不同的弹窗更新里面的图片和文字即可-->
-<div class="window none">
-	<div class="window-content">
-		<div class="head">
-			<div class="container">激活五折卡</div>
-		</div>
-		<div class="middle">
-			<img th:src="@{/images/new/index/card-5.jpg}" width="60%"/>
-			<div class="text">哎哟，不错哟~爆品解锁啦，<a>立刻查看</a></div>
-		</div>
-		<div class="bottom">
-             <a href="#"><img th:src="@{/images/qk_13.png}"/></a>
-		</div>
-	</div>
-</div>
+<div th:replace="/coupon/coupon_window::couponWindow"></div>
 <div th:replace="partials/footer::footer"></div>
 <script type="text/javascript">
     $(function () {

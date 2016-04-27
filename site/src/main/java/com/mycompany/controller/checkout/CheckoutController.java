@@ -89,6 +89,7 @@ public class CheckoutController extends BroadleafCheckoutController {
             return checkoutView;
         }
         try {
+            //todo 需要在订单中保存收货地址
             checkoutService.performCheckout(CartState.getCart());
         } catch (CheckoutException e) {
             LOG.error("下单失败", e);
@@ -99,7 +100,7 @@ public class CheckoutController extends BroadleafCheckoutController {
     }
 
     public String updateOrder() {
-
+        return null;
     }
 
     @RequestMapping(value = "/checkout/savedetails", method = RequestMethod.POST)

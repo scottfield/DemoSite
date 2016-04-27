@@ -32,12 +32,16 @@
 
 <!--空购物车提示信息-->
 <div th:unless="${(cart.total ne null) and (cart.total.amount gt 0)}" th:remove="tag">
-    <div class="card-volume-empty">
-        <img th:src="@{/images/gwc_empty_03.jpg}" width="50%"/>
-    </div>
-    <div class="card-volume-empty">
-        <a th:href="@{/index}">马上去购买</a>
-    </div>
+	<div style="position:absolute;bottom:44px;top:44px;width:100%;" class="vertical-middle-box">
+		<div class="content">
+			<div class="card-volume-empty" style="padding-top:0;">
+				<img th:src="@{/images/gwc_empty_03.jpg}" width="50%"/>
+			</div>
+			<div class="card-volume-empty">
+				<a th:href="@{/index}">马上去购买</a>
+			</div>
+		</div>
+	</div>
 </div>
 <!--购物车详细信息-->
 <div th:if="${(cart.total ne null) and (cart.total.amount gt 0)}" th:remove="tag">

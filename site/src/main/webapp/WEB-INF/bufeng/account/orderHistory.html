@@ -12,7 +12,7 @@
         }, false);
     </script>
 </head>
-<body th:inline="text" class="has-navbar has-tabbar">
+<body th:inline="text" class="has-navbar has-tabbar" th:attr="data-show-coupon-window=${param.showCoupon !=null}">
 <!-- header -->
 <header>
     <div class="container">
@@ -62,11 +62,12 @@
     <div class="affirm-sum-money">
         <div class="sum-money">共[[${order.itemCount}]]件商品 合计:￥[[${order.total}]]</div>
         <a th:href="@{'/account/orders/cancel/'+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">取消订单</a>
-        <a th:href="@{/pickup}" th:if="${order.status.type eq 'PAID'}">领取</a>
+        <a th:href="@{'/pickup?orderId='+${order.id}}" th:if="${order.status.type eq 'PAID'}">领取</a>
         <a th:href="@{'/wechatpay/index/pay?orderId='+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">付款</a>
     </div>
 </div>
 <!---->
+<div th:replace="/coupon/coupon_window::couponWindow"></div>
 <div class="footer"></div>
 <div th:replace="partials/footer::footer"></div>
 </body>

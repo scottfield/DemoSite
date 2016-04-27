@@ -30,10 +30,12 @@
 
         })
     </script>
+	<style>
+		.goods-info .num .mnus,.goods-info .num .add{font-size:33px;line-height:33px;}
+		.goods-info .num .mnus.disable,.goods-info .num .add.disable{color:#999999;}
+	</style>
 </head>
 <body class="has-navbar">
-<!-- header -->
-<div class="header"></div>
 <header>
 	<div class="container">
 		<div class="left">
@@ -65,12 +67,9 @@
 </script>
 
 <!--购物车物品数量-->
-<div class="goods-shopcar">
-    <a th:href="@{/cart}">
-        <img th:src="@{/images/gd_03.png}" height="25"/>
+<a class="goods-shopcar"  th:href="@{/cart}">
         <span th:text="${cart.itemCount}"></span>
-    </a>
-</div>
+</a>
 
 <!--商品信息-->
 <div class="goods-tab">
@@ -93,9 +92,9 @@
         <p th:if="${product.promoMessage}">促销：<font>[[${product.promoMessage}]]</font></p>
         <div class="num">
             <div class="box">
-                <span class="mnus"><img th:src="@{/images/gd_07.png}" height="20"/></span>
+                <span class="mnus">-</span>
                 <span class="number"><input type="text" id="number" value="1"/></span>
-                <span class="add"><img th:src="@{/images/gd_09.png}" height="20"/></span>
+                <span class="add">+</span>
             </div>
         </div>
         <div class="pice"><span>￥[[*{defaultSku.retailPrice}]]</span> <font>￥[[*{defaultSku.salePrice}]]</font></div>
@@ -165,7 +164,12 @@
                 dataType: 'json'
             }).done(function (data) {
                 //修改购物车中显示的物品数量
-                $(".goods-shopcar").find("span").text(data.cartItemCount);
+                $(".container .tab4 .num").html(data.cartItemCount);
+				if(data.quantityAdded){
+					showAjaxTips("已放入购物车！");
+				}else{
+					showAjaxTips("添加失败！");
+				}
                 console.log(data);
             }).fail(function (data) {
                 console.log(data);

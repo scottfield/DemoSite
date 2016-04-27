@@ -2,11 +2,11 @@
     <footer>
         <div class="container">
             <a th:href="@{/}" title="首页" class="tab1"></a>
-            <a class="tab2"></a>
+            <a class="tab2" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>
             <a class="tab3">
                 <span th:id="qrscan"></span>
             </a>
-            <a th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"></a>
+            <a th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"><span class="num">0</span></a>
             <a th:href="@{/account/orders}" title="我的订单" class="tab5"></a>
         </div>
     </footer>

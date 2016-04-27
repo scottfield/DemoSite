@@ -1,69 +1,83 @@
 <!DOCTYPE html>
 <html lang="zh-cn" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>商品分类</title>
+
     <div th:replace="/partials/header::header"></div>
     <script type="text/javascript">
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             FastClick.attach(document.body);
         }, false);
 
     </script>
     <script type="text/javascript">
-        $(function(){
+        $(function () {
 
-            function win_load(){
+            function win_load() {
                 var win_h = $(window).width();
-                var con_w = (win_h-34)/2;
+                var con_w = (win_h - 34) / 2;
                 $(".card-box").width(con_w);
                 $(".card-box .img").height(con_w);
             }
+
             win_load();
 
-            $(window).resize(function() {
+            $(window).resize(function () {
                 win_load();
             });
 
         })
     </script>
 </head>
-<body th:inline="text">
+<body th:inline="text" class="has-tabbar">
 <!-- header -->
-<div class="header"></div>
+<!--
 <header>
     <div class="l-img">
         <a th:href="@{/}"><img src="images/5_ct_04.png" height="15"/> [[${category.name}]]</a>
     </div>
     <div class="r-img"><img src="images/5_ct_02.png" height="30"/></div>
 </header>
-
+-->
 <!--  -->
-
-<div class="hidden"><img src="images/in_45.png" width="100%"/></div>
+<div class="img-panel">
+    <img src="images/new/index/head.jpg"/>
+    <a class="link" href="请写入规则页面地址" style="width:12%;height:19%;top:10%;right:2%;"></a>
+</div>
 <div class="home-hot">
     <div th:replace="layout/partials/slider::slider"></div>
 </div>
 <script type="text/javascript" src="js/swiper.min.js"></script>
 <script language="javascript">
-    var mySwiper = new Swiper('.swiper-container',{
-        prevButton:'.swiper-button-prev',
-        nextButton:'.swiper-button-next',
-        pagination:'.swiper-pagination',
-        loop:true,
-        loopAdditionalSlides:1,
+    var mySwiper = new Swiper('.swiper-container', {
+        prevButton: '.swiper-button-prev',
+        nextButton: '.swiper-button-next',
+        pagination: '.swiper-pagination',
+        loop: true,
+        loopAdditionalSlides: 1,
     })
 </script>
 
 <!-- menu -->
 <div th:replace="/layout/partials/menu::menu"></div>
+<div class="card-5"><img src="../images/in_42.jpg" width="100%"/></div>
+<!--
 <div class="hidden fenlei-title">
     <div class="txt" th:text="${category.name}">可劲儿喝</div>
     <img src="images/kejin_02.jpg" width="100%"/>
 </div>
+-->
+<!--这里根据不同的类型加载不同的图片，图已经切好，对应 eat.jpg fun.jpg drink.jpg-->
+<div class="hidden" th:with="uri=${#httpServletRequest.requestURI}">
+    <img src="../images/new/eat.jpg" width="100%" th:if="${uri=='/dining'}"/>
+    <img src="../images/new/happy.jpg" width="100%" th:if="${uri=='/fun'}"/>
+    <img src="../images/new/drink.jpg" width="100%" th:if="${uri=='/drinking'}"/>
+    <img src="../images/new/fun.jpg" width="100%" th:if="${uri=='/playing'}"/>
+</div>
 <div th:replace="/catalog/partials/productList::productList"></div>
-<div class="footer"></div>
 <div th:replace="partials/footer::footer"></div>
 <!-- 浮层 -->
 <div class="float-layer none">

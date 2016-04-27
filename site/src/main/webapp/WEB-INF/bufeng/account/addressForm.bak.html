@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <div th:replace="/partials/header::header"></div>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            FastClick.attach(document.body);
+        }, false);
+    </script>
+</head>
+<body th:inline="text">
+<!-- header -->
+<div class="header"></div>
+<header>
+    <div class="l-img">
+        <a th:href="@{${#httpServletRequest.getHeader('Referer')}}"><img th:src="@{/images/5_ct_04.png}" height="15"/>
+            提货信息</a>
+    </div>
+    <div class="r-img"><img th:src="@{/images/5_ct_02.png}" height="30"/></div>
+</header>
+
+<!---->
+<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/account/addresses}" th:method="post">
+    <div class="take-cargo-info">
+        <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
+        <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
+        <input type="text" name="address.firstName" th:value="${cart.customer.customerAddresses[0].address.firstName}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+        <input type="text" name="address.firstName" th:unless="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+    </div>
+    <div class="take-cargo-info">
+        <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
+        <span>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：</span>
+        <input type="text" name="address.phonePrimary" th:value="${cart.customer.customerAddresses[0].address.phonePrimary.phoneNumber}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+        <input type="text" name="address.phonePrimary" th:unless="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+    </div>
+    <div class="take-cargo-info adress">
+        <em><img th:src="@{/images/qro_08.png}" width="20"/></em>
+        <span>提货门店：</span>
+        <div class="select" th:each="area:${areas}">
+            <select>
+                <option th:text="${area.key}">中国大陆</option>
+            </select>
+            <select id="shopList" name="address.shop.id">
+                <option th:each="shop:${area.value}" th:object="${shop}" th:text="*{province+'/'+city+'/'+name}"
+                        th:attr="data-address=*{address},data-shopid=*{id}" th:value="*{id}" th:if="${defaultShop ne null and defaultShop.id == shop.id}" th:selected="true"  >四川省/成都市/青羊区/苏坡街道
+                </option>
+                <option th:each="shop:${area.value}" th:object="${shop}" th:text="*{province+'/'+city+'/'+name}"
+                        th:attr="data-address=*{address},data-shopid=*{id}" th:value="*{id}" th:unless="${defaultShop ne null and defaultShop.id == shop.id}" >四川省/成都市/青羊区/苏坡街道
+                </option>
+            </select>
+            <textarea th:if="${defaultShop}" th:text="${defaultShop.address}">default address</textarea>
+            <textarea th:unless="${defaultShop}"></textarea>
+        </div>
+    </div>
+    <input type="hidden" name="address.id" th:value="${cart.customer.customerAddresses[0].address.id}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+    <input type="hidden" name="address.id" th:unless="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+
+    <div class="take-cargo-btn">
+        <a href="#" class="adress-btn" onclick="form.submit.click()">确认信息</a>
+        <input type="submit" name="submit" class="none"/>
+    </div>
+</blc:form>
+<script type="text/javascript">
+    $(function () {
+        $("#shopList").change(function (data) {
+            var address = $(this.selectedOptions[0]).data("address");
+            $(this).siblings("textarea").text(address);
+
+        });
+    });
+</script>
+</body>
+</html>

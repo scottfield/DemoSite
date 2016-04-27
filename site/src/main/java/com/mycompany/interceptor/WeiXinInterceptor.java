@@ -19,6 +19,7 @@ import java.util.Objects;
 
 /**
  * Created by jackie on 4/21/2016.
+ * 生成微信js sdk签名
  */
 public class WeiXinInterceptor implements HandlerInterceptor {
     private volatile static int count = 0;

@@ -12,9 +12,8 @@
         }, false);
     </script>
 </head>
-<body th:inline="text">
+<body th:inline="text" class="has-navbar">
 <!-- header -->
-<div class="header"></div>
 <header>
     <div class="l-img">
         <a th:href="@{/cart}"><img src="images/5_ct_04.png" height="15"/> 订单确认</a>
@@ -22,7 +21,7 @@
     <div class="r-img"><img src="images/5_ct_02.png" height="30"/></div>
 </header>
 
-<!--info-->
+<!--infodsfdasfda-->
 <div class="pb-box" th:if="${#lists.size(cart.customer.customerAddresses) eq 0}">
     <div class="order-fillIn-img">
         <a th:href="@{/account/addresses}">
@@ -47,8 +46,8 @@
             <div class="con ls">
                 <em><img src="images/qro_08.png" height="20"/></em>
                 <span>[[*{shop.province}]] [[*{shop.city}]] [[*{shop.name}]]<br/> [[*{shop.address}]]</span>
+				<a th:href="@{/account/addresses}"><img src="images/qro_11.png" height="25"/></a>
             </div>
-            <div class="btn"><a th:href="@{/account/addresses}"><img src="images/qro_11.png" height="25"/></a></div>
         </div>
     </div>
 </div>
@@ -69,7 +68,7 @@
 </div>
 
 <blc:form th:action="@{/checkout}" th:method="post">
-    <div class="affirm-sum-money">
+    <div class="affirm-sum-money fixed-bottom">
         <div class="sum-money">实付款:￥[[${cart.total}]]</div>
         <a href="#" id="submitBtn">提交订单</a>
     </div>

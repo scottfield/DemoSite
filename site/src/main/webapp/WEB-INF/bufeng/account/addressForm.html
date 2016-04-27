@@ -12,15 +12,16 @@
         }, false);
     </script>
 </head>
-<body th:inline="text">
-<!-- header -->
-<div class="header"></div>
+<body th:inline="text" class="has-navbar">
 <header>
-    <div class="l-img">
-        <a th:href="@{${#httpServletRequest.getHeader('Referer')}}"><img th:src="@{/images/5_ct_04.png}" height="15"/>
-            提货信息</a>
-    </div>
-    <div class="r-img"><img th:src="@{/images/5_ct_02.png}" height="30"/></div>
+	<div class="container">
+		<div class="left">
+			<a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}">提货信息</a>
+		</div>
+		
+		<div class="center"></div>
+		<div class="right"></div>
+	</div>
 </header>
 
 <!---->
@@ -28,14 +29,14 @@
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
         <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
-        <input type="text" name="address.firstName" th:value="${cart.customer.customerAddresses[0].address.firstName}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+        <input type="text" name="address.firstName" th:value="${customer.customerAddresses[0].address.firstName}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
         <input type="text" name="address.firstName" th:unless="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
     </div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：</span>
-        <input type="text" name="address.phonePrimary" th:value="${cart.customer.customerAddresses[0].address.phonePrimary.phoneNumber}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
-        <input type="text" name="address.phonePrimary" th:unless="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+        <input type="text" name="address.phonePrimary" th:value="${customer.customerAddresses[0].address.phonePrimary.phoneNumber}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+        <input type="text" name="address.phonePrimary" th:unless="${#lists.size(customer.customerAddresses) gt 0}"/>
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>

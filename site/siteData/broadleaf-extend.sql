@@ -53,7 +53,7 @@ SELECT * FROM customer_fivecard_xref;
 SELECT * FROM fivecard;
 
 
-/*删除所有会员*/
+/*删除所有会员相关信息*/
 DELETE FROM blc_order_attribute;
 DELETE FROM blc_fulfillment_group_item;
 DELETE FROM blc_fulfillment_group;
@@ -66,8 +66,32 @@ DELETE FROM blc_customer_role;
 DELETE FROM blc_customer_address;
 DELETE FROM customaddressimpl;
 DELETE FROM blc_address;
+DELETE FROM blc_customer_phone;
+DELETE FROM blc_phone;
 DELETE FROM blc_customer;
 /*结束*/
 
-UPDATE shop set shop_account_id = null;
+UPDATE shop SET shop_account_id = NULL;
 SELECT * FROM shop_account;
+/*优惠券*/
+DROP TABLE IF EXISTS coupon;
+CREATE TABLE coupon(
+  coupon_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  coupon_type TINYINT NOT NULL COMMENT '优惠券类型',
+  coupon_value INT NOT NULL COMMENT '优惠券金额',
+  coupon_amount INT NOT NULL DEFAULT 0 COMMENT '优惠券数量',
+  updatedOn DATETIME NOT NULL ,
+  createdOn  DATETIME NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (coupon_id)
+);
+DROP TABLE IF EXISTS customer_coupon_xref;
+CREATE TABLE customer_coupon_xref(
+  customer_coupon_xref_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  coupon_id BIGINT,
+  customer_id BIGINT,
+  coupon_status TINYINT DEFAULT 0 COMMENT '优惠券使用状态,默认未使用',
+  updatedOn  TIMESTAMP NOT NULL ,
+  createdOn  DATETIME NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (customer_coupon_xref_id)
+);
+/*结束*/

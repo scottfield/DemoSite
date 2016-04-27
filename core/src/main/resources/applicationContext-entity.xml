@@ -30,4 +30,8 @@
           class="com.mycompany.sample.core.catalog.domain.CustomCustomerImpl" scope="prototype"/>
     <bean id="com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref"
           class="com.mycompany.sample.core.catalog.domain.CustomerFiveCardXrefImpl" scope="prototype"/>
+    <bean id="com.mycompany.sample.core.catalog.domain.Coupon"
+          class="com.mycompany.sample.core.catalog.domain.CouponImpl" scope="prototype"/>
+    <bean id="com.mycompany.sample.core.catalog.domain.CustomerCouponXref"
+          class="com.mycompany.sample.core.catalog.domain.CustomerCouponXrefImpl" scope="prototype"/>
 </beans>

@@ -14,7 +14,6 @@ img{ vertical-align:middle;}
 	opacity:0;
 }
 .pb-box{
-	height:100px;
 }
 
 header{
@@ -864,27 +863,31 @@ footer a{
 	-moz-border-radius:100%;
 	text-align:center;
 	line-height:40px;
-	position:absolute;
+	position:fixed;
 	right:15px;
 	top:70px;
 	z-index: 100;
+	background-image:url(/images/gd_03.png);
+	background-size:80%;background-position:center;
+	background-repeat:no-repeat;
 }
 .goods-shopcar span{
 	width:15px;
 	height:15px;
 	background-color:#ff0000;
-	border-radius:100%;
-	-webkit-border-radius:100%;
-	-o-border-radius:100%;
-	-ms-border-radius:100%;
-	-moz-border-radius:100%;
+	border-radius:10px;
+	-webkit-border-radius:10px;
+	-o-border-radius:10px;
+	-ms-border-radius:10px;
+	-moz-border-radius:10px;
 	text-align:center;
 	line-height:15px;
 	font-size:.6rem;
 	color:#ffffff;
 	position:absolute;
-	right:5px;
+	right:0;
 	top:-6px;
+	padding:1px 2px;
 }
 .goods-tab{
 	height:40px;
@@ -1376,3 +1379,8 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 .h-box >*{display:block;}
 .coupon-exchange .text-content{padding:10px;}
 .coupon-exchange .text-content .button{display:block;width:40%;margin:40px auto 0 auto;}
+.vertical-middle-box{font-size:0;}
+.vertical-middle-box:before{content:'';display:inline-block;width:1px;height:100%;vertical-align:middle;margin-left:-1px;}
+.vertical-middle-box .content{display:inline-block;vertical-align:middle;width:calc(100% - 1px);font-size:14px;}
+.ajax-tips{position:fixed;width:100%;bottom:15%;text-align:center;opacity:0;-webkit-transition-duration:800ms;}
+.ajax-tips .content{font-size:14px;display:inline-block;padding:8px 10px;background-color:#fff5f6;color:#000;border-radius:8px;}

@@ -4,28 +4,61 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>微信支付样例</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
     <script type="text/javascript" th:inline="text" th:attr="data-jsapi=${jsApiParam}">
         //调用微信JS api 支付
         function jsApiCall() {
             WeixinJSBridge.invoke(
-                    'getBrandWCPayRequest',{
-                        "appId":"[[${appId}]]",
-                        "timeStamp":[[${timeStamp}]],
-                        "nonceStr":"[[${nonceStr}]]",
-                        "package":"[[${package}]]",
-                        "signType":"[[${signType}]]",
-                        "paySign":"[[${paySign}]]"},
+                    'getBrandWCPayRequest', {
+                        "appId": "[[${appId}]]",
+                        "timeStamp": [[${timeStamp}]],
+                        "nonceStr": "[[${nonceStr}]]",
+                        "package": "[[${package}]]",
+                        "signType": "[[${signType}]]",
+                        "paySign": "[[${paySign}]]"
+                    },
                     function (res) {
                         WeixinJSBridge.log(res.err_msg);
                         alert(res.err_code + res.err_desc + res.err_msg);
-                        if(res.err_code=="get_brand_wcpay_request：ok") {
-                            alert("支付成功");
-                            //todo 更新订单状态
-                        }
+                        paymentCallback(res.err_code);
                     }
             )
             ;
         }
+        /*<![CDATA[*/
+        function paymentCallback(errorCode) {
+            if (errorCode != "get_brand_wcpay_request：ok") {
+                alert("支付失败");
+                return;
+            }
+            alert("支付成功");
+            //第一步:更新订单状态
+            var url = $("body").data("confirmurl");
+            var orderId = $("body").data("orderid");
+            var csrfToken = $("body").data("token");
+            $.post(url, {orderId: orderId, csrfToken: csrfToken}).done(function (res) {
+                console.log(res);
+                if (res.code == 1000) {
+                    alert(res.message);
+                    //第二步:发放优惠券
+                    var issueCouponUrl = $("body").data("issue-coupon-url");
+                    $.post(issueCouponUrl, {csrfToken: csrfToken}).done(function (res) {
+                        var orderUrl = '[[@{/account/orders}]]';
+                        console.log(res);
+                        if (res.code == 1000) {
+                            orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue;
+                        }
+                        location.href = orderUrl;
+                    })
+                } else {
+                    alert(res.message);
+                }
+            }).fail(function (res) {
+                console.log(res);
+                alert(res);
+            });
+        }
+        /*]]>*/
 
         function callpay() {
             if (typeof WeixinJSBridge == "undefined") {
@@ -41,38 +74,38 @@
         }
     </script>
     <script type="text/javascript">
-      /*  //获取共享地址
-        function editAddress() {
-            WeixinJSBridge.invoke(
-                    'editAddress',
-                    'edit address parameter',
-                    function (res) {
-                        var value1 = res.proviceFirstStageName;
-                        var value2 = res.addressCitySecondStageName;
-                        var value3 = res.addressCountiesThirdStageName;
-                        var value4 = res.addressDetailInfo;
-                        var tel = res.telNumber;
-                        alert(value1 + value2 + value3 + value4 + ":" + tel);
-                    }
-            );
-        }
+        /*  //获取共享地址
+         function editAddress() {
+         WeixinJSBridge.invoke(
+         'editAddress',
+         'edit address parameter',
+         function (res) {
+         var value1 = res.proviceFirstStageName;
+         var value2 = res.addressCitySecondStageName;
+         var value3 = res.addressCountiesThirdStageName;
+         var value4 = res.addressDetailInfo;
+         var tel = res.telNumber;
+         alert(value1 + value2 + value3 + value4 + ":" + tel);
+         }
+         );
+         }
 
-        window.onload = function () {
-            if (typeof WeixinJSBridge == "undefined") {
-                if (document.addEventListener) {
-                    document.addEventListener('WeixinJSBridgeReady', editAddress, false);
-                } else if (document.attachEvent) {
-                    document.attachEvent('WeixinJSBridgeReady', editAddress);
-                    document.attachEvent('onWeixinJSBridgeReady', editAddress);
-                }
-            } else {
-                editAddress();
-            }
-        };*/
+         window.onload = function () {
+         if (typeof WeixinJSBridge == "undefined") {
+         if (document.addEventListener) {
+         document.addEventListener('WeixinJSBridgeReady', editAddress, false);
+         } else if (document.attachEvent) {
+         document.attachEvent('WeixinJSBridgeReady', editAddress);
+         document.attachEvent('onWeixinJSBridgeReady', editAddress);
+         }
+         } else {
+         editAddress();
+         }
+         };*/
 
     </script>
 </head>
-<body>
+<body th:attr="data-orderid=${orderId},data-confirmurl=@{/account/orders/confirm},data-token=${session.csrfToken},data-issue-coupon-url=@{/coupon/issue}">
 <br/>
 <font color="#9ACD32"><b>该笔订单支付金额为<span style="color:#f00;font-size:50px">1分</span>钱</b></font><br/><br/>
 <div align="center">

@@ -1,0 +1,13 @@
+<div th:fragment="productImages" th:remove="tag">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" th:style="'background-image:url('+@{${media.value.url}}+');'" th:each="media:${product.media}">
+            </div>
+        </div>
+    </div>
+    <div class="bottom-box">
+        <div class="swiper-button-prev"><img th:src="@{/images/in_14.png}" height="15}"/></div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"><img th:src="@{/images/in_16.png}" height="15}"/></div>
+    </div>
+</div>
