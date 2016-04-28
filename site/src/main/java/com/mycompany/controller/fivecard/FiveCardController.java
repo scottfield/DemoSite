@@ -82,7 +82,7 @@ public class FiveCardController {
         if (Objects.nonNull(fiveCardXref)) {
             //防止用户自己点击自己分享的连接地址来分享五折卡
             session.removeAttribute("referrer");
-            return "redirect:/";
+            return retView;
         }
         //判断五折卡类型
         Object referrer = session.getAttribute("referrer");
@@ -109,7 +109,7 @@ public class FiveCardController {
         customer.setFiveCardXref(cardXref);
         customerService.saveCustomer(customer);
         //派卡完成后移除session中的推荐人
-        session.getAttribute("referrer");
+        session.removeAttribute("referrer");
         return retView;
     }
 
@@ -124,7 +124,7 @@ public class FiveCardController {
      * @return
      */
     @RequestMapping("/activate")
-    public String activateFiveCard(HttpSession session) {
+    public String activateFiveCard() {
         //判断是否已经领取五折卡
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();

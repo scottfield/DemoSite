@@ -19,7 +19,6 @@ package com.mycompany.controller.account;
 import com.mycompany.sample.core.WeiXinConstants;
 import com.mycompany.sample.service.CustomerAttributeService;
 import com.mycompany.sample.service.WeixinService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.exception.ServiceException;
@@ -49,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -104,56 +104,41 @@ public class LoginController extends BroadleafLoginController {
      * @param model
      * @return
      */
-    @RequestMapping("/ ")
+    @RequestMapping("/")
     public String loginProcess(HttpServletRequest request, HttpServletResponse response, Model model) {
-        //检测请求参数中是否包含open id
-        String openId = request.getParameter("openid");
-        if (StringUtils.isBlank(openId)) {
-            return "redirect:/login";
-        }
-        //检测用户是否关注公众号
-        Map<String, Object> userInfo = weixinService.getUserInfo(openId);
-       /* if (userInfo.get("subscribe").equals(0)) {
-            return "redirect:/wx/subscribe";
-        }*/
+        String openId = (String) request.getAttribute("openid");
         //检测open ID是否已经注册
-        CustomerAttribute customerAttribute = attributeService.readCustomerByOpenId(openId);
-        if (Objects.isNull(customerAttribute)) {
-            Customer customer = (Customer) entityConfiguration.createEntityInstance("org.broadleafcommerce.profile.core.domain.Customer");
-
-            //重新授权
-            if (!userInfo.get("errcode").equals(0)) {
-                return "redirect:/login";
-            }
-            customer.setUsername(openId);
-            Object nickname = userInfo.get("nickname");
-            customer.setFirstName(nickname == null ? " " : nickname.toString());
-            customer.setLastName(openId);
-            customer.setPassword(openId);
-            customer.setRegistered(true);
-            customer.setEmailAddress("default");
-            Map<String, CustomerAttribute> customerAttributes = customer.getCustomerAttributes();
-            userInfo.remove("errcode");
-            userInfo.remove("errmsg");
-            userInfo.remove("nonce");
-            userInfo.remove("app_key");
-            userInfo.remove("stat_src");
-            userInfo.remove("timestamp");
-            userInfo.remove("queryStr");
-            Set<String> keySet = userInfo.keySet();
-            for (String key : keySet) {
-                CustomerAttribute attribute = new CustomerAttributeImpl();
-                attribute.setName(key);
-                Object value = userInfo.get(key);
-                if (Objects.nonNull(value)) {
-                    attribute.setValue(value.toString());
-                }
-                attribute.setCustomer(customer);
-                customerAttributes.put(key, attribute);
-            }
-
-            customerService.registerCustomer(customer, openId, openId);
+        Customer customer = customerService.readCustomerByUsername(openId);
+        Map<String, Object> userInfo = (Map<String, Object>) request.getAttribute("userInfo");
+        //如果用户不存在则注册新用户,否则更新用户信息
+        if (Objects.isNull(customer)) {
+            registerCustomer(openId, userInfo);
+        } else {
+//            updateCustomer(customer, userInfo);
         }
+        //自动登录
+        autoLogin(request, openId);
+
+        //检测用户是否是通过分享页面访问网站
+        Object referrer = request.getSession().getAttribute("referrer");
+        if (Objects.nonNull(referrer)) {
+            return "redirect:/fiveCard/issue";
+        }
+        return "redirect:/index";
+    }
+
+    private void updateCustomer(Customer customer, Map<String, Object> userInfo) {
+        Map<String, CustomerAttribute> newCustomerAttributes = extractCustomerAttributes(userInfo);
+        Map<String, CustomerAttribute> oldCustomerAttributes = customer.getCustomerAttributes();
+        for (String key : oldCustomerAttributes.keySet()) {
+            CustomerAttribute newAttribute = newCustomerAttributes.get(key);
+            CustomerAttribute oldAttribute = oldCustomerAttributes.get(key);
+            oldAttribute.setValue(newAttribute.getValue());
+        }
+        customerService.saveCustomer(customer);
+    }
+
+    private void autoLogin(HttpServletRequest request, String openId) {
         //将用户自动登录
         String username = openId;
         String password = openId;
@@ -163,12 +148,49 @@ public class LoginController extends BroadleafLoginController {
         securityContext.setAuthentication(authentication);
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-        //检测用户是否是通过分享页面访问网站
-        Object referrer = session.getAttribute("referrer");
-        if (Objects.nonNull(referrer)) {
-            return "redirect:/fiveCard/issue";
+    }
+
+    private void registerCustomer(String openId, Map<String, Object> userInfo) {
+        Customer customer = (Customer) entityConfiguration.createEntityInstance("org.broadleafcommerce.profile.core.domain.Customer");
+        customer.setUsername(openId);
+        Object nickname = userInfo.get("nickname");
+        customer.setFirstName(nickname == null ? " " : nickname.toString());
+        customer.setLastName(openId);
+        customer.setPassword(openId);
+        customer.setRegistered(true);
+        customer.setEmailAddress("default");
+        Map<String, CustomerAttribute> customerAttributes = extractCustomerAttributes(userInfo);
+        for (CustomerAttribute attribute : customerAttributes.values()) {
+            attribute.setCustomer(customer);
         }
-        return "redirect:/index";
+        customerService.registerCustomer(customer, openId, openId);
+    }
+
+    /**
+     * 将调用微信接口返回的用户信息添加到用户对象
+     *
+     * @param userInfo
+     */
+    private Map<String, CustomerAttribute> extractCustomerAttributes(Map<String, Object> userInfo) {
+        Map<String, CustomerAttribute> customerAttributes = new HashMap<>();
+        userInfo.remove("errcode");
+        userInfo.remove("errmsg");
+        userInfo.remove("nonce");
+        userInfo.remove("app_key");
+        userInfo.remove("stat_src");
+        userInfo.remove("timestamp");
+        userInfo.remove("queryStr");
+        Set<String> keySet = userInfo.keySet();
+        for (String key : keySet) {
+            CustomerAttribute attribute = new CustomerAttributeImpl();
+            attribute.setName(key);
+            Object value = userInfo.get(key);
+            if (Objects.nonNull(value)) {
+                attribute.setValue(value.toString());
+            }
+            customerAttributes.put(key, attribute);
+        }
+        return customerAttributes;
     }
 
     @RequestMapping(value = "/login/forgotPassword", method = RequestMethod.GET)

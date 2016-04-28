@@ -17,13 +17,11 @@
 package com.mycompany.controller.account;
 
 import com.mycompany.controller.form.CustomCustomerAddressForm;
-import com.mycompany.interceptor.WeiXinInterceptor;
 import com.mycompany.sample.core.WeiXinConstants;
 import com.mycompany.sample.core.catalog.domain.CustomAddress;
 import com.mycompany.sample.core.catalog.domain.CustomAddressImpl;
 import com.mycompany.sample.core.catalog.domain.CustomCustomer;
 import com.mycompany.sample.core.catalog.domain.Shop;
-import com.mycompany.sample.service.FiveCardService;
 import com.mycompany.sample.service.ShopService;
 import com.mycompany.sample.service.WeixinService;
 import com.mycompany.sample.util.CommonUtils;

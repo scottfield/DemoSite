@@ -25,6 +25,7 @@
     <sec:http pattern="/css/**" security="none" />
     <sec:http pattern="/fonts/**" security="none" />
     <sec:http pattern="/img/**" security="none" />
+    <sec:http pattern="/images/**" security="none" />
     <sec:http pattern="/js/**" security="none" />
     <sec:http pattern="/**/${asset.server.url.prefix.internal}/**" security="none" />
     <sec:http pattern="/favicon.ico" security="none" />       
@@ -68,7 +69,8 @@
         <sec:logout delete-cookies="ActiveID" invalidate-session="true" logout-url="/logout"/>
         
         <!-- Specify our custom filters -->
-        <sec:custom-filter ref="blPreSecurityFilterChain" before="CHANNEL_FILTER"/>
+        <!--<sec:custom-filter ref="checkUserSubscribeFilter" before="FIRST"/>-->
+        <sec:custom-filter ref="blPreSecurityFilterChain" before="FIRST"/>
         <sec:custom-filter ref="blCsrfFilter" before="FORM_LOGIN_FILTER"/>
         <sec:custom-filter ref="blSessionFixationProtectionFilter" before="SESSION_MANAGEMENT_FILTER"/>
         <sec:custom-filter ref="blPostSecurityFilterChain" after="SWITCH_USER_FILTER"/>

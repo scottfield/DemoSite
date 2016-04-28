@@ -21,9 +21,7 @@ import java.util.Objects;
  * Created by jackie on 4/21/2016.
  * 生成微信js sdk签名
  */
-public class WeiXinInterceptor implements HandlerInterceptor {
-    private volatile static int count = 0;
-    private static final int maxTry = 3;
+public class WeiXinSignatureInterceptor implements HandlerInterceptor {
     @Resource
     private WeixinService weixinService;
 
@@ -82,18 +80,7 @@ public class WeiXinInterceptor implements HandlerInterceptor {
 
         ticketMap.put("signature", signature);
         request.setAttribute("ticketMap", ticketMap);
-        //分享相关
-        request.setAttribute("shareTitle", "分享到朋友圈");
-        request.setAttribute("shareDesc", "分享到朋友圈");
-        Customer customer = CustomerState.getCustomer();
-        String shareLink = request.getRequestURL().toString();
-        String uri = request.getRequestURI();
-        shareLink = shareLink.replace(uri, "");
-        if (Objects.nonNull(customer)) {
-            shareLink = shareLink + "/fiveCard/share?referrer=" + customer.getId();
-        }
-        request.setAttribute("shareLink", shareLink);
-        request.setAttribute("shareImageUrl", "http://wwww.baidu.com");
+
     }
 
     @Override
