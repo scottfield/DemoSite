@@ -800,7 +800,7 @@ CREATE TABLE `blc_customer` (
 
 /*Data for the table `blc_customer` */
 
-insert  into `blc_customer`(`CUSTOMER_ID`,`CREATED_BY`,`DATE_CREATED`,`DATE_UPDATED`,`UPDATED_BY`,`CHALLENGE_ANSWER`,`DEACTIVATED`,`EMAIL_ADDRESS`,`FIRST_NAME`,`LAST_NAME`,`PASSWORD`,`PASSWORD_CHANGE_REQUIRED`,`IS_PREVIEW`,`RECEIVE_EMAIL`,`IS_REGISTERED`,`TAX_EXEMPTION_CODE`,`USER_NAME`,`CHALLENGE_QUESTION_ID`,`LOCALE_CODE`) values (5800,0,'2016-04-28 13:50:30',NULL,NULL,NULL,0,'default',' ','o1Py0tx91UJXWdtT_gD9xMdI5Rdo','o1Py0tx91UJXWdtT_gD9xMdI5Rdo{5800}',0,NULL,1,1,NULL,'o1Py0tx91UJXWdtT_gD9xMdI5Rdo',NULL,NULL),(5900,0,'2016-04-28 14:09:17',NULL,NULL,NULL,0,'default','布矮矮儿','o1Py0twT_6kpQRqIX4rJiQD_fjvQ','o1Py0twT_6kpQRqIX4rJiQD_fjvQ{5900}',0,NULL,1,1,NULL,'o1Py0twT_6kpQRqIX4rJiQD_fjvQ',NULL,NULL);
+insert  into `blc_customer`(`CUSTOMER_ID`,`CREATED_BY`,`DATE_CREATED`,`DATE_UPDATED`,`UPDATED_BY`,`CHALLENGE_ANSWER`,`DEACTIVATED`,`EMAIL_ADDRESS`,`FIRST_NAME`,`LAST_NAME`,`PASSWORD`,`PASSWORD_CHANGE_REQUIRED`,`IS_PREVIEW`,`RECEIVE_EMAIL`,`IS_REGISTERED`,`TAX_EXEMPTION_CODE`,`USER_NAME`,`CHALLENGE_QUESTION_ID`,`LOCALE_CODE`) values (5800,0,'2016-04-28 13:50:30',NULL,NULL,NULL,0,'default','jackie','o1Py0tx91UJXWdtT_gD9xMdI5Rdo','o1Py0tx91UJXWdtT_gD9xMdI5Rdo{5800}',0,NULL,1,1,NULL,'o1Py0tx91UJXWdtT_gD9xMdI5Rdo',NULL,NULL),(5900,0,'2016-04-28 14:09:17',NULL,NULL,NULL,0,'default','布矮矮儿','o1Py0twT_6kpQRqIX4rJiQD_fjvQ','o1Py0twT_6kpQRqIX4rJiQD_fjvQ{5900}',0,NULL,1,1,NULL,'o1Py0twT_6kpQRqIX4rJiQD_fjvQ',NULL,NULL);
 
 /*Table structure for table `blc_customer_address` */
 
@@ -840,7 +840,7 @@ CREATE TABLE `blc_customer_attribute` (
 
 /*Data for the table `blc_customer_attribute` */
 
-insert  into `blc_customer_attribute`(`CUSTOMER_ATTR_ID`,`NAME`,`VALUE`,`CUSTOMER_ID`) values (901,'country',NULL,5800),(902,'unionid','ocaz-sguoC7Z2I2wRPu-b3uojmhE',5800),(903,'subscribe','0',5800),(904,'city',NULL,5800),(905,'openid','o1Py0tx91UJXWdtT_gD9xMdI5Rdo',5800),(906,'sex','0',5800),(907,'groupid','0',5800),(908,'language',NULL,5800),(909,'remark',NULL,5800),(910,'subscribe_time','0',5800),(911,'province',NULL,5800),(912,'P2PData',NULL,5800),(913,'nickname',NULL,5800),(914,'headimgurl',NULL,5800),(951,'country','中国',5900),(952,'unionid','ocaz-ssewvtw-wspaylKRHwLejrY',5900),(953,'subscribe','1',5900),(954,'city','成都',5900),(955,'openid','o1Py0twT_6kpQRqIX4rJiQD_fjvQ',5900),(956,'sex','1',5900),(957,'groupid','0',5900),(958,'language','zh_CN',5900),(959,'remark','',5900),(960,'subscribe_time','1461666526',5900),(961,'province','四川',5900),(962,'P2PData',NULL,5900),(963,'nickname','布矮矮儿',5900),(964,'headimgurl','http://wx.qlogo.cn/mmopen/P8cRnwrPJuGKEICxMN8FRpnW4iakzOcE1a30PWFSpeyIUVGpaM1WTia136BeMqNne6fp2iahyJJ5HMQVogrHJJMgAQXSW2icLlZv/0',5900);
+insert  into `blc_customer_attribute`(`CUSTOMER_ATTR_ID`,`NAME`,`VALUE`,`CUSTOMER_ID`) values (901,'country',NULL,5800),(902,'unionid','ocaz-sguoC7Z2I2wRPu-b3uojmhE',5800),(903,'subscribe','0',5800),(904,'city',NULL,5800),(905,'openid','o1Py0tx91UJXWdtT_gD9xMdI5Rdo',5800),(906,'sex','0',5800),(907,'groupid','0',5800),(908,'language',NULL,5800),(909,'remark',NULL,5800),(910,'subscribe_time','0',5800),(911,'province',NULL,5800),(912,'P2PData',NULL,5800),(913,'nickname','jackie',5800),(914,'headimgurl','http://wx.qlogo.cn/mmopen/P8cRnwrPJuGKEICxMN8FRpnW4iakzOcE1a30PWFSpeyIUVGpaM1WTia136BeMqNne6fp2iahyJJ5HMQVogrHJJMgAQXSW2icLlZv/0',5800),(951,'country','中国',5900),(952,'unionid','ocaz-ssewvtw-wspaylKRHwLejrY',5900),(953,'subscribe','1',5900),(954,'city','成都',5900),(955,'openid','o1Py0twT_6kpQRqIX4rJiQD_fjvQ',5900),(956,'sex','1',5900),(957,'groupid','0',5900),(958,'language','zh_CN',5900),(959,'remark','',5900),(960,'subscribe_time','1461666526',5900),(961,'province','四川',5900),(962,'P2PData',NULL,5900),(963,'nickname','布矮矮儿',5900),(964,'headimgurl','http://wx.qlogo.cn/mmopen/P8cRnwrPJuGKEICxMN8FRpnW4iakzOcE1a30PWFSpeyIUVGpaM1WTia136BeMqNne6fp2iahyJJ5HMQVogrHJJMgAQXSW2icLlZv/0',5900);
 
 /*Table structure for table `blc_customer_offer_xref` */
 
@@ -1031,7 +1031,7 @@ CREATE TABLE `blc_discrete_order_item` (
 
 /*Data for the table `blc_discrete_order_item` */
 
-insert  into `blc_discrete_order_item`(`BASE_RETAIL_PRICE`,`BASE_SALE_PRICE`,`ORDER_ITEM_ID`,`BUNDLE_ORDER_ITEM_ID`,`PRODUCT_ID`,`SKU_ID`,`SKU_BUNDLE_ITEM_ID`) values ('899.00000','699.00000',2051,NULL,10102,10202,NULL);
+insert  into `blc_discrete_order_item`(`BASE_RETAIL_PRICE`,`BASE_SALE_PRICE`,`ORDER_ITEM_ID`,`BUNDLE_ORDER_ITEM_ID`,`PRODUCT_ID`,`SKU_ID`,`SKU_BUNDLE_ITEM_ID`) values ('899.00000','699.00000',2051,NULL,10102,10202,NULL),('899.00000','699.00000',2052,NULL,10102,10202,NULL);
 
 /*Table structure for table `blc_dyn_discrete_order_item` */
 
@@ -1334,7 +1334,7 @@ CREATE TABLE `blc_fulfillment_group` (
 
 /*Data for the table `blc_fulfillment_group` */
 
-insert  into `blc_fulfillment_group`(`FULFILLMENT_GROUP_ID`,`DELIVERY_INSTRUCTION`,`PRICE`,`SHIPPING_PRICE_TAXABLE`,`MERCHANDISE_TOTAL`,`METHOD`,`IS_PRIMARY`,`REFERENCE_NUMBER`,`RETAIL_PRICE`,`SALE_PRICE`,`FULFILLMENT_GROUP_SEQUNCE`,`SERVICE`,`SHIPPING_OVERRIDE`,`STATUS`,`TOTAL`,`TOTAL_FEE_TAX`,`TOTAL_FG_TAX`,`TOTAL_ITEM_TAX`,`TOTAL_TAX`,`TYPE`,`ADDRESS_ID`,`FULFILLMENT_OPTION_ID`,`ORDER_ID`,`PERSONAL_MESSAGE_ID`,`PHONE_ID`) values (1901,NULL,'0.00000',0,'699.00000',NULL,0,NULL,'0.00000','0.00000',NULL,NULL,NULL,NULL,'699.00000','0.00000','0.00000','0.00000','0.00000',NULL,NULL,NULL,2001,NULL,NULL);
+insert  into `blc_fulfillment_group`(`FULFILLMENT_GROUP_ID`,`DELIVERY_INSTRUCTION`,`PRICE`,`SHIPPING_PRICE_TAXABLE`,`MERCHANDISE_TOTAL`,`METHOD`,`IS_PRIMARY`,`REFERENCE_NUMBER`,`RETAIL_PRICE`,`SALE_PRICE`,`FULFILLMENT_GROUP_SEQUNCE`,`SERVICE`,`SHIPPING_OVERRIDE`,`STATUS`,`TOTAL`,`TOTAL_FEE_TAX`,`TOTAL_FG_TAX`,`TOTAL_ITEM_TAX`,`TOTAL_TAX`,`TYPE`,`ADDRESS_ID`,`FULFILLMENT_OPTION_ID`,`ORDER_ID`,`PERSONAL_MESSAGE_ID`,`PHONE_ID`) values (1901,NULL,'0.00000',0,'699.00000',NULL,0,NULL,'0.00000','0.00000',NULL,NULL,NULL,NULL,'699.00000','0.00000','0.00000','0.00000','0.00000',NULL,NULL,NULL,2001,NULL,NULL),(1902,NULL,'0.00000',0,'699.00000',NULL,0,NULL,'0.00000','0.00000',NULL,NULL,NULL,NULL,'699.00000','0.00000','0.00000','0.00000','0.00000',NULL,NULL,NULL,2002,NULL,NULL);
 
 /*Table structure for table `blc_fulfillment_group_fee` */
 
@@ -1380,7 +1380,7 @@ CREATE TABLE `blc_fulfillment_group_item` (
 
 /*Data for the table `blc_fulfillment_group_item` */
 
-insert  into `blc_fulfillment_group_item`(`FULFILLMENT_GROUP_ITEM_ID`,`PRORATED_ORDER_ADJ`,`QUANTITY`,`STATUS`,`TOTAL_ITEM_AMOUNT`,`TOTAL_ITEM_TAXABLE_AMOUNT`,`TOTAL_ITEM_TAX`,`FULFILLMENT_GROUP_ID`,`ORDER_ITEM_ID`) values (2051,'0.00',1,NULL,'699.00000','699.00000','0.00000',1901,2051);
+insert  into `blc_fulfillment_group_item`(`FULFILLMENT_GROUP_ITEM_ID`,`PRORATED_ORDER_ADJ`,`QUANTITY`,`STATUS`,`TOTAL_ITEM_AMOUNT`,`TOTAL_ITEM_TAXABLE_AMOUNT`,`TOTAL_ITEM_TAX`,`FULFILLMENT_GROUP_ID`,`ORDER_ITEM_ID`) values (2051,'0.00',1,NULL,'699.00000','699.00000','0.00000',1901,2051),(2052,'0.00',1,NULL,'699.00000','699.00000','0.00000',1902,2052);
 
 /*Table structure for table `blc_fulfillment_opt_banded_prc` */
 
@@ -1823,7 +1823,7 @@ CREATE TABLE `blc_order` (
 
 /*Data for the table `blc_order` */
 
-insert  into `blc_order`(`ORDER_ID`,`CREATED_BY`,`DATE_CREATED`,`DATE_UPDATED`,`UPDATED_BY`,`EMAIL_ADDRESS`,`NAME`,`ORDER_NUMBER`,`IS_PREVIEW`,`ORDER_STATUS`,`ORDER_SUBTOTAL`,`SUBMIT_DATE`,`TAX_OVERRIDE`,`ORDER_TOTAL`,`TOTAL_SHIPPING`,`TOTAL_TAX`,`CURRENCY_CODE`,`CUSTOMER_ID`,`LOCALE_CODE`) values (2001,5800,'2016-04-28 14:54:30','2016-04-28 14:55:08',5800,'default',NULL,'201604281454453662001',NULL,'PAID','699.00000','2016-04-28 14:54:45',NULL,'699.00000','0.00000','0.00000','CNY',5800,'zh_CN');
+insert  into `blc_order`(`ORDER_ID`,`CREATED_BY`,`DATE_CREATED`,`DATE_UPDATED`,`UPDATED_BY`,`EMAIL_ADDRESS`,`NAME`,`ORDER_NUMBER`,`IS_PREVIEW`,`ORDER_STATUS`,`ORDER_SUBTOTAL`,`SUBMIT_DATE`,`TAX_OVERRIDE`,`ORDER_TOTAL`,`TOTAL_SHIPPING`,`TOTAL_TAX`,`CURRENCY_CODE`,`CUSTOMER_ID`,`LOCALE_CODE`) values (2001,5800,'2016-04-28 14:54:30','2016-04-28 14:55:08',5800,'default',NULL,'201604281454453662001',NULL,'PAID','699.00000','2016-04-28 14:54:45',NULL,'699.00000','0.00000','0.00000','CNY',5800,'zh_CN'),(2002,5800,'2016-04-28 15:54:43','2016-04-28 15:54:48',5800,'default',NULL,'201604281554484692002',NULL,'UNPAID','699.00000','2016-04-28 15:54:48',NULL,'699.00000','0.00000','0.00000','CNY',5800,'zh_CN');
 
 /*Table structure for table `blc_order_adjustment` */
 
@@ -1905,7 +1905,7 @@ CREATE TABLE `blc_order_item` (
 
 /*Data for the table `blc_order_item` */
 
-insert  into `blc_order_item`(`ORDER_ITEM_ID`,`DISCOUNTS_ALLOWED`,`ITEM_TAXABLE_FLAG`,`NAME`,`ORDER_ITEM_TYPE`,`PRICE`,`QUANTITY`,`RETAIL_PRICE`,`RETAIL_PRICE_OVERRIDE`,`SALE_PRICE`,`SALE_PRICE_OVERRIDE`,`TOTAL_TAX`,`CATEGORY_ID`,`GIFT_WRAP_ITEM_ID`,`ORDER_ID`,`PARENT_ORDER_ITEM_ID`,`PERSONAL_MESSAGE_ID`) values (2051,NULL,NULL,'测试产品2','org.broadleafcommerce.core.order.domain.DiscreteOrderItem','699.00000',1,'899.00000',NULL,'699.00000',NULL,NULL,2001,NULL,2001,NULL,NULL);
+insert  into `blc_order_item`(`ORDER_ITEM_ID`,`DISCOUNTS_ALLOWED`,`ITEM_TAXABLE_FLAG`,`NAME`,`ORDER_ITEM_TYPE`,`PRICE`,`QUANTITY`,`RETAIL_PRICE`,`RETAIL_PRICE_OVERRIDE`,`SALE_PRICE`,`SALE_PRICE_OVERRIDE`,`TOTAL_TAX`,`CATEGORY_ID`,`GIFT_WRAP_ITEM_ID`,`ORDER_ID`,`PARENT_ORDER_ITEM_ID`,`PERSONAL_MESSAGE_ID`) values (2051,NULL,NULL,'测试产品2','org.broadleafcommerce.core.order.domain.DiscreteOrderItem','699.00000',1,'899.00000',NULL,'699.00000',NULL,NULL,2001,NULL,2001,NULL,NULL),(2052,NULL,NULL,'测试产品2','org.broadleafcommerce.core.order.domain.DiscreteOrderItem','699.00000',1,'899.00000',NULL,'699.00000',NULL,NULL,2001,NULL,2002,NULL,NULL);
 
 /*Table structure for table `blc_order_item_add_attr` */
 
@@ -1997,7 +1997,7 @@ CREATE TABLE `blc_order_item_price_dtl` (
 
 /*Data for the table `blc_order_item_price_dtl` */
 
-insert  into `blc_order_item_price_dtl`(`ORDER_ITEM_PRICE_DTL_ID`,`QUANTITY`,`USE_SALE_PRICE`,`ORDER_ITEM_ID`) values (2051,1,1,2051);
+insert  into `blc_order_item_price_dtl`(`ORDER_ITEM_PRICE_DTL_ID`,`QUANTITY`,`USE_SALE_PRICE`,`ORDER_ITEM_ID`) values (2051,1,1,2051),(2052,1,1,2052);
 
 /*Table structure for table `blc_order_multiship_option` */
 
@@ -3613,11 +3613,11 @@ CREATE TABLE `customer_fivecard_xref` (
   `type` tinyint(4) NOT NULL COMMENT '五折卡类型',
   `referer` bigint(20) DEFAULT NULL COMMENT '推荐人id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 
 /*Data for the table `customer_fivecard_xref` */
 
-insert  into `customer_fivecard_xref`(`active_date`,`create_date`,`id`,`customer_id`,`fivecard_id`,`status`,`type`,`referer`) values (NULL,'2016-04-28 14:04:57',52,5800,NULL,0,0,NULL),('2016-04-28 14:13:37','2016-04-28 14:11:08',53,5900,52,1,1,5800);
+insert  into `customer_fivecard_xref`(`active_date`,`create_date`,`id`,`customer_id`,`fivecard_id`,`status`,`type`,`referer`) values (NULL,'2016-04-28 14:04:57',52,5800,NULL,0,0,NULL),(NULL,'2016-04-28 17:09:20',57,5900,NULL,0,1,5800);
 
 /*Table structure for table `fivecard` */
 
@@ -3647,7 +3647,7 @@ CREATE TABLE `hibernate_sequence` (
 
 /*Data for the table `hibernate_sequence` */
 
-insert  into `hibernate_sequence`(`next_val`) values (57);
+insert  into `hibernate_sequence`(`next_val`) values (58);
 
 /*Table structure for table `product_extend` */
 
@@ -3665,7 +3665,7 @@ CREATE TABLE `product_extend` (
 
 /*Data for the table `product_extend` */
 
-insert  into `product_extend`(`PRODUCT_EXTEND_ID`,`PRODUCT_ID`,`PROMOTION_MESSAGE`,`SALES`) values (2,10101,'测试产品促销信息',16),(3,10102,'测试产品2促销信息',25),(4,10103,NULL,0);
+insert  into `product_extend`(`PRODUCT_EXTEND_ID`,`PRODUCT_ID`,`PROMOTION_MESSAGE`,`SALES`) values (2,10101,'测试产品促销信息',16),(3,10102,'测试产品2促销信息',26),(4,10103,NULL,0);
 
 /*Table structure for table `qrcode` */
 
