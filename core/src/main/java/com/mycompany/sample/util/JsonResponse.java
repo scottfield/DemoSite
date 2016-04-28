@@ -18,7 +18,7 @@ public class JsonResponse {
 
     public static JsonResponse response(String errorMsg) {
         JsonResponse response = new JsonResponse();
-        response.setCode(1000);
+        response.setCode(SUCCESS_CODE);
         response.setMessage(errorMsg);
         return response;
     }

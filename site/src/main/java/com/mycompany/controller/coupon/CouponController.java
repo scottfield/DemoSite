@@ -1,7 +1,6 @@
 package com.mycompany.controller.coupon;
 
-import com.mycompany.controller.form.CustomCustomerAddressForm;
-import com.mycompany.controller.form.PickupInfoForm;
+import com.mycompany.controller.form.CouponExchangeForm;
 import com.mycompany.controller.wrapper.CardWrapper;
 import com.mycompany.sample.core.catalog.domain.*;
 import com.mycompany.sample.service.CouponService;
@@ -12,14 +11,16 @@ import com.mycompany.sample.util.JsonHelper;
 import com.mycompany.sample.util.JsonResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.broadleafcommerce.profile.core.domain.Address;
+import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,17 +41,17 @@ public class CouponController {
     private ShopService shopService;
 
     /**
-     * 发放优惠券
+     * 发放线上优惠券
      *
      * @return
      */
-    @RequestMapping(value = "/issue", method = RequestMethod.POST)
+    @RequestMapping(value = "/issue/online", method = RequestMethod.POST)
     @ResponseBody
-    public Object issueCoupon() {
+    public Object issueOnlineCoupon() {
         JsonResponse result = JsonResponse.response("发放优惠券成功.");
         //检测用户拥有优惠券的数量是否超过限制(最多三张)
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
-        List<CustomerCouponXref> couponXrefList = customer.getCouponXrefs();
+        List<CustomerCouponXref> couponXrefList = customer.getOnlineCouponXrefs();
         if (Objects.nonNull(couponXrefList) && couponXrefList.size() >= 3) {
             result.setCode(JsonResponse.FAIL_CODE);
             String message = "优惠券数量已超出最大限制(每人最多3张),当前用户:" + customer.getId() + ",已拥有的优惠券" + couponXrefList.size() + "张";
@@ -58,21 +59,75 @@ public class CouponController {
             LOG.info(message);
             return result;
         }
-        //从小到大的面额来发放优惠券,发完为止
-        Coupon coupon = null;
-        for (int couponType = Coupon.TYPE_A; couponType <= Coupon.TYPE_D; couponType++) {
-            coupon = couponService.readByType(couponType);
-            if (Objects.nonNull(coupon) && coupon.getAmount() > 0) {
-                break;
-            }
-        }
+
+        Coupon coupon = getNormalCoupon();
+
         if (Objects.isNull(coupon)) {
-            result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("优惠券已发完.");
+            result.setCode(JsonResponse.FAIL_CODE);
             LOG.info("发放优惠券信息:" + JsonHelper.toJsonStr(coupon));
             return result;
         }
 
+        //修改优惠券数量
+        issueCoupon(coupon, customer);
+        LOG.info("优惠券剩余数量==>" + coupon.getAmount());
+        Map<String, Object> others = new HashMap<>();
+        others.put("couponValue", coupon.getValue());
+        result.setOthers(others);
+        return result;
+    }
+
+    /**
+     * 发放线上优惠券
+     *
+     * @return
+     */
+    @RequestMapping(value = "/issue/offline", method = RequestMethod.GET)
+    @ResponseBody
+    public Object issueOfflineCoupon() {
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        JsonResponse result = JsonResponse.response("发放优惠券成功.");
+        Map<String, Object> others = new HashMap<>();
+
+        Coupon couponE = couponService.readByType(Coupon.TYPE_E);//A卡用户优惠券
+        Coupon couponF = couponService.readByType(Coupon.TYPE_F);//B卡用户优惠券
+        //发放A卡用户优惠券
+        JsonResponse responseA = issueCoupon(couponE, customer);
+        if (responseA.getCode() != 1000) {
+            result.setCode(JsonResponse.FAIL_CODE);
+            others.put("errorA", responseA.getMessage());
+        }
+        CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
+        if (Objects.isNull(fiveCardXref)) {
+            result.setCode(JsonResponse.FAIL_CODE);
+            result.setMessage("还没领取五折卡哦");
+            return result;
+        }
+        //发放B卡用户优惠券
+        JsonResponse responseB = issueCoupon(couponF, fiveCardXref.getReferer());
+        if (responseB.getCode() != 1000) {
+            result.setCode(JsonResponse.FAIL_CODE);
+            others.put("errorB", responseB.getMessage());
+        }
+        result.setOthers(others);
+        return result;
+    }
+
+    private JsonResponse issueCoupon(Coupon coupon, Customer customer) {
+        JsonResponse result = JsonResponse.response("发放优惠券成功.");
+        if (Objects.isNull(customer)) {
+            result.setCode(JsonResponse.FAIL_CODE);
+            result.setMessage("用户不存在");
+            return result;
+        }
+        //检查卡券数量
+        if (coupon.getAmount() == 0) {
+            LOG.info("优惠券类型" + coupon.getType() + "剩余数量==>" + coupon.getAmount());
+            result.setCode(JsonResponse.FAIL_CODE);
+            result.setMessage("优惠券已派完");
+            return result;
+        }
         //修改优惠券数量
         coupon.setAmount(coupon.getAmount() - 1);
         //发放优惠券
@@ -84,10 +139,19 @@ public class CouponController {
         couponXref.setUpdatedOn(CommonUtils.currentDate());
         couponXrefService.saveCustomerXref(couponXref);
         LOG.info("优惠券剩余数量==>" + coupon.getAmount());
-        Map<String, Object> others = new HashMap<>();
-        others.put("couponValue", coupon.getValue());
-        result.setOthers(others);
         return result;
+    }
+
+    private Coupon getNormalCoupon() {
+        //从小到大的面额来发放优惠券,发完为止
+        Coupon coupon = null;
+        for (int couponType = Coupon.TYPE_A; couponType <= Coupon.TYPE_D; couponType++) {
+            coupon = couponService.readByType(couponType);
+            if (Objects.nonNull(coupon) && coupon.getAmount() > 0) {
+                break;
+            }
+        }
+        return coupon;
     }
 
     /**
@@ -114,14 +178,14 @@ public class CouponController {
     /**
      * 兑换优惠券
      *
-     * @param couponXrefId
+     * @param form
      * @return
      */
-    @RequestMapping(value = "/exchange", method = RequestMethod.POST)
+    @RequestMapping(value = "/exchange/confirm", method = RequestMethod.POST)
     @ResponseBody
-    public Object exchangeCoupon(@RequestParam(value = "couponXrefId") Long couponXrefId, PickupInfoForm form) {
+    public Object exchangeCoupon(CouponExchangeForm form) {
         //检测优惠券是否存在
-        CustomerCouponXref couponXref = couponXrefService.readById(couponXrefId);
+        CustomerCouponXref couponXref = couponXrefService.readById(form.getCouponXrefId());
         JsonResponse result = JsonResponse.response("兑换优惠券成功.");
         if (Objects.isNull(couponXref)) {
             result.setCode(JsonResponse.FAIL_CODE);

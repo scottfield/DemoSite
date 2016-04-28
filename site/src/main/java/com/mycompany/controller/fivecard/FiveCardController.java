@@ -1,6 +1,7 @@
 package com.mycompany.controller.fivecard;
 
 import com.mycompany.controller.account.ManageCustomerAddressesController;
+import com.mycompany.controller.wrapper.CustomerWrapper;
 import com.mycompany.sample.core.catalog.domain.*;
 import com.mycompany.sample.service.FiveCardService;
 import com.mycompany.sample.service.ShopService;
@@ -9,11 +10,13 @@ import com.mycompany.sample.util.CommonUtils;
 import org.broadleafcommerce.profile.core.domain.Address;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.core.domain.CustomerAddress;
+import org.broadleafcommerce.profile.core.domain.CustomerAttribute;
 import org.broadleafcommerce.profile.core.service.AddressService;
 import org.broadleafcommerce.profile.core.service.CustomerAddressService;
 import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by jackie on 4/23/2016.
@@ -189,6 +193,13 @@ public class FiveCardController {
         return "redirect:/fiveCard";
     }
 
+    /**
+     * 分享链接访问地址
+     *
+     * @param referrer
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/share", method = RequestMethod.GET)
     public String shareFiveCard(@RequestParam("referrer") Long referrer, HttpServletRequest request) {
         //检测分享人
@@ -199,6 +210,46 @@ public class FiveCardController {
         }
         //跳转到首页，如果用户没有授权则会先进行授权
         return "redirect:/";
+    }
+
+    /**
+     * 用户分享出去的链接被好友点击的统计信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/share/page", method = RequestMethod.GET)
+    public String shareFiveCardPage(Model model) {
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        CustomerWrapper owner = getCustomerWrapper(customer);
+        List<CustomerWrapper> followers = getFollowers(customer);
+        owner.setFollowers(followers);
+        model.addAttribute("owner", owner);
+        return "fivecard/card5_share";
+    }
+
+    /**
+     * 获取分享好友列表
+     *
+     * @return
+     */
+    private List<CustomerWrapper> getFollowers(CustomCustomer customer) {
+
+        List<CustomerFiveCardXref> sharedCardXrefs = customer.getFiveCardXref().getSharedCardXrefs();
+        return sharedCardXrefs.stream().map(sharedCardXref -> (CustomCustomer) sharedCardXref.getCustomer()).
+                map(this::getCustomerWrapper).collect(Collectors.toList());
+    }
+
+    private CustomerWrapper getCustomerWrapper(CustomCustomer customCustomer) {
+        CustomerWrapper customerWrapper = new CustomerWrapper();
+        CustomerAttribute nickname = customCustomer.getCustomerAttributes().get("nickname");
+        CustomerAttribute headImageUrl = customCustomer.getCustomerAttributes().get("headimgurl");
+        if (Objects.nonNull(nickname)) {
+            customerWrapper.setNickname(nickname.getValue());
+        }
+        if (Objects.nonNull(headImageUrl)) {
+            customerWrapper.setHeadImageUrl(headImageUrl.getValue());
+        }
+        return customerWrapper;
     }
 
     @RequestMapping("/guide")

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>关注公众号引导</title>
+		<style th:inline="text">
+		/*	html{position:relative;width:100%;height:100%;}
+			body{
+				position:relative;width:100%;height:100%;
+				background-image:url([[@{/images/new/guide.jpg}]]);
+				background-size:cover;
+				background-position:center top;
+				margin:0 auto;
+			}
+			.qrcode{
+				position:absolute;
+				left:55%;top:13%;
+				width:38%;
+			}*/
+		</style>
+	</head>
+	<body>
+		<img class="qrcode" th:src="@{/images/new/activity-guide-head.jpg}"/>
+	</body>
+</html>

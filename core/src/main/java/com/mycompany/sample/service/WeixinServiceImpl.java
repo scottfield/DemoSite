@@ -65,7 +65,8 @@ public class WeixinServiceImpl implements WeixinService {
         WeixinService service = new WeixinServiceImpl();
 //        System.out.println(service.getVipInfo("o1Py0t7UnGihjJqCfZz2bigtkTu4"));
 //        System.out.println(service.getTicket());
-        System.out.println(service.getUserInfo("o1Py0twT_6kpQRqIX4rJiQD_fjvQ"));
+        System.out.println(service.getUserInfo("o1Py0twT_6kpQRqIX4rJiQD_fjvQ"));//老段
+//        System.out.println(service.getUserInfo("o1Py0tx91UJXWdtT_gD9xMdI5Rdo"));//jackie
       /*  Map<String, Object> param = new HashMap<>();
         param.put("timeStamp", "1461661208969");
         param.put("package", "prepay_id=wx201604261702421622b1c4a10329035995");

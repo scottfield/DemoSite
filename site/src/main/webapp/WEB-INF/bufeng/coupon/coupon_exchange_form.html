@@ -26,7 +26,7 @@
 </header>
 
 <!---->
-<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/coupon/exchange}" th:method="post">
+<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/coupon/exchange/confirm}" th:method="post">
     <div class="take-cargo-sm"><em>1</em> 请填写您的信息</div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
@@ -75,7 +75,7 @@
     </div>
     <input type="hidden" name="couponXrefId" th:value="${param.couponXrefId[0]}"/>
 </blc:form>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="text">
     $(function () {
        /* $("#submitBtn").click(function (e) {
             e.preventDefault();
@@ -122,9 +122,7 @@
             })
                     .done(function (data) {
                         if (data.code == 1000) {
-                            debugger;
-                            alert(data.message);
-//                            location.href = [[@{/account/orders}]];
+                            location.href = '[[@{/manage/couponAndFiveCard}]]';
                         } else {
                             alert(data.message);
                         }

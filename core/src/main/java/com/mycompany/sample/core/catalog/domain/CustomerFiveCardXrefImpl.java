@@ -1,8 +1,12 @@
 package com.mycompany.sample.core.catalog.domain;
 
 import org.broadleafcommerce.profile.core.domain.Customer;
+
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -10,14 +14,14 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "customer_fivecard_xref")
-public class CustomerFiveCardXrefImpl implements CustomerFiveCardXref {
+public class CustomerFiveCardXrefImpl implements CustomerFiveCardXref ,Serializable{
     @Id
     @GeneratedValue
     private Integer id;
     @OneToOne(targetEntity = CustomCustomerImpl.class)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
-    @OneToOne(targetEntity = FiveCardImpl.class,cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = FiveCardImpl.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "fivecard_id", referencedColumnName = "card_id")
     private FiveCard fiveCard;
     private Boolean status;
@@ -29,6 +33,9 @@ public class CustomerFiveCardXrefImpl implements CustomerFiveCardXref {
     private Date createDate;
     @Column(name = "active_date")
     private Date activeDate;
+    @OneToMany(targetEntity = CustomerFiveCardXrefImpl.class)
+    @JoinColumn(name = "referer", referencedColumnName = "customer_id")
+    private List<CustomerFiveCardXref> sharedCardXrefs = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -93,5 +100,13 @@ public class CustomerFiveCardXrefImpl implements CustomerFiveCardXref {
 
     public void setActiveDate(Date activeDate) {
         this.activeDate = activeDate;
+    }
+
+    public List<CustomerFiveCardXref> getSharedCardXrefs() {
+        return sharedCardXrefs;
+    }
+
+    public void setSharedCardXrefs(List<CustomerFiveCardXref> sharedCardXrefs) {
+        this.sharedCardXrefs = sharedCardXrefs;
     }
 }

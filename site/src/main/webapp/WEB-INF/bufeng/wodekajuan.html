@@ -29,12 +29,12 @@
 <!---->
 <div th:remove="tag" th:if="${cards==null or #lists.size(cards)==0}">
     <div class="card-volume-empty">
-        <img src="images/empty_03.jpg" width="50%"/>
+        <img th:src="@{/images/empty_03.jpg}" width="50%"/>
 
         <div class="color-empty-gray">您还没有领取到任何卡券，赶快去领取吧！</div>
     </div>
     <div class="card-volume-empty">
-        <a href="#">马上去领取</a>
+        <a th:href="@{/fiveCard/issue}">马上去领取</a>
     </div>
 </div>
 <!--这里要注意的是img-panel里面的图片的宽高比例一定要一样-->

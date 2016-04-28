@@ -46,7 +46,7 @@
         //微信
         $(function () {
             wx.config({
-                debug: true,
+                debug: false,
                 appId: 'wx937fba8914a5d9a9',
                 timestamp: '[[${ticketMap.timestamp}]]',
                 nonceStr: '[[${ticketMap.nonce}]]',
@@ -117,40 +117,7 @@
                         needResult: 1,
                         desc: 'scanQRCode desc',
                         success: function (res) {
-                            //mock data
-//                            res = {"resultStr": "CODE_128,7400045945206", "errMsg": "scanQRCode:ok"};
-                            //检测是否扫码成功
-                            if (res.errMsg != "scanQRCode:ok") {
-                                alert(res.errMsg);
-                                return;
-                            }
-                            //提取二维码
-                            var code = res.resultStr.split(",")[1];
-                            console.log("the qr code==>" + code);
-                            //检测扫码结果是否可用
-                            $.get("[[@{/qr/verify/}]]" + code)
-                                    .done(function (data) {
-                                        console.log(data);
-                                        alert(data.message);
-
-                                        //如果有效的话就信息派发优惠券
-                                        if (data.code == 1000) {
-                                            $.get("[[@{/qr/exchange/}]]" + code)
-                                                    .done(function (data) {
-                                                        console.log(data);
-                                                        alert(data.message);
-                                                    })
-                                                    .fail(function (data) {
-                                                        console.log(data);
-                                                        alert(data.responseText);
-                                                    });
-
-                                        }
-                                    })
-                                    .fail(function (data) {
-                                        console.log(data);
-                                        alert("验证二维码失败,错误信息:" + data.responseText);
-                                    });
+                            qrScanCallback(res);
                         }
                     });
                 });
@@ -160,7 +127,63 @@
         $(function () {
             $("#getFiveCard").click(function () {
                 location.href = "[[@{/fiveCard/issue}]]";
-            })
+            });
         });
+        function qrScanCallback(res) {
+            //mock data
+            res = {"resultStr": "CODE_128,7400045945206", "errMsg": "scanQRCode:ok"};
+            //检测是否扫码成功
+            if (res.errMsg != "scanQRCode:ok") {
+                alert(res.errMsg);
+                return;
+            }
+            //提取二维码
+            var code = res.resultStr.split(",")[1];
+            console.log("the qr code==>" + code);
+            verifyQRCode(code);
+            //检测扫码结果是否可用
+            function verifyQRCode(code) {
+                $.get("[[@{/qr/verify/}]]" + code)
+                        .done(function (data) {
+                            console.log(data);
+                            alert(data.message);
+                            //兑换二维码
+                            if (data.code == 1000) {
+                                exhangeQRCode();
+                            }
+                        })
+                        .fail(function (data) {
+                            console.log(data);
+                            alert("验证二维码失败,错误信息:" + data.responseText);
+                        });
+            }
+
+            //兑换二维码
+            function exhangeQRCode() {
+                $.get("[[@{/qr/exchange/}]]" + code)
+                        .done(function (data) {
+                            console.log(data);
+                            alert(data.message);
+                            issueCoupon();
+                        })
+                        .fail(function (data) {
+                            console.log(data);
+                            alert(data.responseText);
+                        });
+            }
+
+            //发放优惠券
+            function issueCoupon() {
+                var url = '[[@{/coupon/issue/offline}]]';
+                $.get(url).done(function (res) {
+                    if (res.code == 1000) {
+                        alert(res.message);
+                        location.href = '[[@{/manage/couponAndFiveCard}]]';
+                    } else {
+                        alert("优惠券已派完");
+                    }
+                });
+            }
+        }
     </script>
 </div>

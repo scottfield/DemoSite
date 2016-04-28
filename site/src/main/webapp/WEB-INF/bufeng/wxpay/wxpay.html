@@ -19,15 +19,15 @@
                     },
                     function (res) {
                         WeixinJSBridge.log(res.err_msg);
-                        alert(res.err_code + res.err_desc + res.err_msg);
-                        paymentCallback(res.err_code);
+                        alert("err_code:"+res.err_code + ",err_desc:"+res.err_desc + ",err_msg:"+res.err_msg);
+                        paymentCallback(res.err_msg);
                     }
             )
             ;
         }
         /*<![CDATA[*/
-        function paymentCallback(errorCode) {
-            if (errorCode != "get_brand_wcpay_request：ok") {
+        function paymentCallback(errorMsg) {
+            if (errorMsg != "get_brand_wcpay_request:ok") {
                 alert("支付失败");
                 return;
             }
@@ -72,6 +72,7 @@
                 jsApiCall();
             }
         }
+        callpay();
     </script>
     <script type="text/javascript">
         /*  //获取共享地址
@@ -105,13 +106,13 @@
 
     </script>
 </head>
-<body th:attr="data-orderid=${orderId},data-confirmurl=@{/account/orders/confirm},data-token=${session.csrfToken},data-issue-coupon-url=@{/coupon/issue}">
-<br/>
+<body th:attr="data-orderid=${orderId},data-confirmurl=@{/account/orders/confirm},data-token=${session.csrfToken},data-issue-coupon-url=@{/coupon/issue/online}">
+<!--<br/>
 <font color="#9ACD32"><b>该笔订单支付金额为<span style="color:#f00;font-size:50px">1分</span>钱</b></font><br/><br/>
 <div align="center">
     <button style="width:210px; height:50px; border-radius: 15px;background-color:#FE6714; border:0px #FE6714 solid; cursor: pointer;  color:white;  font-size:16px;"
             type="button" onclick="callpay()">立即支付
     </button>
-</div>
+</div>-->
 </body>
 </html>

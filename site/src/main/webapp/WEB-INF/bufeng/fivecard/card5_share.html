@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html th:inline="text" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>五折卡分享好友</title>
+    <div th:replace="/partials/header::header"></div>
+    <link rel="stylesheet" th:href="@{/css/five_card_share.css}"/>
+</head>
+<body class="has-navbar">
+<!--抢五折卡标题-->
+<header th:replace="fivecard/partials/header::header"></header>
+<!--已分享的状态加上shared类名即可-->
+<div class="card5-share-main img-panel">
+    <img th:src="@{/images/new/card-5-share/bg.jpg}"/>
+    <div class="link me" th:object="${owner}">
+        <span class="bg link"></span>
+        <img class="link avatar" th:src="@{*{headImageUrl}}"/>
+        <span class="link name" th:text="*{nickname}">我的名字很长很长</span>
+    </div>
+    <div class="link friend1 shared" th:each="follower:${owner.followers}" th:object="${follower}">
+        <span class="bg link"></span>
+        <img class="link avatar" th:src="@{*{headImageUrl}}"/>
+        <div class="link text">
+            <span class="name" th:text="*{nickname}">爱丽丝</span>领取了五折卡！
+        </div>
+    </div>
+
+			<span class="link" style="width:45%;left:14%;bottom:94.5%;color:#ffcf01;font-size:12px;line-height:12px">
+				你已分享给<span style="font-size:20px;line-height:20px;" th:text="${#lists.size(owner.followers)}">12</span>位好友
+			</span>
+			<span class="link" style="left:66%;bottom:94.5%;color:#ffcf01;font-size:12px;">
+				荣誉称号<span style="font-size:20px;line-height:20px;" th:text="${owner.title}">人气王</span>
+			</span>
+    <span onclick="openShareGuide()" class="link" style="width:36%;height:5.5%;left:31%;top:63%;"></span>
+</div>
+<div class="card5-share-text">
+    <p>在过去一周在过去一周在过去一周在过去一周在过去一周在过去一周</p>
+    <p>在过去一周在过去一周在过去一周在过去一周在过去一周在过去一周</p>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+        FastClick.attach(document.body);
+    });
+    function openShareGuide() {
+        $("body").append('<div class="share-guide-layer" onclick="this.parentNode.removeChild(this)"></div>')
+    }
+</script>
+<div th:replace="fivecard/partials/share::shareFiveCard"></div>
+</html>

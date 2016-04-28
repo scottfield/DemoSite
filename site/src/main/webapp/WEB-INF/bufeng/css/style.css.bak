@@ -498,8 +498,8 @@ footer .container .tab4 .num{background-color:red;position:absolute;color:#fff;f
 footer .container .tab5{background-image:url(../images/new/tab5.png);}
 footer .container .add-cart{background-image:url(../images/new/tabbar-addcart.png);background-size:auto 45%;background-position:right center;}
 footer .container .buy{background-image:url(../images/new/tabbar-buy.png);background-size:auto 45%;}
-footer .container .scan{background-image:url(../images/new/tabbar-scan.png);background-size:auto 50%;}
-footer .container .coupon{background-image:url(../images/new/tabbar-coupon.png);background-size:auto 50%;}
+footer .container .scan{background-image:url(../images/new/tabbar-scan.png);background-size:auto 45%;}
+footer .container .coupon{background-image:url(../images/new/tabbar-coupon.png);background-size:auto 45%;}
 footer a{
 	display:block;
 	-webkit-box-flex:1;

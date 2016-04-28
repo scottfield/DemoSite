@@ -10,6 +10,8 @@ public interface Coupon {
     Integer TYPE_B = 1;
     Integer TYPE_C = 2;
     Integer TYPE_D = 3;
+    Integer TYPE_E = 4;
+    Integer TYPE_F = 5;
     Integer getAmount();
 
     void setAmount(Integer amount);

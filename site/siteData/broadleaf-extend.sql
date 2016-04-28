@@ -68,8 +68,10 @@ DELETE FROM customaddressimpl;
 DELETE FROM blc_address;
 DELETE FROM blc_customer_phone;
 DELETE FROM blc_phone;
+DELETE FROM customer_fivecard_xref;
+DELETE FROM customer_coupon_xref;
 DELETE FROM blc_customer;
-/*结束*/
+/**/
 
 UPDATE shop SET shop_account_id = NULL;
 SELECT * FROM shop_account;
@@ -80,10 +82,17 @@ CREATE TABLE coupon(
   coupon_type TINYINT NOT NULL COMMENT '优惠券类型',
   coupon_value INT NOT NULL COMMENT '优惠券金额',
   coupon_amount INT NOT NULL DEFAULT 0 COMMENT '优惠券数量',
+  coupon_desc VARCHAR(100) COMMENT '使用规则描述',
   updatedOn DATETIME NOT NULL ,
   createdOn  DATETIME NOT NULL,
   PRIMARY KEY (coupon_id)
 );
+INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, updatedOn, createdOn) VALUES(0,5,8000,'购买满50元可用',now(),now());
+INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, updatedOn, createdOn) VALUES(1,10,100,'购买满88元可用',now(),now());
+INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, updatedOn, createdOn) VALUES(2,50,20,'购买满150元可用',now(),now());
+INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, updatedOn, createdOn) VALUES(3,88,5,'购买满200元可用',now(),now());
+INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, updatedOn, createdOn) VALUES(4,10,10,'购买满50元可用',now(),now());
+INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, updatedOn, createdOn) VALUES(5,10,10,'购买满50元可用',now(),now());
 DROP TABLE IF EXISTS customer_coupon_xref;
 CREATE TABLE customer_coupon_xref(
   customer_coupon_xref_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -95,4 +104,4 @@ CREATE TABLE customer_coupon_xref(
   shop_id BIGINT COMMENT '优惠券兑换门店',
   PRIMARY KEY (customer_coupon_xref_id)
 );
-/*结束*/
+/**/

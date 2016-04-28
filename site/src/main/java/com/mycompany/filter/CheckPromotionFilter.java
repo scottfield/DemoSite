@@ -32,6 +32,7 @@ public class CheckPromotionFilter extends OncePerRequestFilter {
         ignoreSet.add("/js/");
         ignoreSet.add("/css/");
         ignoreSet.add("/promotion/");
+        ignoreSet.add("/wx/");
     }
 
     @Override

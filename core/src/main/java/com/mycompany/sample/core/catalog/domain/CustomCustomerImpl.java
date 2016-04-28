@@ -5,6 +5,7 @@ import org.broadleafcommerce.profile.core.domain.CustomerImpl;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by jackie on 4/23/2016.
@@ -33,6 +34,17 @@ public class CustomCustomerImpl extends CustomerImpl implements CustomCustomer {
 
     public void setTest(String test) {
         this.test = test;
+    }
+
+    public List<CustomerCouponXref> getOnlineCouponXrefs() {
+        List<CustomerCouponXref> onlineCouponXrefs = couponXrefs.stream().filter(couponXref -> couponXref.getCoupon().getType() <= Coupon.TYPE_D).collect(Collectors.toList());
+        return onlineCouponXrefs;
+    }
+
+    @Override
+    public List<CustomerCouponXref> getOfflineCouponXrefs() {
+        List<CustomerCouponXref> offlineCouponXrefs = couponXrefs.stream().filter(couponXref -> couponXref.getCoupon().getType() > Coupon.TYPE_D).collect(Collectors.toList());
+        return offlineCouponXrefs;
     }
 
     public List<CustomerCouponXref> getCouponXrefs() {

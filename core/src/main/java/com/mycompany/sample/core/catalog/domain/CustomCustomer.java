@@ -15,6 +15,10 @@ public interface CustomCustomer extends Customer {
 
     void setTest(String test);
 
+    List<CustomerCouponXref> getOnlineCouponXrefs();
+
+    List<CustomerCouponXref> getOfflineCouponXrefs();
+
     List<CustomerCouponXref> getCouponXrefs();
 
     void setCouponXrefs(List<CustomerCouponXref> couponXrefs);

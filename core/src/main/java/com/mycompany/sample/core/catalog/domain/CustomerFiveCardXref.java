@@ -3,6 +3,7 @@ package com.mycompany.sample.core.catalog.domain;
 import org.broadleafcommerce.profile.core.domain.Customer;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jackie on 4/23/2016.
@@ -39,4 +40,7 @@ public interface CustomerFiveCardXref {
     Date getActiveDate();
 
     void setActiveDate(Date activeDate);
+    List<CustomerFiveCardXref> getSharedCardXrefs();
+
+    void setSharedCardXrefs(List<CustomerFiveCardXref> sharedCardXrefs);
 }
