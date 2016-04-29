@@ -91,6 +91,11 @@
             <!--interceptor for weixin subscribe-->
             <bean class="com.mycompany.interceptor.CheckWeiXinSubscribeInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/index"/>
+            <!--interceptor for weixin subscribe-->
+            <bean class="com.mycompany.interceptor.ShowFiveCardActiveCongratulationInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <!-- Default locale set -->

@@ -54,16 +54,22 @@ public class FiveCardController {
     public String getFiveCardPage(HttpServletRequest request, String shopOutOfRange) {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
+        //检测卡类型
+        //A卡用户检查关注门店
+        //重定向A卡用户到关注门店页面
         request.setAttribute("cardType", cardXref.getType());
         request.setAttribute("cardStatus", cardXref.getStatus());
         request.setAttribute("referrer", cardXref.getReferer());
         request.setAttribute("shopOutRange", Objects.nonNull(shopOutOfRange));
+        FiveCard fiveCard = cardXref.getFiveCard();
+        if (Objects.nonNull(fiveCard)) {
+            request.setAttribute("cardCode", fiveCard.getNo());
+        }
         return retView;
     }
 
     @RequestMapping(value = "/sharePage", method = RequestMethod.GET)
     public String getFiveCardSharePage() {
-        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         return "card5_share";
     }
 
@@ -140,16 +146,7 @@ public class FiveCardController {
         if (cardXref.getType() == FiveCard.CARD_TYPE_B && (Objects.isNull((customer.getCustomerAddresses())) || customer.getCustomerAddresses().size() == 0)) {
             return "redirect:/account/addresses?activeFiveCard=true";
         } else if (cardXref.getType() == FiveCard.CARD_TYPE_A) {
-            //检测是否关注门店
-
-            //1检测本地数据库是否有门店记录
-            CustomerAddress followedAddress = null;
-            List<CustomerAddress> customerAddresses = customer.getCustomerAddresses();
-            for (CustomerAddress customerAddress : customerAddresses) {
-                if (ManageCustomerAddressesController.followedAddressName.equals(customerAddress.getAddressName())) {
-                    followedAddress = customerAddress;
-                }
-            }
+            CustomerAddress followedAddress = hasFollowShop(customer);
             //2调用接口查看是否有关注门店
             if (Objects.isNull(followedAddress)) {
                 Map<String, Object> vipInfo = weixinService.getVipInfo(customer.getUsername());
@@ -182,15 +179,38 @@ public class FiveCardController {
             }
         }
         //符合激活条件,激活相应类型的五折卡
-        Integer type = cardXref.getType();
-        FiveCard fiveCard = fiveCardService.readByStatusAndType(false, type);
+        bindFiveCard(customer);
+        return "redirect:/fiveCard";
+    }
+
+    private CustomerAddress hasFollowShop(CustomCustomer customer) {
+        //检测是否关注门店
+
+        //1检测本地数据库是否有门店记录
+        CustomerAddress followedAddress = null;
+        List<CustomerAddress> customerAddresses = customer.getCustomerAddresses();
+        for (CustomerAddress customerAddress : customerAddresses) {
+            if (ManageCustomerAddressesController.followedAddressName.equals(customerAddress.getAddressName())) {
+                followedAddress = customerAddress;
+            }
+        }
+        return followedAddress;
+    }
+
+    /**
+     * 绑定五折卡
+     *
+     * @param customer
+     */
+    private void bindFiveCard(CustomCustomer customer) {
+        CustomerFiveCardXref cardXref = customer.getFiveCardXref();
+        FiveCard fiveCard = fiveCardService.readByStatusAndType(false, cardXref.getType());
         //关联用户与五折卡
         fiveCard.setStatus(FiveCard.CARD_STATUS_ACTIVE);
         cardXref.setFiveCard(fiveCard);
         cardXref.setStatus(FiveCard.CARD_STATUS_ACTIVE);
         cardXref.setActiveDate(CommonUtils.currentDate());
         customerService.saveCustomer(customer);
-        return "redirect:/fiveCard";
     }
 
     /**

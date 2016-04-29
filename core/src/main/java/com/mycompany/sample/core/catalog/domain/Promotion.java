@@ -7,6 +7,9 @@ import java.util.Date;
  * 促销活动
  */
 public interface Promotion {
+    int NOT_START =-1;
+    int IN_PROCESS =0;
+    int END = 1;
     Date getStartDate();
 
     void setStartDate(Date startDate);
@@ -14,4 +17,6 @@ public interface Promotion {
     Date getEndDate();
 
     void setEndDate(Date endDate);
+
+    int getStatus();
 }
