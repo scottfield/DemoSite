@@ -2,6 +2,7 @@ package com.mycompany.interceptor;
 
 import com.mycompany.sample.core.catalog.domain.CustomCustomer;
 import com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref;
+import com.mycompany.sample.core.catalog.domain.FiveCard;
 import com.mycompany.sample.service.FiveCardService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,11 +32,12 @@ public class CheckFiveCardQuantityInterceptor implements HandlerInterceptor {
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
         //未领取五折卡或还未激活
         if (Objects.isNull(cardXref) || (!cardXref.getStatus())) {
-            Long availableFiveCardQuantity = fiveCardService.getAvailableFiveCardQuantity(cardXref.getType());
-            LOG.info("五折卡类型:" + cardXref.getType() + ",剩余数量:" + availableFiveCardQuantity);
+            Integer cardType = Objects.isNull(cardXref) ? FiveCard.CARD_TYPE_A : cardXref.getType();
+            Long availableFiveCardQuantity = fiveCardService.getAvailableFiveCardQuantity(cardType);
+            LOG.info("五折卡类型:" + cardType + ",剩余数量:" + availableFiveCardQuantity);
             request.setAttribute("availableFiveCardQuantity", availableFiveCardQuantity);
             //是否显示赶快激活我五折卡
-            request.setAttribute("showFiveCardAlert", availableFiveCardQuantity<100);
+            request.setAttribute("showFiveCardAlert", availableFiveCardQuantity < 100);
             return true;
         }
 
