@@ -37,4 +37,7 @@ public interface CustomerCouponXref {
     Shop getExchangeShop();
 
     void setExchangeShop(Shop exchangeShop);
+    boolean isNewCoupon();
+
+    void setNewCoupon(boolean newCoupon);
 }

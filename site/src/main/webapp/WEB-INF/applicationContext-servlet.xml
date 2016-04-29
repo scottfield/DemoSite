@@ -93,8 +93,13 @@
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/index"/>
-            <!--interceptor for weixin subscribe-->
-            <bean class="com.mycompany.interceptor.ShowFiveCardActiveCongratulationInterceptor"/>
+            <!--interceptor for new coupon -->
+            <bean class="com.mycompany.interceptor.CheckNewCouponInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/index"/>
+            <!--interceptor for checking five card quantity available -->
+            <bean class="com.mycompany.interceptor.CheckFiveCardQuantityInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

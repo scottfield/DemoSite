@@ -10,8 +10,8 @@ public interface Coupon {
     Integer TYPE_B = 1;
     Integer TYPE_C = 2;
     Integer TYPE_D = 3;
-    Integer TYPE_E = 4;
-    Integer TYPE_F = 5;
+    Integer TYPE_E = 4;//A卡用户线下优惠券
+    Integer TYPE_F = 5;//B卡用户线下优惠券
     Integer getAmount();
 
     void setAmount(Integer amount);
@@ -34,4 +34,7 @@ public interface Coupon {
     Date getCreatedOn();
 
     void setCreatedOn(Date createdOn);
+    String getDesc();
+
+    void setDesc(String desc);
 }

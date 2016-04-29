@@ -31,7 +31,7 @@
         })
     </script>
 </head>
-<body class="has-tabbar" th:inline="text">
+<body class="has-tabbar" th:inline="text" th:attr="data-show-new-share-coupon-dialog=${showNewShareCouponDialog}">
 <div class="img-panel">
 	<img src="images/new/index/head.jpg"/>
 	<a th:class="link" th:href="@{/fiveCard/guide}" style="width:12%;height:19%;top:10%;right:2%;"></a>
@@ -61,23 +61,7 @@
 <div th:replace="/catalog/partials/productList::productList(showAdd=true)"></div>
 <blc:form th:id="addToCartForm" th:action="@{/cart/add}"></blc:form>
 <!-- 浮层 -->
-<!--<div class="float-layer none">
-    <div class="volume">
-        <div class="box">
-            <div class="t-img">
-                <img src="../images/qk_03.png" width="90%" class="img"/>
-                <img src="../images/qk_03.png" width="90%" style="opacity:0;"/>
-            </div>
-            <div class="con"><img src="../images/volume_3.png" height="100%"/></div>
-            <div class="hidden btn">
-                <a href="#"><img src="../images/qk_11.png" height="25"/></a>
-                <a href="#"><img src="../images/qk_13.png" height="25"/></a>
-            </div>
-        </div>
-    </div>
-</div>
--->
-<div th:replace="/coupon/coupon_window::couponWindow"></div>
+<div th:if="${showNewShareCouponDialog}" th:replace="/coupon/coupon_window::couponWindow('10','',${showNewShareCouponDialog})"></div>
 <div th:replace="partials/footer::footer"></div>
 <script type="text/javascript">
     $(function () {

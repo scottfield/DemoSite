@@ -2,6 +2,9 @@ package com.mycompany.interceptor;
 
 import com.mycompany.sample.core.catalog.domain.CustomCustomer;
 import com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref;
+import com.mycompany.sample.service.FiveCardService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,27 +18,27 @@ import java.util.Objects;
 /**
  * Created by jackie on 4/29/2016.
  */
-public class ShowFiveCardActiveCongratulationInterceptor implements HandlerInterceptor {
+public class CheckFiveCardQuantityInterceptor implements HandlerInterceptor {
+    private static final Log LOG = LogFactory.getLog(CheckFiveCardQuantityInterceptor.class);
     @Resource
     private CustomerService customerService;
+    @Resource
+    private FiveCardService fiveCardService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
-        //还未领取五折卡
-        if (Objects.isNull(cardXref)) {
+        //未领取五折卡或还未激活
+        if (Objects.isNull(cardXref) || (!cardXref.getStatus())) {
+            Long availableFiveCardQuantity = fiveCardService.getAvailableFiveCardQuantity(cardXref.getType());
+            LOG.info("五折卡类型:" + cardXref.getType() + ",剩余数量:" + availableFiveCardQuantity);
+            request.setAttribute("availableFiveCardQuantity", availableFiveCardQuantity);
+            //是否显示赶快激活我五折卡
+            request.setAttribute("showFiveCardAlert", availableFiveCardQuantity<100);
             return true;
         }
-        Boolean status = cardXref.getStatus();
-        Boolean showDialog = cardXref.getShowDialog();
-        //五折卡状态为激活,并且显示提示为true则显示恭喜对话框
-        if (status && showDialog) {
-            request.setAttribute("showDialog", true);
-            //重置显示对话框未不显示
-            cardXref.setShowDialog(false);
-            customerService.saveCustomer(customer);
-        }
+
         return true;
     }
 

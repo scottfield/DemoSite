@@ -74,6 +74,7 @@ public class CouponController {
         LOG.info("优惠券剩余数量==>" + coupon.getAmount());
         Map<String, Object> others = new HashMap<>();
         others.put("couponValue", coupon.getValue());
+        others.put("couponDesc", coupon.getDesc());
         result.setOthers(others);
         return result;
     }
@@ -94,7 +95,7 @@ public class CouponController {
         Coupon couponF = couponService.readByType(Coupon.TYPE_F);//B卡用户优惠券
         //发放A卡用户优惠券
         JsonResponse responseA = issueCoupon(couponE, customer);
-        if (responseA.getCode() != 1000) {
+        if (responseA.getCode() != JsonResponse.SUCCESS_CODE) {
             result.setCode(JsonResponse.FAIL_CODE);
             others.put("errorA", responseA.getMessage());
         }
@@ -106,7 +107,7 @@ public class CouponController {
         }
         //发放B卡用户优惠券
         JsonResponse responseB = issueCoupon(couponF, fiveCardXref.getReferer());
-        if (responseB.getCode() != 1000) {
+        if (responseB.getCode() != JsonResponse.SUCCESS_CODE) {
             result.setCode(JsonResponse.FAIL_CODE);
             others.put("errorB", responseB.getMessage());
         }

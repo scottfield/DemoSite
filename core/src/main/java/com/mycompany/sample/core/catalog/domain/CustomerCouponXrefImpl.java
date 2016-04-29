@@ -32,6 +32,8 @@ public class CustomerCouponXrefImpl implements CustomerCouponXref {
     @ManyToOne(targetEntity = ShopImpl.class)
     @JoinColumn(name = "shop_id",referencedColumnName = "id")
     private Shop exchangeShop;
+    @Column(name = "is_new_coupon")
+    private boolean isNewCoupon;
 
     public CustomerCouponXrefImpl() {
     }
@@ -90,5 +92,13 @@ public class CustomerCouponXrefImpl implements CustomerCouponXref {
 
     public void setExchangeShop(Shop exchangeShop) {
         this.exchangeShop = exchangeShop;
+    }
+
+    public boolean isNewCoupon() {
+        return isNewCoupon;
+    }
+
+    public void setNewCoupon(boolean newCoupon) {
+        isNewCoupon = newCoupon;
     }
 }

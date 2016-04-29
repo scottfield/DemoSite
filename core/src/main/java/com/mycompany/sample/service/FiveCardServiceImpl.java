@@ -35,6 +35,11 @@ public class FiveCardServiceImpl implements FiveCardService {
 
     @Override
     public FiveCard readByStatusAndType(Boolean status, Integer type) {
-        return fiveCardDao.readByStatusAndType(status,type);
+        return fiveCardDao.readByStatusAndType(status, type);
+    }
+
+    @Override
+    public Long getAvailableFiveCardQuantity(Integer type) {
+        return fiveCardDao.getAvailableFiveCardQuantity(type);
     }
 }

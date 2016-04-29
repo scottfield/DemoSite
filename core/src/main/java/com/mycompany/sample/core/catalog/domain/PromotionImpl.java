@@ -31,10 +31,10 @@ public class PromotionImpl implements Promotion {
     @Override
     public int getStatus() {
         Date now = new Date();
-        if (startDate.after(now)) {
+        if (now.before(startDate)) {
             return Promotion.NOT_START;
-        } else if (endDate.before(now))
+        } else if (now.after(endDate))
             return Promotion.END;
-        return Promotion.NOT_START;
+        return Promotion.IN_PROCESS;
     }
 }

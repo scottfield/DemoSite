@@ -25,6 +25,8 @@ public class CouponImpl implements Coupon{
 
     @Column(name = "createdOn")
     private Date createdOn;
+    @Column(name = "coupon_desc")
+    private String desc;
 
     public CouponImpl() {
     }
@@ -75,5 +77,13 @@ public class CouponImpl implements Coupon{
 
     public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

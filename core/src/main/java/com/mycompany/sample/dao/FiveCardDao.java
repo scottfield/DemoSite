@@ -15,4 +15,5 @@ public interface FiveCardDao {
     void saveFiveCard(FiveCard fiveCard);
 
     FiveCard readByStatusAndType(Boolean status, Integer type);
+    Long getAvailableFiveCardQuantity(Integer type);
 }

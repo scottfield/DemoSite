@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -87,6 +89,8 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         });
         model.addAttribute("orders", orders);
         model.addAttribute("now", new Date());
+        model.addAttribute("couponValue", request.getParameter("couponValue"));
+        model.addAttribute("showCoupon", "true".equals(request.getParameter("showCoupon")));
         return getOrderHistoryView();
     }
 

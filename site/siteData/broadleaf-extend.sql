@@ -98,14 +98,15 @@ INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, update
 INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, updatedOn, createdOn) VALUES(4,10,10,'购买满50元可用',now(),now());
 INSERT INTO coupon(coupon_type, coupon_value, coupon_amount, coupon_desc, updatedOn, createdOn) VALUES(5,10,10,'购买满50元可用',now(),now());
 DROP TABLE IF EXISTS customer_coupon_xref;
-CREATE TABLE customer_coupon_xref(
-  customer_coupon_xref_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  coupon_id BIGINT,
-  customer_id BIGINT,
-  coupon_status TINYINT DEFAULT 0 COMMENT '优惠券使用状态,默认未使用',
-  updatedOn  DATETIME NOT NULL,
-  createdOn  DATETIME NOT NULL,
-  shop_id BIGINT COMMENT '优惠券兑换门店',
-  PRIMARY KEY (customer_coupon_xref_id)
-);
+CREATE TABLE `customer_coupon_xref` (
+  `customer_coupon_xref_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `coupon_id` bigint(20) DEFAULT NULL,
+  `customer_id` bigint(20) DEFAULT NULL,
+  `coupon_status` tinyint(4) DEFAULT '0' COMMENT '优惠券使用状态,默认未使用',
+  `updatedOn` datetime NOT NULL,
+  `createdOn` datetime NOT NULL,
+  `shop_id` bigint(20) DEFAULT NULL COMMENT '优惠券兑换门店',
+  `is_new_coupon` TINYINT DEFAULT 1 COMMENT '是否是新获取的优惠券',
+  PRIMARY KEY (`customer_coupon_xref_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
 /**/

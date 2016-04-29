@@ -2,6 +2,8 @@ package com.mycompany.filter;
 
 import com.mycompany.sample.core.catalog.domain.Promotion;
 import com.mycompany.sample.service.PromotionService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,6 +22,7 @@ import java.util.Set;
  */
 @Component("checkPromotionFilter")
 public class CheckPromotionFilter extends OncePerRequestFilter {
+    private static final Log LOG = LogFactory.getLog(CheckPromotionFilter.class);
     @Resource
     private PromotionService promotionService;
 
@@ -45,15 +48,19 @@ public class CheckPromotionFilter extends OncePerRequestFilter {
             return;
         }
         request.setAttribute("promotion", currentPromotion);
-        switch (currentPromotion.getStatus()) {
+        int status = currentPromotion.getStatus();
+        LOG.info("当前活动状态==>" + status);
+
+        switch (status) {
             case Promotion.NOT_START:
                 response.sendRedirect("/promotion/countdown");
                 return;
             case Promotion.END:
             case Promotion.IN_PROCESS:
+                filterChain.doFilter(request, response);
+                break;
         }
 
-        filterChain.doFilter(request, response);
     }
 
     public boolean shouldProcessURI(String uri) {
