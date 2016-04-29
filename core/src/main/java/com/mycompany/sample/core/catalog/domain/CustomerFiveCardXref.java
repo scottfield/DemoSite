@@ -43,4 +43,7 @@ public interface CustomerFiveCardXref {
     List<CustomerFiveCardXref> getSharedCardXrefs();
 
     void setSharedCardXrefs(List<CustomerFiveCardXref> sharedCardXrefs);
+    Boolean getShowDialog();
+
+    void setShowDialog(Boolean showDialog);
 }

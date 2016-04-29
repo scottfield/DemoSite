@@ -36,6 +36,8 @@ public class CustomerFiveCardXrefImpl implements CustomerFiveCardXref ,Serializa
     @OneToMany(targetEntity = CustomerFiveCardXrefImpl.class)
     @JoinColumn(name = "referer", referencedColumnName = "customer_id")
     private List<CustomerFiveCardXref> sharedCardXrefs = new ArrayList<>();
+    @Column(name = "is_show_dialog")
+    private Boolean isShowDialog;
 
     public Integer getId() {
         return id;
@@ -108,5 +110,13 @@ public class CustomerFiveCardXrefImpl implements CustomerFiveCardXref ,Serializa
 
     public void setSharedCardXrefs(List<CustomerFiveCardXref> sharedCardXrefs) {
         this.sharedCardXrefs = sharedCardXrefs;
+    }
+
+    public Boolean getShowDialog() {
+        return isShowDialog;
+    }
+
+    public void setShowDialog(Boolean showDialog) {
+        isShowDialog = showDialog;
     }
 }

@@ -14,13 +14,15 @@
         http://www.springframework.org/schema/security/spring-security-3.1.xsd
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+    <bean id="openEntityManagerInViewFilterProxy" class="org.springframework.web.filter.DelegatingFilterProxy">
+        <property name="targetBeanName" value="openEntityManagerInViewFilter"/>
+    </bean>
 
     <bean id="openEntityManagerInViewFilter" class="org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter"/>
 
     <bean id="blPreSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
         <sec:filter-chain-map request-matcher="ant">
             <sec:filter-chain pattern="/**" filters="
-                openEntityManagerInViewFilter,
                 blEstablishSessionFilter,
                 checkPromotionFilter"/>
         </sec:filter-chain-map>

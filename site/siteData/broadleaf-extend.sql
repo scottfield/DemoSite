@@ -30,15 +30,19 @@ SELECT * FROM fivecard;
 SELECT * FROM fivecard WHERE id>30000;
 UPDATE fivecard SET `desc`='分享五张卡',`type`=1 WHERE id>30000;
 DROP TABLE IF EXISTS customer_fivecard_xref;
-CREATE TABLE customer_fivecard_xref(
-  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  customer_id BIGINT NOT NULL,
-  fivecard_id BIGINT,
-  `status` TINYINT NOT NULL DEFAULT 0 COMMENT '五折卡领取状态，默认为未领取',
-  `type` TINYINT NOT NULL COMMENT '五折卡类型',
-  referer BIGINT COMMENT '推荐人id',
-  PRIMARY KEY(id)
+CREATE TABLE `customer_fivecard_xref` (
+  `active_date` datetime DEFAULT NULL COMMENT '激活时间',
+  `create_date` datetime DEFAULT NULL COMMENT '发卡时间',
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `customer_id` bigint(20) NOT NULL,
+  `fivecard_id` bigint(20) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '五折卡领取状态，默认为未领取',
+  `type` tinyint(4) NOT NULL COMMENT '五折卡类型',
+  `referer` bigint(20) DEFAULT NULL COMMENT '推荐人id',
+  is_show_dialog TINYINT DEFAULT 0 COMMENT '是否已经提示过用户获取卡券成功',
+  PRIMARY KEY (`id`)
 );
+COMMIT ;
 SELECT * FROM customer_fivecard_xref;
 INSERT INTO qrcode(`code`) SELECT `条码` FROM sheet$;
 SELECT * FROM qrcode;

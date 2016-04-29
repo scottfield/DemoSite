@@ -114,7 +114,7 @@ public class LoginController extends BroadleafLoginController {
         if (Objects.isNull(customer)) {
             registerCustomer(openId, userInfo);
         } else {
-//            updateCustomer(customer, userInfo);
+            updateCustomer(customer, userInfo);
         }
         //自动登录
         autoLogin(request, openId);
@@ -163,6 +163,7 @@ public class LoginController extends BroadleafLoginController {
         for (CustomerAttribute attribute : customerAttributes.values()) {
             attribute.setCustomer(customer);
         }
+        customer.setCustomerAttributes(customerAttributes);
         customerService.registerCustomer(customer, openId, openId);
     }
 

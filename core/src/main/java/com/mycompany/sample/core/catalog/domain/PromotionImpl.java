@@ -27,4 +27,14 @@ public class PromotionImpl implements Promotion {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public int getStatus() {
+        Date now = new Date();
+        if (startDate.after(now)) {
+            return Promotion.NOT_START;
+        } else if (endDate.before(now))
+            return Promotion.END;
+        return Promotion.NOT_START;
+    }
 }

@@ -50,7 +50,7 @@
 <!-- header -->
 <header>
     <div class="container" th:if="${cardType==0}">
-        <div class="left"><a th:href="@{/index}">抢五折卡</a></div>
+        <div class="left"><a th:href="@{/index}">感恩五折卡</a></div>
         <div class="center"></div>
         <div class="right"></div>
     </div>
@@ -103,7 +103,7 @@
 <!--5折卡方式2激活-->
 <div th:remove="tag" th:if="${cardType==1 and cardStatus}">
     <div class="img-panel card5-texthead">
-        <img th:src="@{images/new/card-5/card5.png}"/>
+        <img th:src="@{/images/fivecard/__${cardCode}__.jpg}"/>
         <img th:src="@{/images/new/card-5/card5-4-1.png}" style="width:80%;margin-top:10px;"/>
         <a class="link" style="top:82%;left:13%;width:73%;height:15%;" th:href="@{/}"></a>
     </div>
@@ -291,16 +291,15 @@
 </div>
 <script type="text/javascript">
     $(function () {
+        $("#shareFiveCardBtn").click(function (e) {
+            e.preventDefault();
+            location.href='[[@{/fiveCard/share/page}]]';
+        });
         $("#activateFiveCard").click(function (e) {
             e.preventDefault();
             location.href = '[[@{/fiveCard/activate}]]';
         });
-        if($("body").data("shopoutrange")) {
-            alert("您关注的门店不在关注范围,请重新关注.");
-            location.href='[[@{/account/addresses/followShop}]]';
-        }
     });
 </script>
-<div th:replace="fivecard/partials/share::shareFiveCard"></div>
 </body>
 </html>

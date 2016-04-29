@@ -11,9 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -41,23 +39,19 @@ public class CheckPromotionFilter extends OncePerRequestFilter {
         Promotion currentPromotion = promotionService.getPromotionById(1L);
         request.setAttribute("startDate", currentPromotion.getStartDate().getTime());
         request.setAttribute("endDate", currentPromotion.getEndDate().getTime());
-        Date now = new Date();
+
         if (!shouldProcessURI(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
-        //活动已取消
-        if (Objects.isNull(currentPromotion)) {
-        } else if (currentPromotion.getStartDate().after(now)) {
-            //活动还未开始
-            response.sendRedirect("/promotion/countdown");
-            return;
-        } else if (currentPromotion.getEndDate().before(now)) {
-            //活动已经结束
-
+        request.setAttribute("promotion", currentPromotion);
+        switch (currentPromotion.getStatus()) {
+            case Promotion.NOT_START:
+                response.sendRedirect("/promotion/countdown");
+                return;
+            case Promotion.END:
+            case Promotion.IN_PROCESS:
         }
-        //活动还未开始
-
 
         filterChain.doFilter(request, response);
     }
