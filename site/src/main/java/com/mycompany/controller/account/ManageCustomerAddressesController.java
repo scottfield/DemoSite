@@ -177,10 +177,9 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
 
     @RequestMapping("/followShop/callBack")
     public String followShopCallBack(HttpServletRequest request, String openid) {
-        String referer = request.getHeader("Referer");
+        String referrer = request.getHeader("Referer");
         //关注门店成功,添加关注门店地址
-        if (Objects.nonNull(openid) && Objects.nonNull(referer) &&(referer.contains(ManageCustomerAddressesController.referer)||referer.contains("/fiveCard/activate"))) {
-            //todo 无法获取到用户关注的门店
+        if (Objects.nonNull(openid) && Objects.nonNull(referrer) &&(referrer.contains(ManageCustomerAddressesController.referer)||referrer.contains("/fiveCard/activate"))) {
             Map<String, Object> vipInfo = weixinService.getVipInfo(openid);
             //模拟数据
 //            Map<String, Object> vipInfo = new HashMap<>();

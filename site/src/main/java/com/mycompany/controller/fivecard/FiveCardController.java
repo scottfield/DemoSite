@@ -170,7 +170,7 @@ public class FiveCardController {
                         followedAddress = customerAddress;
                     } else {
                         //关注门店不在本次活动范围内
-                        return "redirect:/fiveCard?shopOutOfRange=true";
+                        return "redirect:/account/addresses/followShop";
                     }
                 }
             }
@@ -230,7 +230,7 @@ public class FiveCardController {
             session.setAttribute("referrer", referrer);
         }
         //跳转到首页，如果用户没有授权则会先进行授权
-        return "redirect:/";
+        return "redirect:/index";
     }
 
     /**

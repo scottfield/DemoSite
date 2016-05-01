@@ -17,6 +17,8 @@
 package com.mycompany.controller.account;
 
 import com.mycompany.sample.core.WeiXinConstants;
+import com.mycompany.sample.core.catalog.domain.CustomCustomer;
+import com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref;
 import com.mycompany.sample.service.CustomerAttributeService;
 import com.mycompany.sample.service.WeixinService;
 import org.apache.commons.logging.Log;
@@ -92,8 +94,8 @@ public class LoginController extends BroadleafLoginController {
         }
         String queryStr = "app_key=" + WeiXinConstants.APP_KEY + "&ret_uri=" + encodedUrl;
 //        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
-        return "redirect:/?openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo";//jackie
-//        return "redirect:/?openid=o1Py0twT_6kpQRqIX4rJiQD_fjvQ";//布矮矮
+//        return "redirect:/?openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo";//jackie
+        return "redirect:/?openid=o1Py0twT_6kpQRqIX4rJiQD_fjvQ";//布矮矮
     }
 
     /**
@@ -108,7 +110,7 @@ public class LoginController extends BroadleafLoginController {
     public String loginProcess(HttpServletRequest request, HttpServletResponse response, Model model) {
         String openId = (String) request.getAttribute("openid");
         //检测open ID是否已经注册
-        Customer customer = customerService.readCustomerByUsername(openId);
+        CustomCustomer customer = (CustomCustomer) customerService.readCustomerByUsername(openId);
         Map<String, Object> userInfo = (Map<String, Object>) request.getAttribute("userInfo");
         //如果用户不存在则注册新用户,否则更新用户信息
         if (Objects.isNull(customer)) {
@@ -119,9 +121,10 @@ public class LoginController extends BroadleafLoginController {
         //自动登录
         autoLogin(request, openId);
 
-        //检测用户是否是通过分享页面访问网站
         Object referrer = request.getSession().getAttribute("referrer");
-        if (Objects.nonNull(referrer)) {
+        CustomerFiveCardXref cardXref = customer.getFiveCardXref();
+        //检测用户是否是通过分享页面访问网站
+        if (Objects.isNull(cardXref) && Objects.nonNull(referrer)) {
             return "redirect:/fiveCard/issue";
         }
         return "redirect:/index";
