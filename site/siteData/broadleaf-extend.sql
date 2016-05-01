@@ -110,3 +110,16 @@ CREATE TABLE `customer_coupon_xref` (
   PRIMARY KEY (`customer_coupon_xref_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
 /**/
+/*创建产品扩展表*/
+DROP TABLE IF EXISTS `product_extend`;
+CREATE TABLE `product_extend` (
+  `PRODUCT_EXTEND_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `PRODUCT_ID` bigint(20) NOT NULL,
+  `PROMOTION_MESSAGE` varchar(200) DEFAULT NULL,
+  `SALES` bigint(20) DEFAULT '0' COMMENT '销售量',
+  `sale_limit` bigint(20) DEFAULT '1' COMMENT '限购数量',
+  PRIMARY KEY (`PRODUCT_EXTEND_ID`),
+  KEY `PRODUCT_ID` (`PRODUCT_ID`),
+  CONSTRAINT `product_extend_ibfk_1` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `blc_product` (`PRODUCT_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/**/

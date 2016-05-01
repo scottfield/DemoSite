@@ -23,7 +23,8 @@ public class CustomProductImpl extends ProductImpl implements CustomProduct {
             excluded = true)
     @Column(name = "SALES")
     private Integer sales = 0;
-
+    @Column(name = "sale_limit")
+    private Integer limit;
     @Override
     public String getPromoMessage() {
         return promoMessage;
@@ -42,5 +43,13 @@ public class CustomProductImpl extends ProductImpl implements CustomProduct {
     @Override
     public Integer getSales() {
         return sales < 0 ? 0 : sales;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 }

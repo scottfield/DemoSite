@@ -9,4 +9,7 @@ public interface CustomProduct extends Product {
     void setSales(Integer sales);
 
     Integer getSales();
+    Integer getLimit();
+
+    void setLimit(Integer limit);
 }

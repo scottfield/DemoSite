@@ -17,6 +17,7 @@
 package com.mycompany.controller.cart;
 
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
 import org.broadleafcommerce.core.order.service.exception.AddToCartException;
@@ -87,9 +88,9 @@ public class CartController extends BroadleafCartController {
                 responseMap.put("errorCode", exception.getErrorCode());
                 responseMap.put("errorMessage", exception.getMessage());
                 //blMessages.getMessage(exception.get, lfocale))
-            } else if (e.getCause() instanceof InventoryUnavailableException) {
-                responseMap.put("error", "inventoryUnavailable");
-            } else {
+            } else if (ExceptionUtils.getRootCause(e) instanceof InventoryUnavailableException) {
+                responseMap.put("error", "缺货啦!");
+            }else {
                 throw e;
             }
         }

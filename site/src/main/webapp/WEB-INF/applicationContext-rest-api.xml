@@ -51,5 +51,6 @@
          exception mapper or mappers.
          This MUST be marked as singleton. -->
     <bean class="org.broadleafcommerce.core.web.api.BroadleafRestExceptionMapper" scope="singleton"/>
-    
+    <!--extend product wrapper-->
+    <bean id="org.broadleafcommerce.core.web.api.wrapper.ProductWrapper" class="com.mycompany.api.endpoint.wrapper.CustomProductWrapper" scope="prototype"/>
 </beans>
