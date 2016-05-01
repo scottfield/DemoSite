@@ -20,6 +20,8 @@
 
     <bean id="openEntityManagerInViewFilter" class="org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter"/>
 
+    <bean id="checkFiveCardStatusFilter" class="com.mycompany.filter.CheckFiveCardStatusFilter"/>
+
     <bean id="blPreSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
         <sec:filter-chain-map request-matcher="ant">
             <sec:filter-chain pattern="/**" filters="
@@ -34,6 +36,7 @@
                blRequestFilter,
                blCustomerStateFilter,
                blCartStateFilter,
+               checkFiveCardStatusFilter,
                blURLHandlerFilter"/>
         </sec:filter-chain-map>
     </bean>

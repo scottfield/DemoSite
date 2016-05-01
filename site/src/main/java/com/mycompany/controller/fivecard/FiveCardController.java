@@ -54,9 +54,6 @@ public class FiveCardController {
     public String getFiveCardPage(HttpServletRequest request, String shopOutOfRange) {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
-        //检测卡类型
-        //A卡用户检查关注门店
-        //重定向A卡用户到关注门店页面
         request.setAttribute("cardType", cardXref.getType());
         request.setAttribute("cardStatus", cardXref.getStatus());
         request.setAttribute("referrer", cardXref.getReferer());
@@ -116,6 +113,10 @@ public class FiveCardController {
         customerService.saveCustomer(customer);
         //派卡完成后移除session中的推荐人
         session.removeAttribute("referrer");
+        //如果为A卡资格则自动去激活
+        if (cardXref.getType() == FiveCard.CARD_TYPE_A) {
+            return "redirect:/fiveCard/activate";
+        }
         return retView;
     }
 
@@ -163,7 +164,7 @@ public class FiveCardController {
                         Address savedAddress = addressService.saveAddress(address);
                         CustomerAddress customerAddress = customerAddressService.create();
                         customerAddress.setAddress(savedAddress);
-                        customerAddress.setAddressName(ManageCustomerAddressesController.followedAddressName);
+                        customerAddress.setAddressName(ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME);
                         customerAddress.setCustomer(CustomerState.getCustomer());
                         customerAddressService.saveCustomerAddress(customerAddress);
                         followedAddress = customerAddress;
@@ -190,7 +191,7 @@ public class FiveCardController {
         CustomerAddress followedAddress = null;
         List<CustomerAddress> customerAddresses = customer.getCustomerAddresses();
         for (CustomerAddress customerAddress : customerAddresses) {
-            if (ManageCustomerAddressesController.followedAddressName.equals(customerAddress.getAddressName())) {
+            if (ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME.equals(customerAddress.getAddressName())) {
                 followedAddress = customerAddress;
             }
         }

@@ -47,18 +47,19 @@ public class ShopInfoInterceptor implements HandlerInterceptor {
                 defaultShop = address.getShop();
             }
             model.put("defaultShop", defaultShop);
+            model.put("defaultShopId", defaultShop==null?null:defaultShop.getId());
         }
         //获取门店列表
         Set<Shop> shops = shopService.getAllShop();
         Map<String, Set<Shop>> shopMap = new HashMap<>();
         for (Shop shop : shops) {
-            String province = shop.getProvince();
-            if (!shopMap.containsKey(province)) {
+            String city = shop.getCity();
+            if (!shopMap.containsKey(city)) {
                 Set<Shop> set = new HashSet<>();
-                shopMap.put(province, set);
+                shopMap.put(city, set);
                 set.add(shop);
             } else {
-                shopMap.get(province).add(shop);
+                shopMap.get(city).add(shop);
             }
         }
         model.put("areas", shopMap);

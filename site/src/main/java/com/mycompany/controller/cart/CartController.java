@@ -53,13 +53,17 @@ public class CartController extends BroadleafCartController {
     public String cart(HttpServletRequest request, HttpServletResponse response, Model model) throws PricingException {
         return super.cart(request, response, model);
     }
-    
-    /*
-     * The Heat Clinic does not show the cart when a product is added. Instead, when the product is added via an AJAX
-     * POST that requests JSON, we only need to return a few attributes to update the state of the page. The most
-     * efficient way to do this is to call the regular add controller method, but instead return a map that contains
-     * the necessary attributes. By using the @ResposeBody tag, Spring will automatically use Jackson to convert the
-     * returned object into JSON for easy processing via JavaScript.
+
+    /**
+     * 添加商品到购物车
+     * @param request
+     * @param response
+     * @param model
+     * @param addToCartItem
+     * @return
+     * @throws IOException
+     * @throws PricingException
+     * @throws AddToCartException
      */
     @RequestMapping(value = "/add", produces = "application/json")
     public @ResponseBody Map<String, Object> addJson(HttpServletRequest request, HttpServletResponse response, Model model,

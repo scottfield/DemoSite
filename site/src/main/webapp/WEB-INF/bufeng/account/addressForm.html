@@ -5,6 +5,7 @@
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
+
     <div th:replace="/partials/header::header"></div>
     <script type="text/javascript">
         window.addEventListener('load', function () {
@@ -14,14 +15,14 @@
 </head>
 <body th:inline="text" class="has-navbar">
 <header>
-	<div class="container">
-		<div class="left">
-			<a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}">提货信息</a>
-		</div>
-		
-		<div class="center"></div>
-		<div class="right"></div>
-	</div>
+    <div class="container">
+        <div class="left">
+            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}">提货信息</a>
+        </div>
+
+        <div class="center"></div>
+        <div class="right"></div>
+    </div>
 </header>
 
 <!---->
@@ -29,50 +30,83 @@
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
         <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
-        <input type="text" name="address.firstName" th:value="${customer.customerAddresses[0].address.firstName}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+        <input type="text" name="address.firstName" th:value="${customer.customerAddresses[0].address.firstName}"
+               th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
         <input type="text" name="address.firstName" th:unless="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
     </div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：</span>
-        <input type="text" name="address.phonePrimary" th:value="${customer.customerAddresses[0].address.phonePrimary.phoneNumber}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+        <input type="text" name="address.phonePrimary"
+               th:value="${customer.customerAddresses[0].address.phonePrimary.phoneNumber}"
+               th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
         <input type="text" name="address.phonePrimary" th:unless="${#lists.size(customer.customerAddresses) gt 0}"/>
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>
         <span>提货门店：</span>
-        <div class="select" th:each="area:${areas}">
-            <select>
-                <option th:text="${area.key}">中国大陆</option>
+
+        <div class="select">
+            <select id="cityList" th:attr="data-defaultshopid=${defaultShopId}">
+                <option th:text="${area.key}" th:each="area:${areas}" th:value="${area.key}">中国大陆</option>
             </select>
             <select id="shopList" name="address.shop.id">
-                <option th:each="shop:${area.value}" th:object="${shop}" th:text="*{province+'/'+city+'/'+name}"
-                        th:attr="data-address=*{address},data-shopid=*{id}" th:value="*{id}" th:if="${defaultShop ne null and defaultShop.id == shop.id}" th:selected="true"  >四川省/成都市/青羊区/苏坡街道
-                </option>
-                <option th:each="shop:${area.value}" th:object="${shop}" th:text="*{province+'/'+city+'/'+name}"
-                        th:attr="data-address=*{address},data-shopid=*{id}" th:value="*{id}" th:unless="${defaultShop ne null and defaultShop.id == shop.id}" >四川省/成都市/青羊区/苏坡街道
-                </option>
+                <div th:each="area,index:${areas}">
+                    <option th:object="${shop}" th:each="shop:${area.value}" th:text="*{province+'/'+city+'/'+name}"
+                            th:attr="data-address=*{address},data-shopid=*{id},data-city=*{city}" th:value="*{id}">
+                        四川省/成都市/青羊区/苏坡街道
+                    </option>
+                </div>
             </select>
             <textarea th:if="${defaultShop}" th:text="${defaultShop.address}">default address</textarea>
             <textarea th:unless="${defaultShop}"></textarea>
         </div>
     </div>
-    <input type="hidden" name="address.id" th:value="${cart.customer.customerAddresses[0].address.id}" th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
+    <input type="hidden" name="address.id" th:value="${cart.customer.customerAddresses[0].address.id}"
+           th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
     <input type="hidden" name="address.id" th:unless="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
 
     <div class="take-cargo-btn">
         <a href="#" class="adress-btn" onclick="form.submit.click()">确认信息</a>
         <input type="submit" name="submit" class="none"/>
     </div>
+    <div th:text="${addressFirstName}"></div>
+    <div th:text="${addressPhonePrimary}"></div>
+    <div th:text="${addressShopId}"></div>
 </blc:form>
-<script type="text/javascript">
-    $(function () {
-        $("#shopList").change(function (data) {
-            var address = $(this.selectedOptions[0]).data("address");
-            $(this).siblings("textarea").text(address);
-
+<script type="text/javascript">9
+$(function () {
+    $("#cityList").change(function () {
+        var city = $(this).val();
+        var shopList = [];
+        $("#shopList").find("option").each(function () {
+            if ($(this).data("city") == city) {
+                shopList.push(this);
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
         });
+        /*shopList[0].selected = true;
+        $("#shopList").change();*/
     });
+    $("#shopList").change(function (data) {
+        var address = $(this.selectedOptions[0]).data("address");
+        $(this).siblings("textarea").text(address);
+
+    });
+    var defaultShopId = $("#cityList").data("defaultshopid")
+    if (defaultShopId !== undefined) {
+        $("option[data-shopid='" + defaultShopId + "']").attr("selected", "selected");
+        var city = $("option[data-shopid='" + defaultShopId + "']").data("city");
+        $("option[value='" + city + "']").attr("selected", "selected");
+    } else {
+    }
+    //自动选中第一个
+    $("#cityList").change();
+    $("#shopList").change();
+
+});
 </script>
 </body>
 </html>

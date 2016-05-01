@@ -1,5 +1,5 @@
 <div th:fragment="footer" th:remove="tag" th:inline="text">
-    <footer th:attr="data-item-count=${cart.itemCount}">
+    <footer th:attr="data-item-count=${cart.itemCount},data-unlock=${isUnlocked}">
         <div class="container">
             <a th:href="@{/}" title="首页" class="tab1"></a>
             <a class="tab2" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>

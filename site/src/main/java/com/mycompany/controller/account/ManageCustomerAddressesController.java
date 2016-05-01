@@ -17,6 +17,7 @@
 package com.mycompany.controller.account;
 
 import com.mycompany.controller.form.CustomCustomerAddressForm;
+import com.mycompany.controller.form.validator.CustomCustomerAddressFormValidator;
 import com.mycompany.sample.core.WeiXinConstants;
 import com.mycompany.sample.core.catalog.domain.CustomAddress;
 import com.mycompany.sample.core.catalog.domain.CustomAddressImpl;
@@ -34,6 +35,8 @@ import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -56,8 +59,10 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
     @Resource
     private WeixinService weixinService;
 
-    public static final String followedAddressName = "关注门店";
+    public static final String FOLLOWED_ADDRESS_NAME = "关注门店";
+    public static final String PICKUP_ADDRESS_NAME = "收货地址";
     private static final String referer = "http://weixin.cplotus.com/min_store/store.aspx";
+    private Validator addressFormValidator = new CustomCustomerAddressFormValidator();
 
     @InitBinder
     protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
@@ -92,6 +97,15 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
 
     @RequestMapping(method = RequestMethod.POST)
     public String addCustomerAddress(HttpServletRequest request, Model model, @ModelAttribute("customerAddressForm") CustomCustomerAddressForm form, BindingResult result, RedirectAttributes redirectAttributes) throws ServiceException {
+        addressFormValidator.validate(form, result);
+        if (result.hasErrors()) {
+            List<ObjectError> allErrors = result.getAllErrors();
+            for (ObjectError error : allErrors) {
+                model.addAttribute(error.getCode(), error.getDefaultMessage());
+
+            }
+            return "account/addressForm";
+        }
         CustomAddressImpl address = (CustomAddressImpl) form.getAddress();
         //set some default value to bypass form validation
         address.setAddressLine1("default");
@@ -110,7 +124,7 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             Address savedAddress = addressService.saveAddress(address);
             CustomerAddress customerAddress = customerAddressService.create();
             customerAddress.setAddress(savedAddress);
-            customerAddress.setAddressName("收货地址");
+            customerAddress.setAddressName(PICKUP_ADDRESS_NAME);
             customerAddress.setCustomer(CustomerState.getCustomer());
             customerAddressService.saveCustomerAddress(customerAddress);
         }
@@ -189,7 +203,7 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
 
             CustomerAddress customerAddress = customerAddressService.create();
             customerAddress.setAddress(savedAddress);
-            customerAddress.setAddressName(followedAddressName);
+            customerAddress.setAddressName(FOLLOWED_ADDRESS_NAME);
             customerAddress.setCustomer(CustomerState.getCustomer());
             customerAddressService.saveCustomerAddress(customerAddress);
         }
