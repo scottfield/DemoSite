@@ -1,5 +1,6 @@
 package com.mycompany.service;
 
+import com.mycompany.sample.dao.CustomOrderDao;
 import com.mycompany.worklow.cancelOrder.CancelOrderSeed;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,6 +12,7 @@ import org.broadleafcommerce.core.workflow.WorkflowException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by jackie on 4/20/2016.
@@ -31,5 +33,11 @@ public class CustomOrderServiceImpl extends OrderServiceImpl implements CustomOr
         order = seed.getOrder();
         order.setStatus(OrderStatus.CANCELLED);
         orderDao.save(order);
+    }
+
+    @Override
+    public List<Order> findExpiredOrder(Long interval) {
+        CustomOrderDao customOrderDao = (CustomOrderDao) orderDao;
+        return  customOrderDao.readExpiredOrder(interval);
     }
 }

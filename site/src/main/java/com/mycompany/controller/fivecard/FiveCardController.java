@@ -7,6 +7,7 @@ import com.mycompany.sample.service.FiveCardService;
 import com.mycompany.sample.service.ShopService;
 import com.mycompany.sample.service.WeixinService;
 import com.mycompany.sample.util.CommonUtils;
+import com.mycompany.sample.util.WaterMarkUtils;
 import org.broadleafcommerce.profile.core.domain.Address;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.core.domain.CustomerAddress;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -181,7 +183,14 @@ public class FiveCardController {
         }
         //符合激活条件,激活相应类型的五折卡
         bindFiveCard(customer);
+        generateFiveCardImage(customer);
         return "redirect:/fiveCard";
+    }
+
+    private void generateFiveCardImage(CustomCustomer customer) {
+        CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
+        String cardNo = fiveCardXref.getFiveCard().getNo();
+        WaterMarkUtils.mark("d:/card-5-1.jpg", "d:/" + cardNo + ".jpg", Color.black, cardNo);
     }
 
     private CustomerAddress hasFollowShop(CustomCustomer customer) {
