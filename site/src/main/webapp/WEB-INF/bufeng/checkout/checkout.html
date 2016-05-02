@@ -15,12 +15,12 @@
 <body th:inline="text" class="has-navbar">
 <!-- header -->
 <header>
-    <div class="l-img">
-        <a th:href="@{/cart}"><img src="images/5_ct_04.png" height="15"/> 订单确认</a>
+    <div class="container">
+        <div class="left"><a th:href="@{/cart}" class="left-arrow">订单确认</a></div>
+        <div class="center"></div>
+        <div class="right"></div>
     </div>
-    <div class="r-img"><img src="images/5_ct_02.png" height="30"/></div>
 </header>
-
 <!--infodsfdasfda-->
 <div class="pb-box" th:if="${#lists.size(cart.customer.customerAddresses) eq 0}">
     <div class="order-fillIn-img">

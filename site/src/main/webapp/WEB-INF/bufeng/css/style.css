@@ -1352,14 +1352,14 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 	background-repeat:no-repeat;background-position:center;padding:9.5% 0;background-size:contain;margin-top:-9%;
 }
 .window-content .head .container{width:100%;height:100%;color:#fff;font-size:19px;font-size:5.5vw;position:absolute;top:3px;left:0;}
-.window-content .middle{text-align:center;}
-.window-content .middle img{margin-top:5%;}
+.window-content .middle{text-align:center;margin-top:5%;position:relative;}
+.window-content .middle img{}
 .window-content .middle .text{margin-top:5%;}
 .window-content .middle .text .num{color:red;font-size:18px;}
 .window-content .middle .text a{text-decoration:underline;color:#e46e79;}
 .window-content .bottom{text-align:center;margin-top:5%;}
 .window-content .bottom img{height:30px;}
-
+.window-content .middle .coupon-num{position:absolute;color:#e46d78;bottom:59%;right:44%;font-size:38px;line-height:38px;font-size:12vw;line-height:12vw;}
 .card-box .sold-out{
 	background-image:url(../images/new/sold-out.png);width:60%;height:80%;
 	position:absolute;
@@ -1386,3 +1386,5 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 .vertical-middle-box .content{display:inline-block;vertical-align:middle;width:calc(100% - 1px);font-size:14px;}
 .ajax-tips{position:fixed;width:100%;bottom:15%;text-align:center;opacity:0;-webkit-transition-duration:800ms;}
 .ajax-tips .content{font-size:14px;display:inline-block;padding:8px 10px;background-color:#fff5f6;color:#000;border-radius:8px;}
+.goods-info .xq img{width:100%;}
+.order-list-address-tips{background-color:#ececec;color:#666666;font-size:12px;line-height:20px;text-align:center;}

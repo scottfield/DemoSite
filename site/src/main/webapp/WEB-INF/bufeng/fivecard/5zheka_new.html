@@ -46,11 +46,11 @@
         }
     </style>
 </head>
-<body class="has-navbar" th:inline="text" th:attr="data-shopoutrange=${shopOutRange}">
+<body th:class="${cardType==0?'has-navbar':''}" th:inline="text" th:attr="data-shopoutrange=${shopOutRange}">
 <!-- header -->
-<header>
-    <div class="container" th:if="${cardType==0}">
-        <div class="left"><a th:href="@{/index}">感恩五折卡</a></div>
+<header th:if="${cardType==0}">
+    <div class="container">
+        <div class="left"><a th:href="@{/index}" class="left-arrow">感恩五折卡</a></div>
         <div class="center"></div>
         <div class="right"></div>
     </div>

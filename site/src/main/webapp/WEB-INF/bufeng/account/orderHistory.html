@@ -31,7 +31,13 @@
 </div>
 </div>-->
 
-
+<div style="position:absolute;bottom:44px;top:44px;width:100%;" class="vertical-middle-box"  th:if="${orders.size()==0}">
+    <div class="content">
+        <div class="card-volume-empty" style="padding-top:0;">
+            <img width="50%" src="/images/empty-orderlist.png" />
+        </div>
+    </div>
+</div>
 <!--order list-->
 <div th:each="order:${orders}" th:remove="tag" th:with="totalQuantity=0">
     <div class="myorder-tt">
@@ -58,6 +64,7 @@
             </div>
         </div>
     </div>
+    <div class="order-list-address-tips">收货地址收货地址收货地址收货地址</div>
     <div class="order-list-tips" th:if="${order.status.type eq 'UNPAID'}">只剩下[[${15-(now.time - order.submitDate.time)/60000}]]分钟,这个订单就要被取消了,快快付款带我回家吧</div>
     <div class="affirm-sum-money">
         <div class="sum-money">共[[${order.itemCount}]]件商品 合计:￥[[${order.total}]]</div>

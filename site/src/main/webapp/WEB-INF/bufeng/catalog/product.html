@@ -164,11 +164,11 @@
                 dataType: 'json'
             }).done(function (data) {
                 //修改购物车中显示的物品数量
-                $(".container .tab4 .num").html(data.cartItemCount);
 				if(data.quantityAdded){
+                    $(".container .tab4 .num").html(data.cartItemCount);
 					showAjaxTips("已放入购物车！");
 				}else{
-					showAjaxTips("添加失败！");
+                    showAjaxTips(data.error);
 				}
                 console.log(data);
             }).fail(function (data) {

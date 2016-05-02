@@ -13,14 +13,12 @@
     </script>
 </head>
 <body th:inline="text">
-<!-- header -->
-<div class="header"></div>
 <header>
-    <div class="l-img">
-        <a th:href="@{${#httpServletRequest.getHeader('Referer')}}"><img th:src="@{/images/5_ct_04.png}" height="15"/>
-            提货信息</a>
+    <div class="container">
+        <div class="left"><a th:href="@{${#httpServletRequest.getHeader('Referer')}}" class="left-arrow">提货信息</a></div>
+        <div class="center"></div>
+        <div class="right"></div>
     </div>
-    <div class="r-img"><img th:src="@{/images/5_ct_02.png}" height="30"/></div>
 </header>
 
 <!---->

@@ -7,9 +7,9 @@
                 <div class="container">恭喜获得</div>
             </div>
             <div class="middle">
-                <img th:src="@{/images/vm_03.png}" width="60%"/>
-                <span th:text="${couponValue}"></span>
-                <span th:text="${couponDesc}"></span>
+                <img th:src="@{/images/new/coupon/coupon_1_bg.jpg}" width="60%"/>
+                <span class="coupon-num" th:text="${couponValue}"></span>
+                <div class="text" th:if="${couponDesc!=''}" th:text="${couponDesc}"></div>
                 <div class="text">已存入我的卡券中了哟<a th:href="@{/manage/couponAndFiveCard}">立刻查看</a></div>
             </div>
             <div class="bottom">
