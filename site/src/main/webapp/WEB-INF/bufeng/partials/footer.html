@@ -19,7 +19,7 @@
                 e.preventDefault();
                 var quantityavailable = $(this).data("quantityavailable");
                 if (!quantityavailable) {
-//                    alert("暂时无货");
+                    alert("暂时无货");
                     return;
                 }
                 var url = $("#addToCartForm").attr("action");
@@ -46,7 +46,7 @@
         //微信
         $(function () {
             wx.config({
-                debug: true,
+                debug: false,
                 appId: 'wx937fba8914a5d9a9',
                 timestamp: '[[${ticketMap.timestamp}]]',
                 nonceStr: '[[${ticketMap.nonce}]]',

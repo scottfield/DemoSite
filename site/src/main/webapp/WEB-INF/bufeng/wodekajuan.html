@@ -44,7 +44,7 @@
 
         <div class="coupon" th:if="${card.type==0}" th:attr="data-card-status=${card.status},data-type=${card.type}">
             <div class="img-panel">
-                <img th:src="@{/images/new/index/card-5-1.jpg}"/>
+                <img th:src="'/images/new/index/'+${card.status?'card-5-1.jpg':'card-5-1-gray.jpg'}"/>
             </div>
             <div class="desc">请于2020年使用</div>
         </div>

@@ -8,9 +8,9 @@
             </div>
             <div class="middle">
                 <img th:src="@{/images/new/coupon/coupon_1_bg.jpg}" width="60%"/>
-                <span class="coupon-num" th:text="${couponValue}"></span>
+                <span class="coupon-num" th:text="${couponValue}" th:style="'right:'+${couponValue.length() gt 1?'43%':'40%'}"></span>
                 <div class="text" th:if="${couponDesc!=''}" th:text="${couponDesc}"></div>
-                <div class="text">已存入我的卡券中了哟<a th:href="@{/manage/couponAndFiveCard}">立刻查看</a></div>
+                <div class="text">已存入“卡券”中了哟，<a th:href="@{/manage/couponAndFiveCard}">立刻查看</a>！</div>
             </div>
             <div class="bottom">
                 <a href="#"><img th:src="@{/images/qk_13.png}"/></a>

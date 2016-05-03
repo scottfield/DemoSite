@@ -12,7 +12,7 @@
         }, false);
     </script>
 </head>
-<body th:inline="text">
+<body th:inline="text" class="has-navbar">
 <header>
     <div class="container">
         <div class="left"><a th:href="@{${#httpServletRequest.getHeader('Referer')}}" class="left-arrow">提货信息</a></div>
@@ -56,7 +56,7 @@
     <input type="hidden" name="address.id"/>
 
     <div class="take-cargo-btn">
-        <a href="#" class="adress-btn" onclick="form.submit.click()">确认信息</a>
+        <img src="images/new/confirm-info-button.jpg" onclick="form.submit.click()" width="50%">
         <input type="submit" name="submit" class="none"/>
     </div>
     <div th:text="${addressFirstName}"></div>

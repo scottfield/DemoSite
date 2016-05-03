@@ -494,7 +494,7 @@ footer .container .tab3 span{
 	background-position:center top;
 }
 footer .container .tab4{background-image:url(../images/new/tab4.png);position:relative;}
-footer .container .tab4 .num{background-color:red;position:absolute;color:#fff;font-size:12px;line-height:12px;padding:2px 3px;left:60%;border-radius:10px;}
+footer .container .tab4 .num{background-color:red;position:absolute;color:#fff;font-size:12px;line-height:15px;padding:2px;left:60%;border-radius:50%;min-width:15px;}
 footer .container .tab5{background-image:url(../images/new/tab5.png);}
 footer .container .add-cart{background-image:url(../images/new/tabbar-addcart.png);background-size:auto 45%;background-position:right center;}
 footer .container .buy{background-image:url(../images/new/tabbar-buy.png);background-size:auto 45%;}
@@ -1015,6 +1015,7 @@ footer a{
 	color:#7d7d7d;
 	*/
 	margin-bottom:10px;
+	max-width:100%;
 }
 .take-cargo-info textarea{
 	width:100%;
@@ -1328,7 +1329,7 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 	top:0;width:0;
 	height:100%;width:100%;
 	font-size:0;
-	z-index:1000;
+	z-index:1002;
 }
 .window:before{
 	content:'';
@@ -1359,7 +1360,7 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 .window-content .middle .text a{text-decoration:underline;color:#e46e79;}
 .window-content .bottom{text-align:center;margin-top:5%;}
 .window-content .bottom img{height:30px;}
-.window-content .middle .coupon-num{position:absolute;color:#e46d78;bottom:59%;right:44%;font-size:38px;line-height:38px;font-size:12vw;line-height:12vw;}
+.window-content .middle .coupon-num{position:absolute;color:#e46d78;bottom:59%;right:40%;width:20%;font-size:45px;line-height:45px;font-size:14vw;line-height:14vw;}
 .card-box .sold-out{
 	background-image:url(../images/new/sold-out.png);width:60%;height:80%;
 	position:absolute;
@@ -1388,3 +1389,6 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 .ajax-tips .content{font-size:14px;display:inline-block;padding:8px 10px;background-color:#fff5f6;color:#000;border-radius:8px;}
 .goods-info .xq img{width:100%;}
 .order-list-address-tips{background-color:#ececec;color:#666666;font-size:12px;line-height:20px;text-align:center;}
+
+.guide{font-size:14px;line-height:24px;padding:0 3%;}
+.guide .head{text-align:center;font-size:16px;font-size:4.5vw;line-height:4.5vw;margin-top:20px;font-weight:bold;margin:20px 0;}

@@ -165,7 +165,7 @@
             }).done(function (data) {
                 //修改购物车中显示的物品数量
 				if(data.quantityAdded){
-                    $(".container .tab4 .num").html(data.cartItemCount);
+                    $(".goods-shopcar span").html(data.cartItemCount);
 					showAjaxTips("已放入购物车！");
 				}else{
                     showAjaxTips(data.error);
