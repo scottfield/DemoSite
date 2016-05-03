@@ -9,7 +9,7 @@
     </appender>
 
     <logger name="org.broadleafcommerce"> <level value="error" /> </logger>
-    <logger name="org.hibernate"> <level value="error" /> </logger>
+    <logger name="org.hibernate"> <level value="info" /> </logger>
     <logger name="org.springframework"> <level value="error" /> </logger>
     <logger name="org.springframework.web"> <level value="info" /> </logger>
     <logger name="org.springframework.web.servlet"> <level value="info" /> </logger>
