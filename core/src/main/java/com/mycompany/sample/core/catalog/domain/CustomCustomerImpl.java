@@ -1,5 +1,6 @@
 package com.mycompany.sample.core.catalog.domain;
 
+import org.broadleafcommerce.profile.core.domain.CustomerAddress;
 import org.broadleafcommerce.profile.core.domain.CustomerImpl;
 
 import javax.persistence.*;
@@ -53,5 +54,26 @@ public class CustomCustomerImpl extends CustomerImpl implements CustomCustomer {
 
     public void setCouponXrefs(List<CustomerCouponXref> couponXrefs) {
         this.couponXrefs = couponXrefs;
+    }
+
+    @Override
+    public CustomAddress getPickupAddress() {
+        return getCustomAddressByType("收货地址");
+    }
+
+    private CustomAddress getCustomAddressByType(String type) {
+        CustomAddress address = null;
+        for (CustomerAddress customerAddress : customerAddresses) {
+            if (customerAddress.getAddressName().equals(type)) {
+                address = (CustomAddress) customerAddress.getAddress();
+                break;
+            }
+        }
+        return address;
+    }
+
+    @Override
+    public CustomAddress getFollowdShopAddress() {
+        return getCustomAddressByType("关注门店");
     }
 }

@@ -83,14 +83,22 @@ public class FiveCardController {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         String retView = "redirect:/fiveCard";
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
+        Long referrer = (Long) session.getAttribute("referrer");
+        //检测是否是通过分享链接进入
+        if (Objects.nonNull(referrer)) {
+            session.removeAttribute("referrer");
+        }
         //判断用户是否已经拥有五张卡
         if (Objects.nonNull(fiveCardXref)) {
-            //防止用户自己点击自己分享的连接地址来分享五折卡
-            session.removeAttribute("referrer");
-            return retView;
+            //A卡返回首页
+            if (fiveCardXref.getType() == FiveCard.CARD_TYPE_A) {
+                return "redirect:/index";
+            } else {
+                //B卡返回五折卡页面
+                return retView;
+            }
         }
         //判断五折卡类型
-        Object referrer = session.getAttribute("referrer");
         int type = 1;//默认五折卡类型为分享获取的
         if (Objects.isNull(referrer)) {
             type = 0;
@@ -157,18 +165,8 @@ public class FiveCardController {
                 if (Objects.nonNull(vipInfo)) {
                     Shop shop = shopService.readShopByCode((String) vipInfo.get("unit_code"));
                     if (Objects.nonNull(shop)) {
-                        CustomAddressImpl address = new CustomAddressImpl();
-                        address.setAddressLine1("default");
-                        address.setPostalCode("default");
-                        address.setLastName("default");
-                        address.setCity("default");
-                        address.setShop(shop);
-                        Address savedAddress = addressService.saveAddress(address);
-                        CustomerAddress customerAddress = customerAddressService.create();
-                        customerAddress.setAddress(savedAddress);
-                        customerAddress.setAddressName(ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME);
-                        customerAddress.setCustomer(CustomerState.getCustomer());
-                        customerAddressService.saveCustomerAddress(customerAddress);
+                        CustomerAddress customerAddress = addAddress(shop, ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME);
+                        addAddress(shop, ManageCustomerAddressesController.PICKUP_ADDRESS_NAME);//添加门店地址到收获地址
                         followedAddress = customerAddress;
                     } else {
                         //关注门店不在本次活动范围内
@@ -185,6 +183,22 @@ public class FiveCardController {
         bindFiveCard(customer);
         generateFiveCardImage(customer);
         return "redirect:/fiveCard";
+    }
+
+    private CustomerAddress addAddress(Shop shop, String addressName) {
+        CustomAddressImpl address = new CustomAddressImpl();
+        address.setAddressLine1("default");
+        address.setPostalCode("default");
+        address.setLastName("default");
+        address.setCity("default");
+        address.setShop(shop);
+        Address savedAddress = addressService.saveAddress(address);
+        CustomerAddress customerAddress = customerAddressService.create();
+        customerAddress.setAddress(savedAddress);
+        customerAddress.setAddressName(addressName);
+        customerAddress.setCustomer(CustomerState.getCustomer());
+        customerAddressService.saveCustomerAddress(customerAddress);
+        return customerAddress;
     }
 
     private void generateFiveCardImage(CustomCustomer customer) {
@@ -239,7 +253,7 @@ public class FiveCardController {
             session.setAttribute("referrer", referrer);
         }
         //跳转到首页，如果用户没有授权则会先进行授权
-        return "redirect:/index";
+        return "redirect:/fiveCard/issue";
     }
 
     /**

@@ -22,8 +22,10 @@ public class WeiXinShareInterceptor implements HandlerInterceptor {
         String shareLink = request.getRequestURL().toString();
         String uri = request.getRequestURI();
         shareLink = shareLink.replace(uri, "");
-        if (Objects.nonNull(customer)) {
+        if (Objects.nonNull(customer) && "/fiveCard/share/page".equals(uri)) {
             shareLink = shareLink + "/fiveCard/share?referrer=" + customer.getId();
+        } else {
+            shareLink = shareLink +"/index";
         }
         request.setAttribute("shareLink", shareLink);
         request.setAttribute("shareImageUrl", "http://wwww.baidu.com");

@@ -26,7 +26,8 @@
         <sec:filter-chain-map request-matcher="ant">
             <sec:filter-chain pattern="/**" filters="
                 blEstablishSessionFilter,
-                checkPromotionFilter"/>
+                checkPromotionFilter,
+                checkUserSubscribeFilter"/>
         </sec:filter-chain-map>
     </bean>
 

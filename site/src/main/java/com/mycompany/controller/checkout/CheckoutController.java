@@ -16,10 +16,9 @@
 
 package com.mycompany.controller.checkout;
 
-import com.mycompany.sample.core.catalog.domain.CustomAddress;
-import com.mycompany.sample.core.catalog.domain.CustomAddressImpl;
-import com.mycompany.sample.core.catalog.domain.CustomOrder;
-import com.mycompany.sample.core.catalog.domain.Shop;
+import com.mycompany.controller.account.ManageCustomerAddressesController;
+import com.mycompany.sample.core.catalog.domain.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.exception.ServiceException;
@@ -86,6 +85,9 @@ public class CheckoutController extends BroadleafCheckoutController {
                                @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
                                @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
                                RedirectAttributes redirectAttributes) {
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        CustomAddress pickupAddress = customer.getPickupAddress();
+        model.addAttribute("pickupAddress", pickupAddress);
         return checkoutView;
     }
 
@@ -97,22 +99,14 @@ public class CheckoutController extends BroadleafCheckoutController {
                            @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
                            @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
                            RedirectAttributes redirectAttributes) {
-        //check if the order have a pickup address
-        List<CustomerAddress> customerAddresses = CustomerState.getCustomer().getCustomerAddresses();
-        if (Objects.isNull(customerAddresses) || customerAddresses.size() == 0) {
-            model.addAttribute("errorMsg", "请填写收货地址");
-            return checkoutView;
-        }
         try {
-            //todo 需要在订单中保存收货地址
             CustomOrder cart = (CustomOrder) CartState.getCart();
-            CustomAddress address = null;
-
-            for (CustomerAddress customerAddress : customerAddresses) {
-                if (customerAddress.getAddressName().equals("收货地址")) {
-                    address = (CustomAddress) customerAddress.getAddress();
-                    break;
-                }
+            CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+            CustomAddress pickupAddress = customer.getPickupAddress();
+            model.addAttribute("pickupAddress", pickupAddress);
+            if (Objects.isNull(pickupAddress) || Objects.isNull(pickupAddress.getPhonePrimary()) || StringUtils.isBlank(pickupAddress.getFirstName())) {
+                model.addAttribute("errorMsg", "请完善收货地址");
+                return checkoutView;
             }
             //创建订单收货地址
             CustomAddress orderAddress = new CustomAddressImpl();
@@ -123,12 +117,12 @@ public class CheckoutController extends BroadleafCheckoutController {
             Country country = countryService.findCountryByAbbreviation("CA");
             orderAddress.setCountry(country);
             //提货门店
-            Shop shop = address.getShop();
+            Shop shop = pickupAddress.getShop();
             orderAddress.setShop(shop);
             //提货人姓名
-            orderAddress.setFirstName(address.getFirstName());
+            orderAddress.setFirstName(pickupAddress.getFirstName());
             //保存电话
-            Phone phonePrimary = address.getPhonePrimary();
+            Phone phonePrimary = pickupAddress.getPhonePrimary();
             Phone phone = new PhoneImpl();
             phone.setPhoneNumber(phonePrimary.getPhoneNumber());
             orderAddress.setPhonePrimary(phone);

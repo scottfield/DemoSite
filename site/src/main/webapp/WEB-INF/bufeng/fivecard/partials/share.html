@@ -11,7 +11,7 @@
                     timestamp: '[[${ticketMap.timestamp}]]',
                     nonceStr: '[[${ticketMap.nonce}]]',
                     signature: '[[${ticketMap.signature}]]',
-                    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'scanQRCode']
+                    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
                 });
                 wx.ready(function () {
                     //分享给朋友
@@ -25,11 +25,11 @@
                         success: function () {
                             // 用户确认分享后执行的回调函数
 //                       //todo 分享统计
-                            alert("分享成功给朋友！");
+//                            alert("分享成功给朋友！");
 
                         },
                         cancel: function () {
-                            alert("分享给朋友后有好礼哦！");
+//                            alert("分享给朋友后有好礼哦！");
                         }
                     });
                     //分享到朋友圈
@@ -41,17 +41,15 @@
                         success: function () {
                             // 用户确认分享后执行的回调函数
 //                       //todo 分享统计
-                            alert("分享朋友圈成功！");
+//                            alert("分享朋友圈成功！");
                         },
                         cancel: function () {
-                            alert("分享到朋友圈后有好礼哦！");
+//                            alert("分享到朋友圈后有好礼哦！");
                         }
                     });
 
                 });
             });
         });
-
-
     </script>
 </div>

@@ -120,10 +120,10 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             CustomAddressImpl oldAddress = (CustomAddressImpl) addressService.readAddressById(address.getId());
             oldAddress.setFirstName(address.getFirstName());
             Phone phonePrimary = oldAddress.getPhonePrimary();
-            /*if (Objects.isNull(phonePrimary)) {
+            if (Objects.isNull(phonePrimary)) {
                 phonePrimary = new PhoneImpl();
                 oldAddress.setPhonePrimary(phonePrimary);
-            }*/
+            }
             phonePrimary.setPhoneNumber(address.getPhonePrimary().getPhoneNumber());
             oldAddress.setShop(address.getShop());
             addressService.saveAddress(oldAddress);
