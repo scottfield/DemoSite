@@ -6,7 +6,7 @@
             <a class="tab3">
                 <span th:id="qrscan"></span>
             </a>
-            <a th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"><span class="num" th:text="${cart.itemCount}">0</span></a>
+            <a th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"><span th:style="'display:'+${cart.itemCount==0?'none':'block'}" class="num" th:text="${cart.itemCount}">0</span></a>
             <a th:href="@{/account/orders}" title="我的订单" class="tab5"></a>
         </div>
     </footer>
@@ -36,7 +36,12 @@
                     },
                     dataType: 'json'
                 }).done(function (data) {
-                    console.log(data);
+                    if(data.quantityAdded){
+                        $(".container .tab4 .num").css("display","block").html(data.cartItemCount);
+                        showAjaxTips("已放入购物车！");
+                    }else{
+                        showAjaxTips(data.error);
+                    }
                 }).fail(function (data) {
                     console.log(data);
                     location.reload();

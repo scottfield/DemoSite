@@ -617,7 +617,7 @@ footer a{
 	position:relative;
 }
 .affirm-sum-money.fixed-bottom{position:fixed;width:100%;bottom:0;left:0;}
-.has-tabbar .affirm-sum-money.fixed-bottom{margin-bottom:14%;}
+.has-tabbar .affirm-sum-money.fixed-bottom{margin-bottom:44px;}
 .affirm-sum-money .sum-money{
 	-webkit-box-flex:1;
 	height:35px;
@@ -1315,7 +1315,7 @@ footer a{
 .text-singleline{white-space:no-warp;text-overflow:ellipsis}
 .has-tabbar{padding:0 0 44px 0;}
 .has-navbar{padding:44px 0 0 0;}
-.has-navbar.has-tabbar{padding:12.6% 0 13% 0;}
+.has-navbar.has-tabbar{padding:44px 0 44px 0;}
 header .left{margin-left:4%;position:absolute;height:100%;top:0;left:0;width:50%;z-index:1}
 header .right{margin-right:4%;position:absolute;height:100%;text-align:right;right:0;top:0;width:50%;z-index:1;}
 header .left-arrow{background:url(../images/5_ct_04.png) no-repeat left center;background-size:auto 50%;height:100%;padding-left:10%;}
