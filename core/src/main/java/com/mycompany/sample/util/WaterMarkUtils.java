@@ -30,17 +30,17 @@ public class WaterMarkUtils {
             Graphics2D g = bufImg.createGraphics();
             g.drawImage(srcImg, 0, 0, srcImgWidth, srcImgHeight, null);
             //Font font = new Font("Courier New", Font.PLAIN, 12);
-            Font font = new Font("宋体", Font.PLAIN, 20);//设置字体
+            Font font = new Font("宋体", Font.PLAIN, 100);//设置字体
             g.setColor(markContentColor); //根据图片的背景设置水印颜色
 
             g.setFont(font);
             int x = (srcImgWidth - getWatermarkLength(waterMarkContent, g)) / 2;//设置文字x轴偏移量
-            int y = srcImgHeight - 50;//设置文字y轴偏移量
+            int y = srcImgHeight - 300;//设置文字y轴偏移量
             g.drawString(waterMarkContent, x, y);
             g.dispose();
             // 输出图片
             FileOutputStream outImgStream = new FileOutputStream(outImgPath);
-            ImageIO.write(bufImg, "jpg", outImgStream);
+            ImageIO.write(bufImg, "png", outImgStream);
             outImgStream.flush();
             outImgStream.close();
         } catch (Exception e) {
@@ -62,6 +62,6 @@ public class WaterMarkUtils {
     public static void main(String[] args) {
         String cardNo = "7400050287161";
         // 原图位置, 输出图片位置, 水印文字颜色, 水印文字
-        new WaterMarkUtils().mark("d:/card-5-1.jpg", "d:/" + cardNo + ".jpg", Color.black, cardNo);
+        new WaterMarkUtils().mark("d:/fivecard.png", "d:/" + cardNo + ".png", Color.black, cardNo);
     }
 }

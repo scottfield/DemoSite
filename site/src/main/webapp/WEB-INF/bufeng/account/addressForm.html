@@ -38,9 +38,9 @@
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：</span>
         <input type="text" name="address.phonePrimary"
-               th:value="${customer.customerAddresses[0].address.phonePrimary.phoneNumber}"
+               th:value="${customer.customerAddresses[0]?.address?.phonePrimary?.phoneNumber}"
                th:if="${#lists.size(cart.customer.customerAddresses) gt 0}"/>
-        <input type="text" name="address.phonePrimary" th:unless="${#lists.size(customer.customerAddresses) gt 0}"/>
+        <!--<input type="text" name="address.phonePrimary" th:unless="${#lists.size(customer.customerAddresses) gt 0}"/>-->
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>

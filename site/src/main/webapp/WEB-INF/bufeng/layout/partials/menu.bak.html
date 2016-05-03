@@ -1,6 +1,0 @@
-<div class="menu" th:fragment="menu">
-<blc:categories resultVar="navCategories" parentCategory="主导航" maxResults="10"/>
-    <a href="#" th:href="@{${category.url}}" th:each="category : ${navCategories}">
-        <img th:src="${category.categoryMedia['primary']?.url}" th:alt="${category.name}"/>
-    </a>
-</div>
