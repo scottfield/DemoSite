@@ -5,6 +5,7 @@ import com.mycompany.sample.payment.weixin.common.HttpService;
 import com.mycompany.sample.payment.weixin.common.JsonUtil;
 import com.mycompany.sample.payment.weixin.common.XMLParser;
 import com.mycompany.sample.payment.weixin.protocol.UnifiedOrderReqData;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
@@ -44,17 +45,21 @@ public class WxPayApi {
     }
 
     public static void main(String[] args) throws Exception {
-        String appid = "wx937fba8914a5d9a9";
+    /*    String appid = "wx937fba8914a5d9a9";
         String mch_id = "10010514";
-        String body = "test";
-        String out_trade_no = "42254455";
+        String body = "测试支付";
+        String out_trade_no = "4ds2254455";
         String spbill_create_ip = "192.168.2.1";
-        String notify_url = "http://discount.lzzyad.com";
+//        String notify_url = "http://discount.lzzyad.com";
+        String notify_url = "http://localhost:8080/wechatpay/index/notify";
         String trade_type = "JSAPI";
         String openId = "o1Py0tx91UJXWdtT_gD9xMdI5Rdo";
         Integer total_fee = 1;
         UnifiedOrderReqData reqData = new UnifiedOrderReqData.UnifiedOrderReqDataBuilder(appid, mch_id,
                 body, out_trade_no, total_fee, spbill_create_ip, notify_url, trade_type).setOpenid(openId).build();
-        System.out.println(UnifiedOrder(reqData));
+        System.out.println(UnifiedOrder(reqData));*/
+        String querystr = "appid=wx937fba8914a5d9a9&body=测试支付&mch_id=10010514&nonce_str=w9bwkoz06iwss827vzvxqm1yo5a4eo74&notify_url=http://localhost:8080/wechatpay/index/notify&openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo&out_trade_no=201605031734252982703&spbill_create_ip=127.0.0.1&total_fee=1&trade_type=JSAPI&key=xVVm9pGXwwJpAQWkhJDszfi46wtBX1EQ";
+        String s = DigestUtils.md5Hex(querystr);
+        System.out.println(s.toUpperCase());
     }
 }

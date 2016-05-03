@@ -1,5 +1,6 @@
 package com.mycompany.sample.payment.weixin.common;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
@@ -20,7 +21,7 @@ public class Signature {
     /**
      * 签名算法
      *
-     * @param o 要参与签名的数据对象
+     * @param o   要参与签名的数据对象
      * @param key
      * @return 签名
      * @throws IllegalAccessException
@@ -65,9 +66,9 @@ public class Signature {
             sb.append(arrayToSort[i]);
         }
         String result = sb.toString();
-        result += "key=" + Configure.getKey(mchid);
+        result += "key=" + Configure.getKey(mchid).trim();
         //Util.log("Sign Before MD5:" + result);
-        result = MD5.MD5Encode(result).toUpperCase();
+        result = DigestUtils.md5Hex(result).toUpperCase();
         //Util.log("Sign Result:" + result);
         return result;
     }
@@ -86,7 +87,7 @@ public class Signature {
         //清掉返回数据对象里面的Sign数据（不能把这个数据也加进去进行签名），然后用签名算法进行签名
         map.put("sign", "");
         //将API返回的数据根据用签名算法进行计算新的签名，用来跟API返回的签名进行比较
-        return Signature.getSign(map,"" );
+        return Signature.getSign(map, "");
     }
 
     /**
@@ -113,7 +114,7 @@ public class Signature {
             //清掉返回数据对象里面的Sign数据（不能把这个数据也加进去进行签名），然后用签名算法进行签名
             map.put("sign", "");
             //将API返回的数据根据用签名算法进行计算新的签名，用来跟API返回的签名进行比较
-            String signForAPIResponse = Signature.getSign(map,"" );
+            String signForAPIResponse = Signature.getSign(map, "");
 
             if (!signForAPIResponse.equals(signFromAPIResponse)) {
                 //签名验不过，表示这个API返回的数据有可能已经被篡改了

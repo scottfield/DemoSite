@@ -97,7 +97,5 @@
         <property name="targetRef" value="blMergedClassTransformers"/>
     </bean>
     <!--override default bean-->
-    <bean id="blOrderService" class="com.mycompany.service.CustomOrderServiceImpl"/>
-    <bean id="blOrderDao" class="com.mycompany.sample.dao.CustomOrderDaoImpl"/>
     <bean id="md5Encoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
 </beans>

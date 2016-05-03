@@ -16,6 +16,10 @@
 
 package com.mycompany.controller.checkout;
 
+import com.mycompany.sample.core.catalog.domain.CustomAddress;
+import com.mycompany.sample.core.catalog.domain.CustomAddressImpl;
+import com.mycompany.sample.core.catalog.domain.CustomOrder;
+import com.mycompany.sample.core.catalog.domain.Shop;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.exception.ServiceException;
@@ -29,6 +33,12 @@ import org.broadleafcommerce.core.web.order.CartState;
 import org.broadleafcommerce.core.workflow.Activity;
 import org.broadleafcommerce.core.workflow.ProcessContext;
 import org.broadleafcommerce.core.workflow.Processor;
+import org.broadleafcommerce.profile.core.domain.Country;
+import org.broadleafcommerce.profile.core.domain.CustomerAddress;
+import org.broadleafcommerce.profile.core.domain.Phone;
+import org.broadleafcommerce.profile.core.domain.PhoneImpl;
+import org.broadleafcommerce.profile.core.service.AddressService;
+import org.broadleafcommerce.profile.core.service.CountryService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,6 +73,10 @@ public class CheckoutController extends BroadleafCheckoutController {
     private Activity incrementProductSalesActivity;
     @Resource(name = "changeOrderStatusToUnpaidActivity")
     private Activity changeOrderStatusToUnpaidActivity;
+    @Resource
+    private AddressService addressService;
+    @Resource
+    private CountryService countryService;
 
     @RequestMapping(value = "/checkout", method = RequestMethod.GET)
     public String checkoutPage(HttpServletRequest request, HttpServletResponse response, Model model,
@@ -84,13 +98,44 @@ public class CheckoutController extends BroadleafCheckoutController {
                            @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
                            RedirectAttributes redirectAttributes) {
         //check if the order have a pickup address
-        if (Objects.isNull(CustomerState.getCustomer().getCustomerAddresses()) || CustomerState.getCustomer().getCustomerAddresses().size() == 0) {
+        List<CustomerAddress> customerAddresses = CustomerState.getCustomer().getCustomerAddresses();
+        if (Objects.isNull(customerAddresses) || customerAddresses.size() == 0) {
             model.addAttribute("errorMsg", "请填写收货地址");
             return checkoutView;
         }
         try {
             //todo 需要在订单中保存收货地址
-            checkoutService.performCheckout(CartState.getCart());
+            CustomOrder cart = (CustomOrder) CartState.getCart();
+            CustomAddress address = null;
+
+            for (CustomerAddress customerAddress : customerAddresses) {
+                if (customerAddress.getAddressName().equals("收货地址")) {
+                    address = (CustomAddress) customerAddress.getAddress();
+                    break;
+                }
+            }
+            //创建订单收货地址
+            CustomAddress orderAddress = new CustomAddressImpl();
+            orderAddress.setAddressLine1("default");
+            orderAddress.setPostalCode("default");
+            orderAddress.setLastName("default");
+            orderAddress.setCity("default");
+            Country country = countryService.findCountryByAbbreviation("CA");
+            orderAddress.setCountry(country);
+            //提货门店
+            Shop shop = address.getShop();
+            orderAddress.setShop(shop);
+            //提货人姓名
+            orderAddress.setFirstName(address.getFirstName());
+            //保存电话
+            Phone phonePrimary = address.getPhonePrimary();
+            Phone phone = new PhoneImpl();
+            phone.setPhoneNumber(phonePrimary.getPhoneNumber());
+            orderAddress.setPhonePrimary(phone);
+            orderAddress = (CustomAddress) addressService.saveAddress(orderAddress);
+
+            cart.setAddress(orderAddress);
+            checkoutService.performCheckout(cart);
         } catch (CheckoutException e) {
             LOG.error("下单失败", e);
             model.addAttribute("errorMsg", "下单失败!");

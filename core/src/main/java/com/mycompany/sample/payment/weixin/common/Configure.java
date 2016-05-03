@@ -19,27 +19,23 @@ public class Configure {
     //门店与商户对照表
     public static Map<String, ShopAccount> accountMap = new HashMap<>();
     //mock data
-    /*static {
-        ShopAccount account = new ShopAccountImpl();
-        account.setKey("xVVm9pGXwwJpAQWkhJDszfi46wtBX1EQ");
-        account.setMchid("10010514");
-        account.setAppsecret("1974155fda854243a2a4b08c2928bf92");
-        account.setAppid("wx937fba8914a5d9a9");
-        accountMap.put("10010514", account);
-        ShopAccount tianhe = new ShopAccountImpl();
-        tianhe.setKey("BC018B996C9107107DF1AC73E703C8DA");
-        tianhe.setMchid("1281605801");
-        tianhe.setAppsecret("1974155fda854243a2a4b08c2928bf92");
-        tianhe.setAppid("wx937fba8914a5d9a9");
-        accountMap.put("1281605801", tianhe);
-        ShopAccount huadu = new ShopAccountImpl();
-        huadu.setKey("CACB7A4C00A841E238D000C28A8F123E");
-        huadu.setMchid("1324991401");
-        huadu.setAppsecret("1974155fda854243a2a4b08c2928bf92");
-        huadu.setAppid("wx937fba8914a5d9a9");
-        accountMap.put("1324991401", huadu);
+    static {
+        //三元里
+        ShopAccount sanyuanli = new ShopAccountImpl();
+        sanyuanli.setMchid("10010514");
+        sanyuanli.setKey("xVVm9pGXwwJpAQWkhJDszfi46wtBX1EQ");
+        sanyuanli.setAppsecret("1974155fda854243a2a4b08c2928bf92");
+        sanyuanli.setAppid("wx937fba8914a5d9a9");
+        accountMap.put("10010514", sanyuanli);
+        //潮州
+        ShopAccount chaozhou = new ShopAccountImpl();
+        chaozhou.setMchid("1281842701");
+        chaozhou.setKey("A534585E7E4B969A516B0F29B8281410");
+        chaozhou.setAppsecret("1974155fda854243a2a4b08c2928bf92");
+        chaozhou.setAppid("wx937fba8914a5d9a9");
+        accountMap.put("1281842701", chaozhou);
 
-    }*/
+    }
 
     private static String key = "562d8ba6bf2bc562d8ba6bf337562d8b";
 

@@ -21,8 +21,8 @@
         <div class="right"></div>
     </div>
 </header>
-<!--infodsfdasfda-->
-<div class="pb-box" th:if="${#lists.size(cart.customer.customerAddresses) eq 0}">
+<!--info-->
+<div class="pb-box" th:if="${customer.customerAddresses ne null and #lists.size(customer.customerAddresses) eq 0}">
     <div class="order-fillIn-img">
         <a th:href="@{/account/addresses}">
             <div class="img"></div>
@@ -30,8 +30,8 @@
     </div>
 </div>
 
-<div class="pb-box" th:object="${cart.customer.customerAddresses[0].address}"
-     th:unless="${#lists.size(cart.customer.customerAddresses) eq 0}">
+<div class="pb-box" th:object="${customer.customerAddresses[0].address}"
+     th:if="${#lists.size(customer.customerAddresses) > 0}">
     <div class="order-fillIn-img">
         <img src="images/qr_03.jpg" class="opacity-0" width="100%"/>
         <div class="info">

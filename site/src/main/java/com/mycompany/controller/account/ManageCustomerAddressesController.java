@@ -44,7 +44,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/account/addresses")
@@ -117,7 +119,12 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
         if (Objects.nonNull(address.getId())) {
             CustomAddressImpl oldAddress = (CustomAddressImpl) addressService.readAddressById(address.getId());
             oldAddress.setFirstName(address.getFirstName());
-            oldAddress.getPhonePrimary().setPhoneNumber(address.getPhonePrimary().getPhoneNumber());
+            Phone phonePrimary = oldAddress.getPhonePrimary();
+            /*if (Objects.isNull(phonePrimary)) {
+                phonePrimary = new PhoneImpl();
+                oldAddress.setPhonePrimary(phonePrimary);
+            }*/
+            phonePrimary.setPhoneNumber(address.getPhonePrimary().getPhoneNumber());
             oldAddress.setShop(address.getShop());
             addressService.saveAddress(oldAddress);
         } else {//add a new address
@@ -179,7 +186,7 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
     public String followShopCallBack(HttpServletRequest request, String openid) {
         String referrer = request.getHeader("Referer");
         //关注门店成功,添加关注门店地址
-        if (Objects.nonNull(openid) && Objects.nonNull(referrer) &&(referrer.contains(ManageCustomerAddressesController.referer)||referrer.contains("/fiveCard/activate"))) {
+        if (Objects.nonNull(openid) && Objects.nonNull(referrer) && (referrer.contains(ManageCustomerAddressesController.referer) || referrer.contains("/fiveCard/activate"))) {
             Map<String, Object> vipInfo = weixinService.getVipInfo(openid);
             //模拟数据
 //            Map<String, Object> vipInfo = new HashMap<>();

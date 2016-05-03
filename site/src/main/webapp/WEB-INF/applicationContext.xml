@@ -306,4 +306,8 @@
             </bean>
         </property>
     </bean>
+
+    <!--bean override-->
+    <bean id="blOrderService" class="com.mycompany.service.CustomOrderServiceImpl"/>
+    <bean id="blOrderDao" class="com.mycompany.sample.dao.CustomOrderDaoImpl"/>
 </beans>

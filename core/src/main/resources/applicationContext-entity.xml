@@ -34,4 +34,6 @@
           class="com.mycompany.sample.core.catalog.domain.CouponImpl" scope="prototype"/>
     <bean id="com.mycompany.sample.core.catalog.domain.CustomerCouponXref"
           class="com.mycompany.sample.core.catalog.domain.CustomerCouponXrefImpl" scope="prototype"/>
+    <bean id="org.broadleafcommerce.core.order.domain.Order"
+          class="com.mycompany.sample.core.catalog.domain.CustomOrderImpl" scope="prototype"/>
 </beans>

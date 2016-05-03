@@ -74,6 +74,8 @@ DELETE FROM blc_customer_phone;
 DELETE FROM blc_phone;
 DELETE FROM customer_fivecard_xref;
 DELETE FROM customer_coupon_xref;
+DELETE FROM order_extend;
+DELETE FROM customer_extend;
 DELETE FROM blc_customer;
 /**/
 
@@ -121,5 +123,14 @@ CREATE TABLE `product_extend` (
   PRIMARY KEY (`PRODUCT_EXTEND_ID`),
   KEY `PRODUCT_ID` (`PRODUCT_ID`),
   CONSTRAINT `product_extend_ibfk_1` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `blc_product` (`PRODUCT_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/**/
+/*订单扩展表*/
+DROP TABLE IF EXISTS order_extend;
+CREATE TABLE `order_extend` (
+  `ORDER_EXTEND_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `ORDER_ID` bigint(20) NOT NULL,
+  `ADDRESS_ID` bigint(20),
+  PRIMARY KEY (ORDER_EXTEND_ID)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /**/

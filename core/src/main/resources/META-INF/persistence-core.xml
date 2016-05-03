@@ -16,6 +16,7 @@
         <class>com.mycompany.sample.core.catalog.domain.CustomerFiveCardXrefImpl</class>
         <class>com.mycompany.sample.core.catalog.domain.CouponImpl</class>
         <class>com.mycompany.sample.core.catalog.domain.CustomerCouponXrefImpl</class>
+        <class>com.mycompany.sample.core.catalog.domain.CustomOrderImpl</class>
         <exclude-unlisted-classes/>
     </persistence-unit>
     

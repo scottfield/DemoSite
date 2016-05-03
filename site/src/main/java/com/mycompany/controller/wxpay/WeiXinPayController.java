@@ -1,7 +1,7 @@
 package com.mycompany.controller.wxpay;
 
-import com.mycompany.sample.core.catalog.domain.CustomAddress;
 import com.mycompany.sample.core.catalog.domain.CustomCustomer;
+import com.mycompany.sample.core.catalog.domain.CustomOrder;
 import com.mycompany.sample.core.catalog.domain.Shop;
 import com.mycompany.sample.core.catalog.domain.ShopAccount;
 import com.mycompany.sample.payment.weixin.common.Configure;
@@ -11,9 +11,7 @@ import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.sample.util.CommonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.service.OrderService;
-import org.broadleafcommerce.profile.core.domain.CustomerAddress;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,17 +38,10 @@ public class WeiXinPayController {
     @RequestMapping("/pay")
     public String unifyOrder(HttpServletRequest request, Long orderId) {
         String retView = "wxpay/wxpay";
-        Order order = orderService.findOrderById(orderId);
+        CustomOrder order = (CustomOrder) orderService.findOrderById(orderId);
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
-        List<CustomerAddress> customerAddresses = customer.getCustomerAddresses();
-        Shop shop = null;
-        for (CustomerAddress customerAddress : customerAddresses) {
-            if (customerAddress.getAddressName().equals("收货地址")) {
-                CustomAddress address = (CustomAddress) customerAddress.getAddress();
-                shop = address.getShop();
-                break;
-            }
-        }
+        Shop shop = order.getAddress().getShop();
+
         String requestURI = request.getRequestURI();
         StringBuffer requestURL = request.getRequestURL();
         //如果没有收货地址就填写收货地址
