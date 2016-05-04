@@ -26,21 +26,17 @@
 </header>
 
 <!---->
-<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/account/addresses}" th:method="post">
+<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/account/addresses}"
+          th:object="${customerAddressForm}" th:method="post">
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
         <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
-        <input type="text" name="address.firstName" th:value="${customer.pickupAddress.firstName}"
-               th:if="${customer.pickupAddress!=null}"/>
-        <input type="text" name="address.firstName" th:unless="${customer.pickupAddress!=null}"/>
+        <input type="text" th:field="*{address.firstName}"/>
     </div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电 &nbsp;&nbsp;&nbsp;&nbsp;话：</span>
-        <input type="text" name="address.phonePrimary"
-               th:value="${customer.pickupAddress?.phonePrimary?.phoneNumber}"
-               th:if="${customer.pickupAddress!=null}"/>
-        <input type="text" name="address.phonePrimary" th:unless="${customer.pickupAddress!=null}"/>
+        <input type="text" th:field="*{address.phonePrimary.phoneNumber}"/>
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>
@@ -62,9 +58,7 @@
             <textarea th:unless="${defaultShop}"></textarea>
         </div>
     </div>
-    <input type="hidden" name="address.id" th:value="${customer.pickupAddress.id}"
-           th:if="${customer.pickupAddress!=null}"/>
-    <input type="hidden" name="address.id" th:unless="${customer.pickupAddress!=null}"/>
+    <input type="hidden" th:field="*{address.id}"/>
 
     <div class="take-cargo-btn">
         <img src="/images/new/confirm-info-button.jpg" onclick="form.submit.click()" width="50%"/>
@@ -88,7 +82,7 @@ $(function () {
             }
         });
         /*shopList[0].selected = true;
-        $("#shopList").change();*/
+         $("#shopList").change();*/
     });
     $("#shopList").change(function (data) {
         var address = $(this.selectedOptions[0]).data("address");

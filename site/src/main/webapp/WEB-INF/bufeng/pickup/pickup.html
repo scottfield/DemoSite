@@ -56,7 +56,8 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     $(function () {
-        $("#submitBtn").click(function () {
+        $("#submitBtn").click(function (e) {
+            e.preventDefault();
             var $form = $("#pickupForm");
             var queryStr = $("#pickupForm").serialize();
             var method = $form.attr("method");

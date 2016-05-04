@@ -91,13 +91,19 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String viewCustomerAddresses(HttpServletRequest request, Model model) {
+    public String viewCustomerAddresses(HttpServletRequest request, @ModelAttribute("customerAddressForm")CustomCustomerAddressForm form) {
         String activeFiveCard = request.getParameter("activeFiveCard");
         if (Objects.nonNull(activeFiveCard)) {
             request.getSession().setAttribute("activeFiveCard", true);
             return "fivecard/active_form";
+        } else {
+            CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+            CustomAddress pickupAddress = customer.getPickupAddress();
+            if (Objects.nonNull(pickupAddress)) {
+                form.setAddress(pickupAddress);
+            }
+            return "account/addressForm";
         }
-        return "account/addressForm";
     }
 
     @RequestMapping(method = RequestMethod.POST)

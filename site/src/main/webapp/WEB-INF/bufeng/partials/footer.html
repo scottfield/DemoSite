@@ -1,13 +1,13 @@
 <div th:fragment="footer" th:remove="tag" th:inline="text">
     <footer th:attr="data-item-count=${cart.itemCount},data-unlock=${isUnlocked}">
         <div class="container">
-            <a th:href="@{/}" title="首页" class="tab1"></a>
-            <a class="tab2" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>
-            <a class="tab3">
+            <a th:if="${showHome?:true}" th:href="@{/}" title="首页" class="tab1"></a>
+            <a th:if="${showCoupon?:true}" class="tab2" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>
+            <a th:if="${showQrScan?:true}" class="tab3">
                 <span th:id="qrscan"></span>
             </a>
-            <a th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"><span th:style="'display:'+${cart.itemCount==0?'none':'block'}" class="num" th:text="${cart.itemCount}">0</span></a>
-            <a th:href="@{/account/orders}" title="我的订单" class="tab5"></a>
+            <a th:if="${showCart?:true}" th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"><span th:style="'display:'+${cart.itemCount==0?'none':'block'}" class="num" th:text="${cart.itemCount}">0</span></a>
+            <a th:if="${showOrder?:true}" th:href="@{/account/orders}" title="我的订单" class="tab5"></a>
         </div>
     </footer>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>

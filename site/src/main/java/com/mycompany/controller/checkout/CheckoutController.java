@@ -16,7 +16,6 @@
 
 package com.mycompany.controller.checkout;
 
-import com.mycompany.controller.account.ManageCustomerAddressesController;
 import com.mycompany.sample.core.catalog.domain.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -33,7 +32,6 @@ import org.broadleafcommerce.core.workflow.Activity;
 import org.broadleafcommerce.core.workflow.ProcessContext;
 import org.broadleafcommerce.core.workflow.Processor;
 import org.broadleafcommerce.profile.core.domain.Country;
-import org.broadleafcommerce.profile.core.domain.CustomerAddress;
 import org.broadleafcommerce.profile.core.domain.Phone;
 import org.broadleafcommerce.profile.core.domain.PhoneImpl;
 import org.broadleafcommerce.profile.core.service.AddressService;
