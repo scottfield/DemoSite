@@ -40,7 +40,7 @@
 </div>
 <!--order list-->
 <div th:each="order:${orders}" th:remove="tag" th:with="totalQuantity=0">
-    <div class="myorder-tt">
+    <div th:class="'myorder-tt'+${order.status.type eq 'CANCELLED'?' bg-gray':(order.status.type eq 'PAID'?' bg-order-success':'')}">
         <span class="fl"><em></em>[[${order.orderNumber}]]</span>
         <span class="fr" th:if="${order.status.type eq 'UNPAID'}" th:text="待支付"></span>
         <span class="fr" th:if="${order.status.type eq 'PAID'}">提货门店:[[${order.address.shop.name}]]</span>
@@ -66,13 +66,13 @@
     </div>
     <div class="order-list-address-tips" th:if="${order.status.type eq 'PAID'}" th:text="${order.address.shop.address}"></div>
     <div class="order-list-tips" th:if="${order.status.type eq 'UNPAID'}">只剩下[[${15-(now.time - order.submitDate.time)/60000}]]分钟,这个订单就要被取消了,快快付款带我回家吧</div>
-    <div class="affirm-sum-money">
+    <div th:class="'affirm-sum-money'+${order.status.type eq 'CANCELLED'?' bg-gray':(order.status.type eq 'PAID'?' bg-order-success':'')}">
         <div class="sum-money">共[[${order.itemCount}]]件商品 合计:￥[[${order.total}]]</div>
         <!--<a th:href="@{'/account/orders/cancel/'+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">取消订单</a>-->
         <a th:href="@{'/pickup?orderId='+${order.id}}" th:if="${order.status.type eq 'PAID'}">我要提货</a>
         <a th:href="@{'/wechatpay/index/pay?orderId='+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">立即付款</a>
-        <a href="javascript:void(0)" th:if="${order.status.type eq 'CONSUMED'}">提货成功</a>
-        <a href="javascript:void(0)" th:if="${order.status.type eq 'CANCELLED'}">已取消</a>
+        <a style="background-color:transparent;" href="javascript:void(0)" th:if="${order.status.type eq 'CONSUMED'}">提货成功</a>
+        <a style="background-color:transparent;" href="javascript:void(0)" th:if="${order.status.type eq 'CANCELLED'}">已取消</a>
     </div>
 </div>
 <!---->

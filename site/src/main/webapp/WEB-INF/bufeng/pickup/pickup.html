@@ -12,27 +12,26 @@
         }, false);
     </script>
 </head>
-<body>
-<!-- header -->
-<div class="header"></div>
+<body class="has-navbar">
 <header>
-    <div class="l-img">
-        <a th:href="@{/account/orders}"><img th:src="@{/images/5_ct_04.png}" height="15"/> 提货</a>
+    <div class="container">
+        <div class="left"><a th:href="@{/account/orders}" class="left-arrow">提货</a></div>
+        <div class="center"></div>
+        <div class="right"></div>
     </div>
-    <div class="r-img"><img th:src="@{/images/5_ct_02.png}" height="30"/></div>
 </header>
 
 <!---->
 <blc:form th:name="form" th:action="@{/pickup}" th:method="post" th:id="pickupForm">
     <div class="take-cargo-tit"><img th:src="@{/images/th_03.jpg}" height="35"/></div>
-    <div class="take-cargo-sm"><em>1</em> 请填写您的信息</div>
+    <div class="take-cargo-sm"><em>1</em> <span>请填写您的信息</span></div>
     <div class="take-cargo-info">
-        <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
+        <em><img th:src="@{/images/qro_03.png}" width="16"/></em>
         <span>姓       名：</span>
         <input type="text" name="reciever" th:value="${orderAddress.firstName}"/>
     </div>
     <div class="take-cargo-info">
-        <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
+        <em><img th:src="@{/images/qro_06.png}" width="16"/></em>
         <span>电       话：</span>
         <input type="text" name="recieverPhone"
                th:value="${orderAddress.phonePrimary.phoneNumber}"/>
@@ -40,7 +39,7 @@
 
     <div class="hr"></div>
 
-    <div class="take-cargo-sm"><em>2</em> 请服务台工作人员输入验证码</div>
+    <div class="take-cargo-sm"><em>2</em> <span>请服务台工作人员输入验证码</span></div>
     <div class="pb-box">
         <div class="take-cargo-yz">
             <span>验证码</span>
@@ -49,7 +48,7 @@
     </div>
 
     <div class="take-cargo-btn">
-        <img th:id="submitBtn" th:src="@{/images/confirm_03.jpg}" height="40"/>
+        <img th:id="submitBtn" th:src="@{/images/new/confirm-exchange.png}" height="40"/>
         <input type="submit" name="submit" class="none"/>
     </div>
     <input type="hidden" th:name="orderId" th:id="orderId" th:value="${param.orderId[0]}"/>

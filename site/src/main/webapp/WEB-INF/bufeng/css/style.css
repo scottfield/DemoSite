@@ -648,7 +648,8 @@ footer a{
 	background-size:auto 100%;
 	margin-top:10px;
 	position:relative;
-	height: 100px;
+	padding:3% 4.5% 4% 3%;
+	min-height:80px;
 }
 .order-fillIn-img .img{
 	width:100%;
@@ -661,10 +662,6 @@ footer a{
 }
 
 .order-fillIn-img .info{
-	width:90%;
-	position:absolute;
-	left:6%;
-	top:13%;
 	font-size:.8rem;
 }
 .order-fillIn-img .info .con{
@@ -702,6 +699,9 @@ footer a{
 	padding:0 10px;
 	color:#e46d78;
 }
+.take-cargo-sm *{
+	vertical-align:middle;
+}
 .take-cargo-sm em{
 	width:20px;
 	height:20px;
@@ -721,9 +721,11 @@ footer a{
 	display:-webkit-box;
 	-webkit-box-orient:horizontal;
 }
+.take-cargo-info em{display:inline-block;}
+.take-cargo-info *{vertical-align:middle;}
 .take-cargo-info input{
 	-webkit-box-flex:1;
-	height:20px;
+	height:24px;
 	display:block;
 	border:0;
 	border-bottom:1px #87817f solid;
@@ -1368,6 +1370,7 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 }
 .order-list-tips{background-color:#fbe461;color:red;font-size:12px;line-height:20px;text-align:center;}
 .bg-gray{background-color:#727272;}
+.bg-order-success{background-color:#7f82a4;}
 .card-volume-empty .color-empty-gray{font-size:12px;margin-top:20px;}
 .color-empty-gray{color:#bcb1b1;}
 .coupon-list{overflow:hidden;}
