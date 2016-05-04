@@ -171,7 +171,11 @@ public class FiveCardController {
                     //检查门店是否在活动范围内
                     if (Objects.nonNull(shop)) {
                         CustomerAddress customerAddress = addAddress(shop, ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME);
-                        addAddress(shop, ManageCustomerAddressesController.PICKUP_ADDRESS_NAME);//添加门店地址到收获地址
+                        CustomAddress pickupAddress = customer.getPickupAddress();
+//                        如果用户没有收货地址则添加关注的门店地址为收货地址
+                        if (Objects.isNull(pickupAddress)) {
+                            addAddress(shop, ManageCustomerAddressesController.PICKUP_ADDRESS_NAME);//添加门店地址到收获地址
+                        }
                         followedAddress = customerAddress;
                     }
                 }

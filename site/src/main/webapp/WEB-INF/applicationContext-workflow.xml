@@ -11,6 +11,8 @@
             <list>
                 <bean p:order="2010" id="blCheckAddAvailabilityActivity"
                       class="org.broadleafcommerce.core.order.service.workflow.CheckAvailabilityActivity"/>
+                <bean p:order="2020" id="checkPurchageLimitActivity"
+                      class="com.mycompany.worklow.cart.CheckPurchageLimitActivity"/>
             </list>
         </property>
     </bean>
@@ -22,6 +24,8 @@
             <list>
                 <bean p:order="2010" id="blCheckUpdateAvailabilityActivity"
                       class="org.broadleafcommerce.core.order.service.workflow.CheckAvailabilityActivity"/>
+                <bean p:order="2020" id="checkPurchageLimitActivity"
+                      class="com.mycompany.worklow.cart.CheckPurchageLimitActivity"/>
             </list>
         </property>
     </bean>

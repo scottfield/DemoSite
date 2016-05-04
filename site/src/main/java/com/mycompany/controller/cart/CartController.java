@@ -17,6 +17,7 @@
 package com.mycompany.controller.cart;
 
 
+import com.mycompany.worklow.cart.ExceededMaxPurchaseQuantityLimitException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
@@ -47,7 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/cart")
 public class CartController extends BroadleafCartController {
-    
+
     @Override
     @RequestMapping("")
     public String cart(HttpServletRequest request, HttpServletResponse response, Model model) throws PricingException {
@@ -56,6 +57,7 @@ public class CartController extends BroadleafCartController {
 
     /**
      * 添加商品到购物车
+     *
      * @param request
      * @param response
      * @param model
@@ -66,12 +68,14 @@ public class CartController extends BroadleafCartController {
      * @throws AddToCartException
      */
     @RequestMapping(value = "/add", produces = "application/json")
-    public @ResponseBody Map<String, Object> addJson(HttpServletRequest request, HttpServletResponse response, Model model,
-            @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
+    public
+    @ResponseBody
+    Map<String, Object> addJson(HttpServletRequest request, HttpServletResponse response, Model model,
+                                @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
         Map<String, Object> responseMap = new HashMap<String, Object>();
         try {
             super.add(request, response, model, addToCartItem);
-            
+
             if (addToCartItem.getItemAttributes() == null || addToCartItem.getItemAttributes().size() == 0) {
                 responseMap.put("productId", addToCartItem.getProductId());
             }
@@ -91,25 +95,27 @@ public class CartController extends BroadleafCartController {
                 responseMap.put("error", "productOptionValidationError");
                 responseMap.put("errorCode", exception.getErrorCode());
                 responseMap.put("errorMessage", exception.getMessage());
-                //blMessages.getMessage(exception.get, lfocale))
             } else if (ExceptionUtils.getRootCause(e) instanceof InventoryUnavailableException) {
-                responseMap.put("error", "缺货啦!");
-            }else {
+                responseMap.put("error", "库存不足!");
+            } else if (ExceptionUtils.getRootCause(e) instanceof ExceededMaxPurchaseQuantityLimitException) {
+                ExceededMaxPurchaseQuantityLimitException exception = (ExceededMaxPurchaseQuantityLimitException) ExceptionUtils.getRootCause(e);
+                responseMap.put("error", "超出最大购买数量限制:" + exception.getMaxQuantityLimit() + ",已经添加数量:" + (exception.getQuantityRrequested() - 1));
+            } else {
                 throw e;
             }
         }
-        
+
         return responseMap;
     }
-    
+
     /*
      * The Heat Clinic does not support adding products with required product options from a category browse page
      * when JavaScript is disabled. When this occurs, we will redirect the user to the full product details page 
      * for the given product so that the required options may be chosen.
      */
-    @RequestMapping(value = "/add", produces = { "text/html", "*/*" })
+    @RequestMapping(value = "/add", produces = {"text/html", "*/*"})
     public String add(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
-            @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
+                      @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
         try {
             return super.add(request, response, model, addToCartItem);
         } catch (AddToCartException e) {
@@ -117,10 +123,10 @@ public class CartController extends BroadleafCartController {
             return "redirect:" + product.getUrl();
         }
     }
-    
+
     @RequestMapping("/updateQuantity")
     public String updateQuantity(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
-            @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, UpdateCartException, RemoveFromCartException {
+                                 @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, UpdateCartException, RemoveFromCartException {
         try {
             return super.updateQuantity(request, response, model, addToCartItem);
         } catch (UpdateCartException e) {
@@ -139,32 +145,32 @@ public class CartController extends BroadleafCartController {
             }
         }
     }
-    
+
     @Override
     @RequestMapping("/remove")
     public String remove(HttpServletRequest request, HttpServletResponse response, Model model,
-            @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, RemoveFromCartException {
+                         @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, RemoveFromCartException {
         return super.remove(request, response, model, addToCartItem);
     }
-    
+
     @Override
     @RequestMapping("/empty")
     public String empty(HttpServletRequest request, HttpServletResponse response, Model model) throws PricingException {
         return super.empty(request, response, model);
     }
-    
+
     @Override
     @RequestMapping("/promo")
     public String addPromo(HttpServletRequest request, HttpServletResponse response, Model model,
-            @RequestParam("promoCode") String customerOffer) throws IOException, PricingException {
+                           @RequestParam("promoCode") String customerOffer) throws IOException, PricingException {
         return super.addPromo(request, response, model, customerOffer);
     }
-    
+
     @Override
     @RequestMapping("/promo/remove")
     public String removePromo(HttpServletRequest request, HttpServletResponse response, Model model,
-            @RequestParam("offerCodeId") Long offerCodeId) throws IOException, PricingException {
+                              @RequestParam("offerCodeId") Long offerCodeId) throws IOException, PricingException {
         return super.removePromo(request, response, model, offerCodeId);
     }
-    
+
 }
