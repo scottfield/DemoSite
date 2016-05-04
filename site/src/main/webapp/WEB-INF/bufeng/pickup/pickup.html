@@ -4,7 +4,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>提货</title>
+    <title th:replace="/partials/title::title"></title>
     <div th:replace="/partials/header::header"></div>
     <script type="text/javascript">
         window.addEventListener('load', function () {
@@ -17,7 +17,7 @@
 <div class="header"></div>
 <header>
     <div class="l-img">
-        <a href="#"><img th:src="@{/images/5_ct_04.png}" height="15"/> 订单确认</a>
+        <a th:href="@{/account/orders}"><img th:src="@{/images/5_ct_04.png}" height="15"/> 提货</a>
     </div>
     <div class="r-img"><img th:src="@{/images/5_ct_02.png}" height="30"/></div>
 </header>
@@ -29,13 +29,13 @@
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
         <span>姓       名：</span>
-        <input type="text" name="reciever" th:value="${customer.customerAddresses[0].address.firstName}"/>
+        <input type="text" name="reciever" th:value="${orderAddress.firstName}"/>
     </div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电       话：</span>
         <input type="text" name="recieverPhone"
-               th:value="${customer.customerAddresses[0].address.phonePrimary.phoneNumber}"/>
+               th:value="${orderAddress.phonePrimary.phoneNumber}"/>
     </div>
 
     <div class="hr"></div>

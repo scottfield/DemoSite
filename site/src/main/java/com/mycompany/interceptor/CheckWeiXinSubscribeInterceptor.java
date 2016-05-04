@@ -29,11 +29,6 @@ public class CheckWeiXinSubscribeInterceptor implements HandlerInterceptor {
         }
         //检测用户是否关注公众号
         Map<String, Object> userInfo = weixinService.getUserInfo(openId);
-
-        if (UNSUBSCRIBED.equals(userInfo.get("subscribe"))) {
-            response.sendRedirect("/wx/subscribe");
-            return false;
-        }
         request.setAttribute("userInfo", userInfo);
         request.setAttribute("openid", openId);
         return true;

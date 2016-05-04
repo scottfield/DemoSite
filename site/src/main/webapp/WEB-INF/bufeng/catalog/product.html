@@ -4,7 +4,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
+    <title th:replace="/partials/title::title"></title>
     <div th:replace="/partials/header::header"></div>
     <script type="text/javascript">
         window.addEventListener('load', function () {
@@ -30,21 +30,27 @@
 
         })
     </script>
-	<style>
-		.goods-info .num .mnus,.goods-info .num .add{font-size:33px;line-height:33px;}
-		.goods-info .num .mnus.disable,.goods-info .num .add.disable{color:#999999;}
-	</style>
+    <style>
+        .goods-info .num .mnus, .goods-info .num .add {
+            font-size: 33px;
+            line-height: 33px;
+        }
+
+        .goods-info .num .mnus.disable, .goods-info .num .add.disable {
+            color: #999999;
+        }
+    </style>
 </head>
-<body class="has-navbar has-tabbar">
+<body class="has-navbar has-tabbar" th:attr="data-checkout-url=@{/checkout}">
 <header>
-	<div class="container">
-		<div class="left">
-			<a th:href="@{${#httpServletRequest.getHeader('Referer')}}" class="left-arrow">商品详情</a>
-		</div>
-		
-		<div class="center"></div>
-		<div class="right"></div>
-	</div>
+    <div class="container">
+        <div class="left">
+            <a th:href="@{${#httpServletRequest.getHeader('Referer')}}" class="left-arrow">商品详情</a>
+        </div>
+
+        <div class="center"></div>
+        <div class="right"></div>
+    </div>
     <!--<div class="l-img">
         <a th:href="@{${#httpServletRequest.getHeader('Referer')}}"><img th:src="@{/images/5_ct_04.png}" height="15"/>商品详情</a>
     </div>
@@ -67,8 +73,8 @@
 </script>
 
 <!--购物车物品数量-->
-<a class="goods-shopcar"  th:href="@{/cart}">
-        <span th:text="${cart.itemCount}"></span>
+<a class="goods-shopcar" th:href="@{/cart}">
+    <span th:text="${cart.itemCount}"></span>
 </a>
 
 <!--商品信息-->
@@ -116,10 +122,10 @@
         <!--*/-->
         <input type="hidden" name="quantity" value="1"/>
     </blc:form>
-	<div class="container">
-		<a class="add-cart" href="#" title="加入购物车" id="addToCartBtn"></a>
-		<a class="buy" href="#" title="立即购买"></a>
-	</div>
+    <div class="container">
+        <a class="add-cart" href="#" title="加入购物车" id="addToCartBtn"></a>
+        <a class="buy" href="#" title="立即购买"></a>
+    </div>
 </footer>
 
 </body>
@@ -149,32 +155,59 @@
         //添加购物车绑定事件
         $("#addToCartBtn").click(function (e) {
             e.preventDefault();
+            var param = getFormParam();
+            console.log(param);
+            addProductToCart(param);
+        });
+        //添加立即购买绑定事件
+        $(".buy").click(function (e) {
+            e.preventDefault();
+            var param = getFormParam();
+            param.callback = function () {
+                location.href = $("body").data("checkout-url");
+            };
+            console.log(param);
+            addProductToCart(param);
+        });
+
+        function getFormParam() {
             var url = $("#addToCartForm").attr("action");
             var productId = $('input[name="productId"]').val();
             var quantity = $('input[name="quantity"]').val();
             var csrfToken = $('input[name="csrfToken"]').val();
+            return {url: url, productId: productId, quantity: quantity, csrfToken: csrfToken};
+        }
+
+        function addProductToCart(param) {
             $.ajax({
                 method: "post",
-                url: url,
+                url: param.url,
                 data: {
-                    productId: productId,
-                    quantity: quantity,
-                    csrfToken: csrfToken
+                    productId: param.productId,
+                    quantity: param.quantity,
+                    csrfToken: param.csrfToken
                 },
                 dataType: 'json'
             }).done(function (data) {
                 //修改购物车中显示的物品数量
-				if(data.quantityAdded){
+                if (data.quantityAdded) {
                     $(".goods-shopcar span").html(data.cartItemCount);
-					showAjaxTips("已放入购物车！");
-				}else{
+                    //执行回调函数
+                    if (undefined !== param.callback) {
+                        param.callback();
+                    } else {
+                        showAjaxTips("已放入购物车！");
+                    }
+                } else {
                     showAjaxTips(data.error);
-				}
+                }
                 console.log(data);
             }).fail(function (data) {
                 console.log(data);
                 location.reload();
             });
-        });
+        }
+
+
     });
 </script>

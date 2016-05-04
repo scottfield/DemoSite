@@ -118,8 +118,11 @@ CREATE TABLE `product_extend` (
   `PRODUCT_EXTEND_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `PRODUCT_ID` bigint(20) NOT NULL,
   `PROMOTION_MESSAGE` varchar(200) DEFAULT NULL,
-  `SALES` bigint(20) DEFAULT '0' COMMENT '销售量',
-  `sale_limit` bigint(20) DEFAULT '1' COMMENT '限购数量',
+  `SALES` bigint(20) DEFAULT 0 COMMENT '销售量',
+  `sale_limit` bigint(20) COMMENT '限购数量',
+  `product_department` VARCHAR(20) COMMENT '部门',
+  `product_style` VARCHAR(20) COMMENT 'style',
+  `product_sku` VARCHAR(20) COMMENT 'sku',
   PRIMARY KEY (`PRODUCT_EXTEND_ID`),
   KEY `PRODUCT_ID` (`PRODUCT_ID`),
   CONSTRAINT `product_extend_ibfk_1` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `blc_product` (`PRODUCT_ID`)

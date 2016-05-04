@@ -8,11 +8,9 @@ import com.mycompany.sample.service.ShopService;
 import com.mycompany.sample.service.WeixinService;
 import com.mycompany.sample.util.CommonUtils;
 import com.mycompany.sample.util.NewImageUtils;
-import org.broadleafcommerce.profile.core.domain.Address;
-import org.broadleafcommerce.profile.core.domain.Customer;
-import org.broadleafcommerce.profile.core.domain.CustomerAddress;
-import org.broadleafcommerce.profile.core.domain.CustomerAttribute;
+import org.broadleafcommerce.profile.core.domain.*;
 import org.broadleafcommerce.profile.core.service.AddressService;
+import org.broadleafcommerce.profile.core.service.CountryService;
 import org.broadleafcommerce.profile.core.service.CustomerAddressService;
 import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
@@ -54,6 +52,8 @@ public class FiveCardController {
     private CustomerAddressService customerAddressService;
     @Resource
     private ShopService shopService;
+    @Resource
+    private CountryService countryService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String getFiveCardPage(HttpServletRequest request, String shopOutOfRange) {
@@ -128,7 +128,7 @@ public class FiveCardController {
         session.removeAttribute("referrer");
         //如果为A卡资格则自动去激活
         if (cardXref.getType() == FiveCard.CARD_TYPE_A) {
-            return "redirect:/fiveCard/activate";
+            return "redirect:/fiveCard/activate?autoActive=true";
         }
         return retView;
     }
@@ -144,7 +144,7 @@ public class FiveCardController {
      * @return
      */
     @RequestMapping("/activate")
-    public String activateFiveCard(HttpServletRequest request) {
+    public String activateFiveCard(HttpServletRequest request, Boolean autoActive) {
         //判断是否已经领取五折卡
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
@@ -160,25 +160,28 @@ public class FiveCardController {
         if (cardXref.getType() == FiveCard.CARD_TYPE_B && (Objects.isNull((customer.getCustomerAddresses())) || customer.getCustomerAddresses().size() == 0)) {
             return "redirect:/account/addresses?activeFiveCard=true";
         } else if (cardXref.getType() == FiveCard.CARD_TYPE_A) {
+            //检测是否关注门店
+            //1检测本地数据库是否有门店记录
             CustomerAddress followedAddress = hasFollowShop(customer);
             //2调用接口查看是否有关注门店
             if (Objects.isNull(followedAddress)) {
                 Map<String, Object> vipInfo = weixinService.getVipInfo(customer.getUsername());
-                //将用户关注的门店写入数据库
                 if (Objects.nonNull(vipInfo)) {
                     Shop shop = shopService.readShopByCode((String) vipInfo.get("unit_code"));
+                    //检查门店是否在活动范围内
                     if (Objects.nonNull(shop)) {
                         CustomerAddress customerAddress = addAddress(shop, ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME);
                         addAddress(shop, ManageCustomerAddressesController.PICKUP_ADDRESS_NAME);//添加门店地址到收获地址
                         followedAddress = customerAddress;
-                    } else {
-                        //关注门店不在本次活动范围内
-                        return "redirect:/account/addresses/followShop";
                     }
                 }
             }
             //未关注门店跳转到关注门店
             if (Objects.isNull(followedAddress)) {
+                //如果是开卡自动激活则跳转到五折卡页面
+                if (Objects.isNull(autoActive)) {
+                    return "redirect:/fiveCard";
+                }
                 return "redirect:/account/addresses/followShop";
             }
         }
@@ -195,6 +198,8 @@ public class FiveCardController {
         address.setLastName("default");
         address.setCity("default");
         address.setShop(shop);
+        Country country = countryService.findCountryByAbbreviation("CA");
+        address.setCountry(country);
         Address savedAddress = addressService.saveAddress(address);
         CustomerAddress customerAddress = customerAddressService.create();
         customerAddress.setAddress(savedAddress);
@@ -212,7 +217,7 @@ public class FiveCardController {
         NewImageUtils newImageUtils = new NewImageUtils();
         try {
             String parentDirectory = resourceFile.getFile().getParent();
-            String saveFilePath = parentDirectory+ File.separator + cardNo + "_card.png";
+            String saveFilePath = parentDirectory + File.separator + cardNo + "_card.png";
             // 对图像加水印
             BufferedImage buffImg = NewImageUtils.watermark(resourceFile.getFile(), waterFile.getFile(), 70, 270, 1f);
             // 输出水印图片
@@ -223,9 +228,6 @@ public class FiveCardController {
     }
 
     private CustomerAddress hasFollowShop(CustomCustomer customer) {
-        //检测是否关注门店
-
-        //1检测本地数据库是否有门店记录
         CustomerAddress followedAddress = null;
         List<CustomerAddress> customerAddresses = customer.getCustomerAddresses();
         for (CustomerAddress customerAddress : customerAddresses) {

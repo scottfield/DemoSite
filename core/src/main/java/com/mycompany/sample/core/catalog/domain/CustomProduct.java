@@ -12,4 +12,15 @@ public interface CustomProduct extends Product {
     Integer getLimit();
 
     void setLimit(Integer limit);
+    String getDepartment();
+
+    void setDepartment(String department);
+
+    String getSku();
+
+    void setSku(String sku);
+
+    String getStyle();
+
+    void setStyle(String style);
 }

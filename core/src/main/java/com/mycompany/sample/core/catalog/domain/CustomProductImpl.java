@@ -23,8 +23,23 @@ public class CustomProductImpl extends ProductImpl implements CustomProduct {
             excluded = true)
     @Column(name = "SALES")
     private Integer sales = 0;
+
+    @AdminPresentation(friendlyName = "CustomProductImpl_Product_Sale_Limit", order = 2000,
+            group = Presentation.Group.Name.General, groupOrder = Presentation.Group.Order.General)
     @Column(name = "sale_limit")
     private Integer limit;
+    @AdminPresentation(friendlyName = "CustomProductImpl_Product_Department", order = 2000,
+            group = Presentation.Group.Name.General, groupOrder = Presentation.Group.Order.General)
+    @Column(name = "product_department")
+    private String department;
+    @AdminPresentation(friendlyName = "CustomProductImpl_Product_Style", order = 2000,
+            group = Presentation.Group.Name.General, groupOrder = Presentation.Group.Order.General)
+    @Column(name = "product_style")
+    private String style;
+    @AdminPresentation(friendlyName = "CustomProductImpl_Product_Sku", order = 2000,
+            group = Presentation.Group.Name.General, groupOrder = Presentation.Group.Order.General)
+    @Column(name = "product_sku")
+    private String sku;
     @Override
     public String getPromoMessage() {
         return promoMessage;
@@ -51,5 +66,29 @@ public class CustomProductImpl extends ProductImpl implements CustomProduct {
 
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

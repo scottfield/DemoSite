@@ -30,6 +30,7 @@ import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafManageCustomerAddressesController;
 import org.broadleafcommerce.profile.core.domain.*;
 import org.broadleafcommerce.profile.core.service.AddressService;
+import org.broadleafcommerce.profile.core.service.CountryService;
 import org.broadleafcommerce.profile.core.service.CustomerAddressService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
@@ -60,6 +61,8 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
     private CustomerAddressService customerAddressService;
     @Resource
     private WeixinService weixinService;
+    @Resource
+    private CountryService countryService;
 
     public static final String FOLLOWED_ADDRESS_NAME = "关注门店";
     public static final String PICKUP_ADDRESS_NAME = "收货地址";
@@ -128,6 +131,8 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             oldAddress.setShop(address.getShop());
             addressService.saveAddress(oldAddress);
         } else {//add a new address
+            Country country = countryService.findCountryByAbbreviation("CA");
+            address.setCountry(country);
             Address savedAddress = addressService.saveAddress(address);
             CustomerAddress customerAddress = customerAddressService.create();
             customerAddress.setAddress(savedAddress);

@@ -4,13 +4,13 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>五折卡分享好友</title>
+    <title th:replace="/partials/title::title"></title>
     <div th:replace="/partials/header::header"></div>
     <link rel="stylesheet" th:href="@{/css/five_card_share.css}"/>
 </head>
 <body class="has-navbar">
 <!--抢五折卡标题-->
-<header th:replace="fivecard/partials/header::header"></header>
+<header th:replace="fivecard/partials/header::header(targetUrl='/fiveCard')"></header>
 <!--已分享的状态加上shared类名即可-->
 <div class="card5-share-main img-panel">
     <img th:src="@{/images/new/card-5-share/bg.jpg}"/>

@@ -1,6 +1,8 @@
 package com.mycompany.controller.pickup;
 
 import com.mycompany.controller.form.PickupInfoForm;
+import com.mycompany.sample.core.catalog.domain.CustomAddress;
+import com.mycompany.sample.core.catalog.domain.CustomOrder;
 import com.mycompany.sample.core.catalog.domain.Shop;
 import com.mycompany.sample.service.ShopService;
 import org.apache.commons.logging.Log;
@@ -13,6 +15,7 @@ import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,7 +42,10 @@ public class PickupController {
     private ShopService shopService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String pickupPage(HttpServletRequest request,@RequestParam String orderId) {
+    public String pickupPage(HttpServletRequest request, @RequestParam Long orderId, Model model) {
+        CustomOrder order = (CustomOrder) orderService.findOrderById(orderId);
+        CustomAddress orderAddress = order.getAddress();
+        model.addAttribute("orderAddress", orderAddress);
         return "pickup/pickup";
     }
 

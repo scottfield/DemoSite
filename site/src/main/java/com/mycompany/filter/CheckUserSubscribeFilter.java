@@ -12,8 +12,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by jackie on 4/28/2016.
@@ -24,14 +25,19 @@ public class CheckUserSubscribeFilter extends OncePerRequestFilter {
     @Resource
     private WeixinService weixinService;
     private static final Integer UNSUBSCRIBED = 0;//未关注公众号状态
+    private Set<String> ignoreSet = new HashSet<>();
 
+    {
+        ignoreSet.add("/fiveCard");
+        ignoreSet.add("/account/addresses");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
         Customer customer = CustomerState.getCustomer();
         String openId = customer.getUsername();
-        if (shouldProcessURI(requestURI, openId)) {
+        if (shouldProcessURI(requestURI)) {
             Map<String, Object> userInfo = weixinService.getUserInfo(openId);
             if (UNSUBSCRIBED.equals(userInfo.get("subscribe"))) {
                 response.sendRedirect("/wx/subscribe");
@@ -44,12 +50,14 @@ public class CheckUserSubscribeFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public boolean shouldProcessURI(String uri, String openId) {
+    public boolean shouldProcessURI(String uri) {
 
-        if ( Objects.nonNull(openId) && !openId.equals("")) {
-            return true;
+        for (String ignoreUri : ignoreSet) {
+            if (uri.startsWith(ignoreUri)) {
+                return false;
+            }
         }
-        return false;
+        return true;
 
     }
 }
