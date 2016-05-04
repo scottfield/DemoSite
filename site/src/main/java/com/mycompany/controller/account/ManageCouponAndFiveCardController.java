@@ -30,6 +30,7 @@ public class ManageCouponAndFiveCardController {
             CardWrapper card = CardWrapper.getInstance();
             card.setStatus(fiveCardXref.getStatus());
             card.setType(CardWrapper.FIVE_CARD_TYPE);
+            card.setCardNo(fiveCardXref.getFiveCard().getNo());
             cards.add(card);
         }
         //转换优惠券

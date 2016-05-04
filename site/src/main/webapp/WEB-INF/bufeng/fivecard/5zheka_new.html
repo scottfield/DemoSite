@@ -74,7 +74,7 @@
 <!--5折卡方式1激活-->
 <div th:if="${cardType==0 and cardStatus==true}" th:remove="tag">
     <div class="img-panel card5-texthead">
-        <img th:src="@{/images/fivecard/__${cardCode}__.jpg}"/>
+        <img th:src="@{/images/fivecard/__${cardCode}___card.png}"/>
         <img th:src="@{/images/new/card-5/card5-1-2.png}"/>
         <a class="link" style="top:82%;left:48%;width:44%;height:15%;" th:id="shareFiveCardBtn" href="送人连接"></a>
     </div>

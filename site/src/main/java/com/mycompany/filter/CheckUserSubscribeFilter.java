@@ -1,6 +1,8 @@
 package com.mycompany.filter;
 
 import com.mycompany.sample.service.WeixinService;
+import org.broadleafcommerce.profile.core.domain.Customer;
+import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -10,10 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Created by jackie on 4/28/2016.
@@ -29,7 +29,8 @@ public class CheckUserSubscribeFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        String openId = request.getParameter("openid");
+        Customer customer = CustomerState.getCustomer();
+        String openId = customer.getUsername();
         if (shouldProcessURI(requestURI, openId)) {
             Map<String, Object> userInfo = weixinService.getUserInfo(openId);
             if (UNSUBSCRIBED.equals(userInfo.get("subscribe"))) {
@@ -45,7 +46,7 @@ public class CheckUserSubscribeFilter extends OncePerRequestFilter {
 
     public boolean shouldProcessURI(String uri, String openId) {
 
-        if (uri.equals("/") && Objects.nonNull(openId) && !openId.equals("")) {
+        if ( Objects.nonNull(openId) && !openId.equals("")) {
             return true;
         }
         return false;

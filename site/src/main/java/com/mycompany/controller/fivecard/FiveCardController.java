@@ -7,7 +7,7 @@ import com.mycompany.sample.service.FiveCardService;
 import com.mycompany.sample.service.ShopService;
 import com.mycompany.sample.service.WeixinService;
 import com.mycompany.sample.util.CommonUtils;
-import com.mycompany.sample.util.WaterMarkUtils;
+import com.mycompany.sample.util.NewImageUtils;
 import org.broadleafcommerce.profile.core.domain.Address;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.core.domain.CustomerAddress;
@@ -21,11 +21,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.support.ServletContextResource;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -141,7 +144,7 @@ public class FiveCardController {
      * @return
      */
     @RequestMapping("/activate")
-    public String activateFiveCard() {
+    public String activateFiveCard(HttpServletRequest request) {
         //判断是否已经领取五折卡
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
@@ -181,7 +184,7 @@ public class FiveCardController {
         }
         //符合激活条件,激活相应类型的五折卡
         bindFiveCard(customer);
-        generateFiveCardImage(customer);
+        generateFiveCardImage(customer, request);
         return "redirect:/fiveCard";
     }
 
@@ -201,10 +204,22 @@ public class FiveCardController {
         return customerAddress;
     }
 
-    private void generateFiveCardImage(CustomCustomer customer) {
+    private void generateFiveCardImage(CustomCustomer customer, HttpServletRequest request) {
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
         String cardNo = fiveCardXref.getFiveCard().getNo();
-        WaterMarkUtils.mark("d:/card-5-1.jpg", "d:/" + cardNo + ".jpg", Color.black, cardNo);
+        ServletContextResource resourceFile = new ServletContextResource(request.getSession().getServletContext(), "WEB-INF/bufeng/images/fivecard/fivecard_backgroud.png");
+        ServletContextResource waterFile = new ServletContextResource(request.getSession().getServletContext(), "WEB-INF/bufeng/images/fivecard/" + cardNo + ".png");
+        NewImageUtils newImageUtils = new NewImageUtils();
+        try {
+            String parentDirectory = resourceFile.getFile().getParent();
+            String saveFilePath = parentDirectory+ File.separator + cardNo + "_card.png";
+            // 对图像加水印
+            BufferedImage buffImg = NewImageUtils.watermark(resourceFile.getFile(), waterFile.getFile(), 70, 270, 1f);
+            // 输出水印图片
+            newImageUtils.generateWaterFile(buffImg, saveFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private CustomerAddress hasFollowShop(CustomCustomer customer) {
