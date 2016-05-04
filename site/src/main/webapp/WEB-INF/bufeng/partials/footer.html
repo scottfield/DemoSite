@@ -15,11 +15,11 @@
         //购物车
         $(function () {
             //添加购物车绑定事件
-            $(".addToCartBtn img").click(function (e) {
+            $("body").on("click",".addToCartBtn img",function (e) {
                 e.preventDefault();
                 var quantityavailable = $(this).data("quantityavailable");
                 if (!quantityavailable) {
-                    alert("暂时无货");
+                    //alert("暂时无货");
                     return;
                 }
                 var url = $("#addToCartForm").attr("action");
