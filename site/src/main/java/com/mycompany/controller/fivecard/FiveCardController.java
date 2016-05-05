@@ -113,7 +113,7 @@ public class FiveCardController {
         FiveCard fiveCard = fiveCardService.readByStatusAndType(false, type);
         //没有可用的五折卡
         if (Objects.isNull(fiveCard)) {
-            return "redirect:/unavailable";
+            return "redirect:/index";
         }
         //发放五折卡
         CustomerFiveCardXref cardXref = new CustomerFiveCardXrefImpl();
@@ -125,11 +125,10 @@ public class FiveCardController {
         if (Objects.nonNull(referrer)) {
             Customer referrerCustomer = customerService.readCustomerById((Long) referrer);
             cardXref.setReferer(referrerCustomer);
+            retView = retView + "?referrerPage=true";
         }
         customer.setFiveCardXref(cardXref);
         customerService.saveCustomer(customer);
-        //派卡完成后移除session中的推荐人
-        session.removeAttribute("referrer");
         //如果为A卡资格则自动去激活
         if (cardXref.getType() == FiveCard.CARD_TYPE_A) {
             return "redirect:/fiveCard/activate?autoActive=true";
