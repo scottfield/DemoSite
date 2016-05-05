@@ -135,17 +135,18 @@ public class CartController extends BroadleafCartController {
             responseMap.put("quantityAdded", addToCartItem.getQuantity());
             responseMap.put("cartItemCount", String.valueOf(CartState.getCart().getItemCount()));
         } catch (UpdateCartException e) {
-            if (e.getCause() instanceof InventoryUnavailableException) {
-                // Since there was an exception, the order gets detached from the Hibernate session. This re-attaches it
-                CartState.setCart(orderService.findOrderById(CartState.getCart().getId()));
-                if (isAjaxRequest(request)) {
-//                    model.addAttribute("errorMessage", "Not enough inventory to fulfill your requested amount of " + addToCartItem.getQuantity());
-                    responseMap.put("error", "库存不足!");
-                } else {
-//                    redirectAttributes.addAttribute("errorMessage", "Not enough inventory to fulfill your requested amount of " + addToCartItem.getQuantity());
-                    responseMap.put("error", "库存不足!");
-//                    return getCartPageRedirect();
-                }
+            if (e.getCause() instanceof RequiredAttributeNotProvidedException) {
+                responseMap.put("error", "allOptionsRequired");
+            } else if (e.getCause() instanceof ProductOptionValidationException) {
+                ProductOptionValidationException exception = (ProductOptionValidationException) e.getCause();
+                responseMap.put("error", "productOptionValidationError");
+                responseMap.put("errorCode", exception.getErrorCode());
+                responseMap.put("errorMessage", exception.getMessage());
+            } else if (ExceptionUtils.getRootCause(e) instanceof InventoryUnavailableException) {
+                responseMap.put("error", "库存不足!");
+            } else if (ExceptionUtils.getRootCause(e) instanceof ExceededMaxPurchaseQuantityLimitException) {
+                ExceededMaxPurchaseQuantityLimitException exception = (ExceededMaxPurchaseQuantityLimitException) ExceptionUtils.getRootCause(e);
+                responseMap.put("error", "超出最大购买数量限制:" + exception.getMaxQuantityLimit() + ",已经添加数量:" + (exception.getQuantityRrequested() - 1));
             } else {
                 throw e;
             }
