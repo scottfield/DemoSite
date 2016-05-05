@@ -102,6 +102,9 @@ public class FiveCardController {
                 return "redirect:/index";
             } else {
                 //B卡返回五折卡页面
+                if (Objects.nonNull(referrer)) {
+                    retView = retView + "?referrerPage=true";
+                }
                 return retView;
             }
         }
