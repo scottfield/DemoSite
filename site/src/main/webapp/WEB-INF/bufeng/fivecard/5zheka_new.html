@@ -75,8 +75,10 @@
 <div th:if="${cardType==0 and cardStatus==true}" th:remove="tag">
     <div class="img-panel card5-texthead">
         <img th:src="@{/images/fivecard/__${cardCode}___card.png}"/>
+    </div>
+    <div class="img-panel card5-texthead">
         <img th:src="@{/images/new/card-5/card5-1-2.png}"/>
-        <a class="link" style="top:82%;left:48%;width:44%;height:15%;" th:id="shareFiveCardBtn" href="送人连接"></a>
+        <a class="link" style="top:22%;left:48%;width:44%;height:70%;" th:id="shareFiveCardBtn" href="送人连接"></a>
     </div>
     <div class="img-panel" style="margin-top:-1px;">
         <img src="images/new/card-5/card5-cloud.jpg"/>
@@ -104,8 +106,10 @@
 <div th:remove="tag" th:if="${cardType==1 and cardStatus}">
     <div class="img-panel card5-texthead">
         <img th:src="@{/images/fivecard/__${cardCode}___card.png}"/>
+    </div>
+    <div class="img-panel card5-texthead" style="padding-top:0;">
         <img th:src="@{/images/new/card-5/card5-4-1.png}" style="width:80%;margin-top:10px;"/>
-        <a class="link" style="top:82%;left:13%;width:73%;height:15%;" th:href="@{/}"></a>
+        <a class="link" style="top:32%;left:13%;width:73%;height:60%;" th:href="@{/}"></a>
     </div>
     <div class="img-panel" style="margin-top:-1px;">
         <img src="images/new/card-5/card5-cloud.jpg"/>
@@ -255,44 +259,21 @@
 
 <!---->
 <div class="hidden"><img th:src="@{/images/new/card-5/card5-3.jpg}" width="100%"/></div>
-<div class="offline hidden">
-    <div class="box">
-        <div class="img"><img th:src="@{/images/5_c_11.jpg}" height="100%"/></div>
-        <div class="title">香奈儿清香黛尔香氛50ml</div>
-        <div class="pice">
-            <span>￥909</span>
-            <font>￥9092</font>
-        </div>
-    </div>
-    <div class="box">
-        <div class="img"><img th:src="@{/images/5_c_11.jpg}" height="100%"/></div>
-        <div class="title">香奈儿清香黛尔香氛50ml</div>
-        <div class="pice">
-            <span>￥909</span>
-            <font>￥9092</font>
-        </div>
-    </div>
-    <div class="box">
-        <div class="img"><img th:src="@{/images/5_c_11.jpg}" height="100%"/></div>
-        <div class="title">香奈儿清香黛尔香氛50ml</div>
-        <div class="pice">
-            <span>￥909</span>
-            <font>￥9092</font>
-        </div>
-    </div>
-    <div class="box">
-        <div class="img"><img th:src="@{/images/5_c_11.jpg}" height="100%"/></div>
-        <div class="title">香奈儿清香黛尔香氛50ml</div>
-        <div class="pice">
-            <span>￥909</span>
-            <font>￥9092</font>
-        </div>
-    </div>
+<div class="offline hidden" id="product_offline_list_panel" th:attr="host=${host}">
+    <div class="product-list"></div>
+    <div class="load-more">正在加载商品列表...</div>
 </div>
-<div th:if="${cardType==1 and cardStatus==true}">
+<!--<div th:if="!${cardType==1 and cardStatus==true}">
     <div th:replace="partials/footer::footer(showHome=false,showCart=false,showOrder=false)"></div>
-</div>
-<script type="text/javascript">
+</div>-->
+<footer th:if="${param.referrerPage!=null and param.referrerPage[0]=='true'}">
+    <div class="container">
+        <a class="scan" id="qrscan"></a>
+        <a class="coupon" th:href="@{/manage/couponAndFiveCard}"></a>
+    </div>
+</footer>
+<script type="text/javascript" th:inline="text">
+    //<![CDATA[
     $(function () {
         $("#shareFiveCardBtn").click(function (e) {
             e.preventDefault();
@@ -303,6 +284,74 @@
             location.href = '[[@{/fiveCard/activate}]]';
         });
     });
+    $(document).ready(function(){
+
+        var product_list_panel = $("#product_offline_list_panel");
+        var host = product_list_panel.attr("host");
+        var categoryId = 2001;
+
+        $(window).scroll(function () {
+            var w_height = $(this).height();
+            if ($(this).scrollTop() + w_height >= product_list_panel.offset().top + product_list_panel.outerHeight()) {
+                loadProductList(pageLimit, currentOffset);
+            }
+        });
+        var currentOffset = 1, loading = false, loadAll = false, pageLimit = 2, unlock = $("footer").data("unlock");
+        $(window).scroll();
+
+        function loadProductList(limit, offset) {
+            if (loading || loadAll)return;
+            loading = true;
+            $.ajax({
+                url: host + '/api/v1/catalog/category/' + categoryId,
+                data: {
+                    productLimit: limit,
+                    productOffset: offset
+                },
+                success: function (response) {
+                    var listHtml = [];
+                    //hack
+                    if (response.products === undefined) {
+                        return;
+                    }
+                    if (response.products.product.constructor == Object) {
+                        var product = [];
+                        product.push(response.products.product);
+                        response.products.product = product;
+                    }
+                    $.each(response.products.product, function (index) {
+                        //判断是否需要显示解锁标志
+                        var locker = unlock ? '' : '<span class="unlock">解锁预购</span>';
+                        listHtml.push([
+                            '<a class="box" href="' + this.url + '">',
+                            '<div class="img"><img src="',this.primaryMedia.url,'" height="100%"/></div>',
+                            '<div class="title">', this.name, '</div>',
+                            '<div class="pice">',
+                            '<span>￥', this.salePrice.amount, '</span>',
+                            '<font>￥', this.retailPrice.amount, '</font>',
+                            '</div>',
+                            '</a>',
+                        ].join(""));
+                    });
+                    product_list_panel.find(".product-list").append(listHtml.join(""));
+                    loading = false;
+                    if (response.products.product.length < limit) {
+                        loadAll = true;
+                        product_list_panel.find(".load-more").html("已加载全部");
+                    } else {
+                        product_list_panel.find(".load-more").html("正在加载更多...");
+                        currentOffset++;
+                    }
+                },
+                error: function () {
+                    loading = false;
+                    loadAll = true;
+                    product_list_panel.find(".load-more").html("加载商品列表出错");
+                }
+            });
+        }
+    });
+    //]]>
 </script>
 </body>
 </html>

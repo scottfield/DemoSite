@@ -453,6 +453,7 @@ header .text{
 .offline .title{
 	font-size:.8rem;
 	-webkit-box-flex:1;
+	padding-left:10px;
 }
 .offline .pice{
 }
@@ -498,7 +499,8 @@ footer .container .tab4 .num{background-color:red;position:absolute;color:#fff;f
 footer .container .tab5{background-image:url(../images/new/tab5.png);}
 footer .container .add-cart{background-image:url(../images/new/tabbar-addcart.png);background-size:auto 45%;background-position:right center;}
 footer .container .buy{background-image:url(../images/new/tabbar-buy.png);background-size:auto 45%;}
-footer .container .scan{background-image:url(../images/new/tabbar-scan.png);background-size:auto 50%;}
+footer .container .scan{background-image:url(../images/new/tabbar-scan.png);background-size:auto 50%;position:relative;}
+footer .container .scan:after{content:'';position:absolute;right:0;top:12px;width:1px;height:20px;background-color:#fff;}
 footer .container .coupon{background-image:url(../images/new/tabbar-coupon.png);background-size:auto 50%;}
 footer a{
 	display:block;
@@ -1018,6 +1020,7 @@ footer a{
 	*/
 	margin-bottom:10px;
 	max-width:100%;
+	min-width:55%;
 }
 .take-cargo-info textarea{
 	width:100%;
@@ -1064,25 +1067,28 @@ footer a{
 	color:#5d5a5a;
 }
 .shop-car-list .text .title{
-	height:35px;
+	height:32px;
 	overflow:hidden;
 }
 .shop-car-list .text .spec{
+	min-height:12px;
 }
 .shop-car-list .text .num{
 }
 .shop-car-list .num .bx{
 	height:25px;
 }
+.shop-car-list .num .disable{color:#E5E5E5;}
 .shop-car-list .num .mnus,.shop-car-list .num .add{
 	width:25px;
-	height:25px;
-	line-height:25px;
+	height:28px;
+	line-height: 25px;
+	font-size:20px;
 }
 .shop-car-list .num .number,.shop-car-list .num .number input{
-	width:35px;
-	height:25px;
-	line-height:25px;
+	width:45px;
+	height:28px;
+	line-height:normal;
 	font-size:.8rem
 }
 .shop-car-list .del{
@@ -1388,10 +1394,10 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 .vertical-middle-box{font-size:0;}
 .vertical-middle-box:before{content:'';display:inline-block;width:1px;height:100%;vertical-align:middle;margin-left:-1px;}
 .vertical-middle-box .content{display:inline-block;vertical-align:middle;width:calc(100% - 1px);font-size:14px;}
-.ajax-tips{position:fixed;width:100%;bottom:15%;text-align:center;opacity:0;-webkit-transition-duration:800ms;}
+.ajax-tips{position:fixed;width:100%;top:50%;text-align:center;opacity:0;-webkit-transition-duration:800ms;transition-duration:800ms;}
 .ajax-tips .content{font-size:14px;display:inline-block;padding:8px 10px;background-color:#fff5f6;color:#000;border-radius:8px;}
 .goods-info .xq img{width:100%;}
-.order-list-address-tips{background-color:#ececec;color:#666666;font-size:12px;line-height:20px;text-align:center;}
+.order-list-address-tips{background-color:#ececec;color:#666666;font-size:12px;line-height:20px;text-align:left;padding-left:3%;}
 
 .guide{font-size:14px;line-height:24px;padding:0 3%;}
 .guide .head{text-align:center;font-size:16px;font-size:4.5vw;line-height:4.5vw;margin-top:20px;font-weight:bold;margin:20px 0;}

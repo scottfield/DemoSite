@@ -17,7 +17,7 @@
 <header>
     <div class="container">
         <div class="left">
-            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}">提货信息</a>
+            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}">办理开卡</a>
         </div>
 
         <div class="center"></div>
@@ -31,12 +31,12 @@
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
         <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
-        <input type="text" th:field="*{address.firstName}"/>
+        <input type="text" th:field="*{address.firstName}" placeholder="*请填写姓名"/>
     </div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电 &nbsp;&nbsp;&nbsp;&nbsp;话：</span>
-        <input type="text" th:field="*{address.phonePrimary.phoneNumber}"/>
+        <input type="text" th:field="*{address.phonePrimary.phoneNumber}"  placeholder="*请填写电话"/>
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>
@@ -54,8 +54,8 @@
                     </option>
                 </div>
             </select>
-            <textarea th:if="${defaultShop}" th:text="${defaultShop.address}">default address</textarea>
-            <textarea th:unless="${defaultShop}"></textarea>
+            <textarea th:if="${defaultShop}" th:text="${defaultShop.address}"  placeholder="*请选择常去门店">default address</textarea>
+            <textarea th:unless="${defaultShop}" placeholder="*请选择常去门店"></textarea>
         </div>
     </div>
     <input type="hidden" th:field="*{address.id}"/>
@@ -70,17 +70,26 @@
 </blc:form>
 <script type="text/javascript">9
 $(function () {
+    var allShopList = $("#shopList option");
     $("#cityList").change(function () {
         var city = $(this).val();
         var shopList = [];
-        $("#shopList").find("option").each(function () {
+        allShopList.each(function(){
             if ($(this).data("city") == city) {
                 shopList.push(this);
-                $(this).show();
-            } else {
-                $(this).hide();
             }
         });
+        $("#shopList").html("").append(shopList);
+        $("#shopList").change();
+//        var shopList = [];
+//        $("#shopList").find("option").each(function () {
+//            if ($(this).data("city") == city) {
+//                shopList.push(this);
+//                $(this).show();
+//            } else {
+//                $(this).hide();
+//            }
+//        });
         /*shopList[0].selected = true;
          $("#shopList").change();*/
     });
@@ -97,8 +106,8 @@ $(function () {
     } else {
     }
     //自动选中第一个
-    $("#cityList").change();
-    $("#shopList").change();
+    //$("#cityList").change();
+    //$("#shopList").change();
 
 });
 </script>

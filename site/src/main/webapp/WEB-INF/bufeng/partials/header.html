@@ -4,7 +4,8 @@
     <script type="text/javascript" src="../js/jquery-1.9.1.min.js" th:src="@{/js/jquery-1.9.1.min.js}"></script>
     <script type="text/javascript" src="../js/fastclick.js" th:src="@{/js/fastclick.js}"></script>
     <script type="text/javascript" th:src="@{/js/swiper.min.js}"></script>
-	<script>
+	<script th:inline="text">
+		//<![CDATA[
 		var ajaxTipsTimer,ajaxTipsTimer2;
 		function showAjaxTips(tips){
 			clearTimeout(ajaxTipsTimer);
@@ -17,12 +18,15 @@
 			setTimeout(function(){
 				$(".ajax-tips").css("opacity",1);
 			},1);
+			var showtime = tips.length*200;
+			showtime = showtime<2000?2000:showtime;
 			ajaxTipsTimer = setTimeout(function(){
 				$(".ajax-tips").css("opacity",0);
 				ajaxTipsTimer2 = setTimeout(function(){
 					$(".ajax-tips").css("display","none");
 				},800);
-			},2000)
+			},showtime)
 		}
+		//]]>
 	</script>
 </div>

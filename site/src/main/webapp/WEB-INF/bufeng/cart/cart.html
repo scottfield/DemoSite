@@ -12,7 +12,7 @@
         }, false);
     </script>
 </head>
-<body th:inline="text" class="has-navbar has-tabbar">
+<body th:inline="text" class="has-navbar has-tabbar" style="padding-bottom:79px;">
 <!-- header -->
 <!--<div class="header"></div>
 <header>
@@ -31,8 +31,8 @@
 </header>
 
 <!--空购物车提示信息-->
-<div th:unless="${(cart.total ne null) and (cart.total.amount gt 0)}" th:remove="tag">
-	<div style="position:absolute;bottom:44px;top:44px;width:100%;" class="vertical-middle-box">
+<!--<div th:unless="${(cart.total ne null) and (cart.total.amount gt 0)}" th:remove="tag">-->
+	<div id="cart_empty_panel" th:style="'position:absolute;bottom:44px;top:44px;width:100%;display:'+${((cart.total ne null) and (cart.total.amount gt 0))?'none':'block'}" class="vertical-middle-box">
 		<div class="content">
 			<div class="card-volume-empty" style="padding-top:0;">
 				<img th:src="@{/images/gwc_empty_03.jpg}" width="50%"/>
@@ -42,7 +42,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+<!--</div>-->
 <!--购物车详细信息-->
 <div th:if="${(cart.total ne null) and (cart.total.amount gt 0)}" th:remove="tag">
     <div class="shop-car-list hidden" style="padding:0;">
@@ -54,16 +54,17 @@
                     <div th:each="attr:*{product.productAttributes}" th:remove="tag">[[${attr.key}]]:[[${attr.value}]]
                     </div>
                 </div>
-                <div class="pice">¥[[*{price}]]</div>
+                <div class="pice" th:attr="price=*{price}">¥[[*{price}]]</div>
                 <div class="num">
-                    <div class="bx" th:attr="data-itemId=${item.id},data-csrfToken=${session.csrfToken},data-product-id=${item.product.id},data-product-limit=${item.product.limit}">
-                        <span class="mnus"><img th:src="@{/images/gd_07.png}" height="10"/></span>
+                    <div class="bx" th:attr="itemid=${item.id},csrfToken=${session.csrfToken},productid=${item.product.id},productlimit=${item.product.limit}">
+                        <span th:class="'mnus'+*{quantity==1?' disable':''}">-</span>
                         <span class="number"><input type="text" id="number" th:value="*{quantity}"/></span>
-                        <span class="add"><img th:src="@{/images/gd_09.png}" height="10"/></span>
+                        <span class="add">+</span>
                     </div>
                 </div>
             </div>
-            <a th:href="@{'/cart/remove?orderItemId='+*{id}}" class="del">删除</a>
+            <!--<a th:href="@{'/cart/remove?orderItemId='+*{id}}" class="del">删除</a>-->
+            <a class="del" th:attr="itemid=${item.id},csrfToken=${session.csrfToken},productid=${item.product.id},productlimit=${item.product.limit}">删除</a>
         </div>
     </div>
 
@@ -72,7 +73,7 @@
         <!--<div class="tishi">-->
             <!--15分钟未支付将自动取消订单-->
         <!--</div>-->
-        <div class="sum-money">共[[${cart.itemCount}]]件商品 合计:￥[[${cart.total}]]</div>
+        <div class="sum-money">共<span id="cart_total_count">[[${cart.itemCount}]]</span>件商品 合计:￥<span id="cart_total_price">[[${cart.total}]]</span></div>
         <a th:href="@{/checkout}">去结算</a>
         <!--<a th:href="@{/cart/empty}">取消订单</a>-->
     </div>
@@ -87,28 +88,48 @@
 </html>
 <script type="text/javascript">
     $(function () {
-        $(".mnus").on("click", function () {
-            var num = parseInt($("#number").val());
-            if (num > 1) {
-                num--
-                $("#number").val(num);
+        $(".mnus").click(function () {
+            if($(this).hasClass("disable"))return;
+            var parent = $(this).parent();
+            var current = parseInt(parent.find("input").val());
+            if (current > 1) {
+                addProductToCart.call(this,{
+                    productId:parent.attr("productid"),
+                    orderItemId:parent.attr("itemid"),
+                    csrfToken:parent.attr("csrfToken"),
+                    quantity:current-1
+                });
             }
         });
-        $(".add").on("click", function () {
-            var num = parseInt($("#number").val());
-            num++
-            $("#number").val(num);
+        $(".add").click(function () {
+            if($(this).hasClass("disable"))return;
+            var parent = $(this).parent();
+            var current = parseInt(parent.find("input").val());
+            addProductToCart.call(this,{
+                productId:parent.attr("productid"),
+                orderItemId:parent.attr("itemid"),
+                csrfToken:parent.attr("csrfToken"),
+                quantity:current+1
+            });
+        });
+        $(".del").click(function(){
+            addProductToCart.call(this,{
+                productId:$(this).attr("productid"),
+                orderItemId:$(this).attr("itemid"),
+                csrfToken:$(this).attr("csrfToken"),
+                quantity:0
+            });
         });
         //修改购物车--增加物品数量
-        $(".bx").find(".add").click(function (e) {
-            e.preventDefault();
-            updateCartItem.call(this);
-        });
-        //修改购物车--减少物品数量
-        $(".bx").find(".mnus").click(function (e) {
-            e.preventDefault();
-            updateCartItem.call(this);
-        });
+//        $(".bx").find(".add").click(function (e) {
+//            e.preventDefault();
+//            updateCartItem.call(this);
+//        });
+//        //修改购物车--减少物品数量
+//        $(".bx").find(".mnus").click(function (e) {
+//            e.preventDefault();
+//            updateCartItem.call(this);
+//        });
         //更新购物车数量
         function updateCartItem() {
             var orderItemId = $(this).parents(".bx").data("itemid");
@@ -125,6 +146,69 @@
             }
 
             return csrfTokenInput.val();
+        }
+        function addProductToCart(param) {
+            $(this).addClass("disable");
+            var __this = this;
+            $.ajax({
+                method: "post",
+                url: "/cart/updateQuantity",
+                data: {
+                    productId: param.productId,
+                    quantity: param.quantity,
+                    csrfToken: param.csrfToken,
+                    orderItemId:param.orderItemId
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.quantityAdded==0){
+                        $(__this).parents(".box").remove();
+                        $("footer .tab4 .num").css("display","block").html(data.cartItemCount);
+                        if(data.cartItemCount==0){
+                            $("footer .tab4 .num").css("display","none").html(data.cartItemCount);
+                            $("#cart_empty_panel").show();
+                        }
+                        countTotalPrice();
+                        return;
+                    }
+                    $(__this).removeClass("disable");
+                    //修改购物车中显示的物品数量
+                    if (data.quantityAdded) {
+                        $("footer .tab4 .num").css("display","block").html(data.cartItemCount);
+                        $(__this).parent().find("input").val(data.quantityAdded);
+                        if(data.quantityAdded==1){
+                            $(__this).parent().find(".mnus").addClass("disable");
+                        }else{
+                            $(__this).parent().find(".mnus").removeClass("disable");
+                        }
+                        countTotalPrice();
+                        showAjaxTips("修改成功！");
+                    } else {
+                        showAjaxTips(data.error);
+                    }
+                    console.log(data);
+                },
+                error:function(data){
+                    //$(__this).removeClass("disable");
+                    console.log(data);
+                    location.reload();
+                }
+            });
+        }
+        function countTotalPrice(){
+            var totalPrice = 0;
+            var totalCount = 0;
+            $(".shop-car-list .box").each(function(){
+                var price = parseFloat($(this).find(".pice").attr("price"));
+                var count = parseInt($(this).find(".number input").val());
+                totalPrice+=price*count;
+                totalCount+=count;
+            });
+            $("#cart_total_count").html(totalCount);
+            $("#cart_total_price").html(totalPrice.toFixed(2));
+            if(totalPrice==0){
+                $("#cart_total_price").parents(".fixed-bottom").remove();
+            }
         }
     });
 </script>

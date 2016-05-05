@@ -1,4 +1,4 @@
-<div id="product_list_panel" th:attr="showadd=${showAdd}" class="five-card hidden" th:fragment="productList"
+<div id="product_list_panel" th:attr="showadd=${showAdd},host=${host},categoryid=${category.id}" class="five-card hidden" th:fragment="productList"
      th:if="${products}">
     <div class="product-list hidden"></div>
     <!--<div th:each="product,state:${products}" th:object="${product}" th:remove="tag">-->
@@ -36,6 +36,8 @@
         $(document).ready(function () {
             var product_list_panel = $("#product_list_panel");
             var showAdd = product_list_panel.attr("showadd");
+            var host = product_list_panel.attr("host");
+            var categoryId = product_list_panel.attr("categoryid");
 
             $(window).scroll(function () {
                 var w_height = $(this).height();
@@ -43,11 +45,9 @@
                     loadProductList(pageLimit, currentOffset);
                 }
             });
-            var currentOffset = 1, loading = false, loadAll = false, pageLimit = 2, unlock = $("footer").data("unlock");
+            var currentOffset = 1, loading = false, loadAll = false, pageLimit = 8, unlock = $("footer").data("unlock");
 
             function loadProductList(limit, offset) {
-                var host = $("[data-host]").data("host");
-                var categoryId = $("[data-category-id]").data("category-id");
                 if (loading || loadAll)return;
                 loading = true;
                 $.ajax({
@@ -69,7 +69,7 @@
                         }
                         $.each(response.products.product, function (index) {
                             //判断是否需要显示解锁标志
-                            var locker = unlock ? null : '<span class="unlock">解锁预购</span>';
+                            var locker = unlock ? '' : '<span class="unlock">解锁预购</span>';
                             listHtml.push([
                                 '<div class="card-box">',
                                 locker,
@@ -84,7 +84,7 @@
                                 '</div>',
                                 '<div class="hidden btn">',
                                 '<a href="#" class="addToCartBtn">',
-                                '<img src="/images/in_48', this.quantityAvailable == 0 ? '' : '_h', '.png" height="25" data-productid="', this.id, '" data-quantityAvailable="', this.quantityAvailable, '" />',
+                                '<img src="/images/in_48', this.quantityAvailable == 0||!unlock ? '' : '_h', '.png" height="25" data-productid="', this.id, '" data-quantityAvailable="', this.quantityAvailable, '" />',
                                 '</a>',
                                 '</div>',
                                 '</div>'
@@ -92,9 +92,10 @@
                             if (((offset - 1) * limit + index == 1) && showAdd == "true") {
                                 listHtml.push('<div class="card-5"><img src="/images/new/index/index2.jpg" width="100%"/></div>');
                             }
-                            if (((offset - 1) * limit + response.products.product.length) > 3 && showAdd == "true") {
-                                listHtml.push('<div class="card-5"><img src="/images/udj_03.jpg" width="100%"/></div>');
-                            }
+                            //广告位加入位置
+                            //if (((offset - 1) * limit + index == 3) && showAdd == "true") {
+                                //listHtml.push('<div class="card-5"><img src="/images/udj_03.jpg" width="100%"/></div>');
+                            //}
                         });
                         product_list_panel.find(".product-list").append(listHtml.join(""));
                         $(window).resize();

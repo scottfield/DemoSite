@@ -18,9 +18,9 @@
 <header>
     <div class="container">
         <div class="left">
+            <a href="/manage/couponAndFiveCard">兑换现金券</a>
         </div>
-
-        <div class="center">兑换</div>
+        <div class="center"></div>
         <div class="right"></div>
     </div>
 </header>
@@ -70,7 +70,7 @@
          </div>
      </div>-->
     <div class="take-cargo-btn">
-        <img th:id="submitBtn" th:src="@{/images/new/confirm-info-button.jpg}" width="50%"/>
+        <img th:id="submitBtn" th:src="@{/images/new/confirm-coupon-exchange.png}" width="50%"/>
         <input type="submit" name="submit" class="none"/>
     </div>
     <input type="hidden" name="couponXrefId" th:value="${param.couponXrefId[0]}"/>

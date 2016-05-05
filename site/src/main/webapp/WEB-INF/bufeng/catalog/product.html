@@ -74,7 +74,7 @@
 
 <!--购物车物品数量-->
 <a class="goods-shopcar" th:href="@{/cart}">
-    <span th:text="${cart.itemCount}"></span>
+    <span th:text="${cart.itemCount}" th:style="'display:'+${cart.itemCount==0?'none':'block'}"></span>
 </a>
 
 <!--商品信息-->
@@ -191,7 +191,7 @@
             }).done(function (data) {
                 //修改购物车中显示的物品数量
                 if (data.quantityAdded) {
-                    $(".goods-shopcar span").html(data.cartItemCount);
+                    $(".goods-shopcar span").css("display","block").html(data.cartItemCount);
                     //执行回调函数
                     if (undefined !== param.callback) {
                         param.callback();

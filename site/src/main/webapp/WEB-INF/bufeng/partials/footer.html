@@ -18,7 +18,8 @@
             $("body").on("click",".addToCartBtn img",function (e) {
                 e.preventDefault();
                 var quantityavailable = $(this).data("quantityavailable");
-                if (!quantityavailable) {
+                var unlock = $("footer").data("unlock");
+                if (!quantityavailable||unlock=='false'||unlock==false) {
                     //alert("暂时无货");
                     return;
                 }
@@ -117,7 +118,7 @@
                     }
                 });
                 //微信扫一扫功能
-                $("#qrscan").click(function () {
+                $("body").on("click","#qrscan",function () {
                     wx.scanQRCode({
                         needResult: 1,
                         desc: 'scanQRCode desc',
