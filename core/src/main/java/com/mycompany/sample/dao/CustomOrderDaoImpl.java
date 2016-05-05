@@ -19,7 +19,7 @@ public class CustomOrderDaoImpl extends OrderDaoImpl implements CustomOrderDao {
         Query query = em.createQuery("select order from org.broadleafcommerce.core.order.domain.Order order where order.submitDate < :expireddDate and order.status=:status");
         Date expiredDate = new Date(System.currentTimeMillis() + interval);
         query.setParameter("expireddDate", expiredDate);
-        query.setParameter("status", OrderStatus.getInstance("UNPAID"));
+        query.setParameter("status", OrderStatus.getInstance("UNPAID").getType());
         List orders = query.getResultList();
         return orders;
     }

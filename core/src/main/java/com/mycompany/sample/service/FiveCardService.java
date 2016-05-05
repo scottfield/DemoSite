@@ -22,4 +22,11 @@ public interface FiveCardService {
      * @return
      */
     Long getAvailableFiveCardQuantity(Integer type);
+
+    /**
+     * 根据五折卡类型获取总五折卡总量
+     * @param type
+     * @return
+     */
+    Long getTotalFiveCardQuantityByType(Integer type);
 }

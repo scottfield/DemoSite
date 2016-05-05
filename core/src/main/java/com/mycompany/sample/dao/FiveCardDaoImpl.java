@@ -56,4 +56,12 @@ public class FiveCardDaoImpl implements FiveCardDao {
         Object quantity = query.getSingleResult();
         return (Long) quantity;
     }
+
+    @Override
+    public Long getTotalFiveCardQuantityByType(Integer type) {
+        Query query = em.createQuery("select count(fivecard) from com.mycompany.sample.core.catalog.domain.FiveCard fivecard where fivecard.type=:type");
+        query.setParameter("type", type);
+        Object quantity = query.getSingleResult();
+        return (Long) quantity;
+    }
 }

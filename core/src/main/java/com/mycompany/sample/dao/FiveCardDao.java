@@ -16,4 +16,6 @@ public interface FiveCardDao {
 
     FiveCard readByStatusAndType(Boolean status, Integer type);
     Long getAvailableFiveCardQuantity(Integer type);
+    Long getTotalFiveCardQuantityByType(Integer type);
+
 }

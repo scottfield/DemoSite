@@ -125,25 +125,29 @@ public class CartController extends BroadleafCartController {
     }
 
     @RequestMapping("/updateQuantity")
-    public String updateQuantity(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
-                                 @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, UpdateCartException, RemoveFromCartException {
+    @ResponseBody
+    public Map<String, Object> updateQuantity(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
+                                              @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, UpdateCartException, RemoveFromCartException {
+        Map<String, Object> responseMap = new HashMap<String, Object>();
         try {
-            return super.updateQuantity(request, response, model, addToCartItem);
+            super.updateQuantity(request, response, model, addToCartItem);
         } catch (UpdateCartException e) {
             if (e.getCause() instanceof InventoryUnavailableException) {
                 // Since there was an exception, the order gets detached from the Hibernate session. This re-attaches it
                 CartState.setCart(orderService.findOrderById(CartState.getCart().getId()));
                 if (isAjaxRequest(request)) {
-                    model.addAttribute("errorMessage", "Not enough inventory to fulfill your requested amount of " + addToCartItem.getQuantity());
-                    return getCartView();
+//                    model.addAttribute("errorMessage", "Not enough inventory to fulfill your requested amount of " + addToCartItem.getQuantity());
+                    responseMap.put("error", "库存不足!");
                 } else {
-                    redirectAttributes.addAttribute("errorMessage", "Not enough inventory to fulfill your requested amount of " + addToCartItem.getQuantity());
-                    return getCartPageRedirect();
+//                    redirectAttributes.addAttribute("errorMessage", "Not enough inventory to fulfill your requested amount of " + addToCartItem.getQuantity());
+                    responseMap.put("error", "库存不足!");
+//                    return getCartPageRedirect();
                 }
             } else {
                 throw e;
             }
         }
+        return responseMap;
     }
 
     @Override

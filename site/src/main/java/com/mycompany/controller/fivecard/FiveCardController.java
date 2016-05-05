@@ -189,7 +189,7 @@ public class FiveCardController {
             //未关注门店跳转到关注门店
             if (Objects.isNull(followedAddress)) {
                 //如果是开卡自动激活则跳转到五折卡页面
-                if (Objects.isNull(autoActive)) {
+                if (Boolean.TRUE.equals(autoActive)) {
                     return "redirect:/fiveCard";
                 }
                 return "redirect:/account/addresses/followShop";

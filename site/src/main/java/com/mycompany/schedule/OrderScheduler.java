@@ -22,7 +22,7 @@ public class OrderScheduler {
     @Resource
     private CustomOrderService orderService;
 
-    @Scheduled(fixedDelay = 15 * 60 * 1000)
+    @Scheduled(fixedDelay = 15 * 60 * 1000,initialDelay = 60*1000)
     public void updateOrder() {
         System.out.println("-----*****cancel order status*****------");
         List<Order> expiredOrder = orderService.findExpiredOrder(15 * 60 * 1000L);

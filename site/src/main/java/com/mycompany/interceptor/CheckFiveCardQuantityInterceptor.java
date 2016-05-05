@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 /**
@@ -25,26 +26,30 @@ public class CheckFiveCardQuantityInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
-        CustomerFiveCardXref cardXref = customer.getFiveCardXref();
-        //用户拥有未激活的的五折卡
-        if (Objects.nonNull(cardXref) && (!cardXref.getStatus())) {
-            Integer cardType = cardXref.getType();
-            Long availableFiveCardQuantity = fiveCardService.getAvailableFiveCardQuantity(cardType);
-            LOG.info("五折卡类型:" + cardType + ",剩余数量:" + availableFiveCardQuantity);
-            request.setAttribute("availableFiveCardQuantity", availableFiveCardQuantity);
-            Integer promotionStatus = (Integer) request.getAttribute("promotionStatus");
-            //五折卡数量低于100张或线下活动已近开始则提示激活五折卡
-            request.setAttribute("showFiveCardAlert", availableFiveCardQuantity < 100 || promotionStatus == 1);
-            return true;
-        }
-
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        CustomerFiveCardXref cardXref = customer.getFiveCardXref();
+        HttpSession session = request.getSession();
+        Object showFiveCardAlert = session.getAttribute("showFiveCardAlert");
+        Object uri = request.getAttribute("uri");
+        if (Objects.nonNull(showFiveCardAlert) && Boolean.TRUE.equals(showFiveCardAlert)) {
+            session.setAttribute("showFiveCardAlert", false);
+        }
+        //用户拥有未激活的的五折卡
+        if (Objects.nonNull(cardXref) && (!cardXref.getStatus()) && Objects.isNull(showFiveCardAlert)) {
+            Integer cardType = cardXref.getType();
+            Long availableFiveCardQuantity = fiveCardService.getAvailableFiveCardQuantity(cardType);
+            Long totalFiveCardQuantity = fiveCardService.getTotalFiveCardQuantityByType(cardType);
+            LOG.info("五折卡类型:" + cardType + ",剩余数量:" + availableFiveCardQuantity);
+            request.setAttribute("availableFiveCardQuantity", availableFiveCardQuantity);
+            Integer promotionStatus = (Integer) request.getAttribute("promotionStatus");
+            //五折卡数量低于100张或线下活动已近开始则提示激活五折卡
+            session.setAttribute("showFiveCardAlert", availableFiveCardQuantity < totalFiveCardQuantity * 0.1 || promotionStatus == 1);
+        }
     }
 
     @Override

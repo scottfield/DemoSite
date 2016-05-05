@@ -4,6 +4,7 @@ import com.mycompany.controller.wrapper.CardWrapper;
 import com.mycompany.sample.core.catalog.domain.CustomCustomer;
 import com.mycompany.sample.core.catalog.domain.CustomerCouponXref;
 import com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref;
+import com.mycompany.sample.core.catalog.domain.FiveCard;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,8 @@ public class ManageCouponAndFiveCardController {
             CardWrapper card = CardWrapper.getInstance();
             card.setStatus(fiveCardXref.getStatus());
             card.setType(CardWrapper.FIVE_CARD_TYPE);
-            card.setCardNo(fiveCardXref.getFiveCard().getNo());
+            FiveCard fiveCard = fiveCardXref.getFiveCard();
+            card.setCardNo(Objects.isNull(fiveCard)?null:fiveCard.getNo());
             cards.add(card);
         }
         //转换优惠券

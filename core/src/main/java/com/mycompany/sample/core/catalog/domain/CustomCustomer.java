@@ -24,6 +24,6 @@ public interface CustomCustomer extends Customer {
     void setCouponXrefs(List<CustomerCouponXref> couponXrefs);
 
     CustomAddress getPickupAddress();
-    CustomAddress getFollowdShopAddress();
+    CustomAddress getFollowedShopAddress();
 
 }

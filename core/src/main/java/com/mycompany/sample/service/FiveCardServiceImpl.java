@@ -42,4 +42,9 @@ public class FiveCardServiceImpl implements FiveCardService {
     public Long getAvailableFiveCardQuantity(Integer type) {
         return fiveCardDao.getAvailableFiveCardQuantity(type);
     }
+
+    @Override
+    public Long getTotalFiveCardQuantityByType(Integer type) {
+        return fiveCardDao.getTotalFiveCardQuantityByType(type);
+    }
 }

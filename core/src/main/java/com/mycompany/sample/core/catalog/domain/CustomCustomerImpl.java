@@ -73,7 +73,7 @@ public class CustomCustomerImpl extends CustomerImpl implements CustomCustomer {
     }
 
     @Override
-    public CustomAddress getFollowdShopAddress() {
+    public CustomAddress getFollowedShopAddress() {
         return getCustomAddressByType("关注门店");
     }
 }
