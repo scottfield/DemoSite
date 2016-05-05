@@ -131,6 +131,9 @@ public class CartController extends BroadleafCartController {
         Map<String, Object> responseMap = new HashMap<String, Object>();
         try {
             super.updateQuantity(request, response, model, addToCartItem);
+            responseMap.put("productName", catalogService.findProductById(addToCartItem.getProductId()).getName());
+            responseMap.put("quantityAdded", addToCartItem.getQuantity());
+            responseMap.put("cartItemCount", String.valueOf(CartState.getCart().getItemCount()));
         } catch (UpdateCartException e) {
             if (e.getCause() instanceof InventoryUnavailableException) {
                 // Since there was an exception, the order gets detached from the Hibernate session. This re-attaches it
