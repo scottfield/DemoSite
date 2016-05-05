@@ -1,5 +1,4 @@
-<!--新弹窗推荐使用新弹窗-->
-<!--恭喜激活五折卡弹窗，不同的弹窗更新里面的图片和文字即可-->
+<!--恭喜获得优惠券弹窗，不同的弹窗更新里面的图片和文字即可-->
 <div th:fragment="couponWindow(couponValue,couponDesc,visible)" th:remove="tag">
     <div th:class="${(visible!=null and visible==true)?'window':'window none'}">
         <div class="window-content">
@@ -14,36 +13,6 @@
             </div>
             <div class="bottom">
                 <a href="#"><img th:src="@{/images/qk_13.png}"/></a>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript">
-        $(function () {
-            var $window = $(".window");
-            $window.find(".bottom img").click(function (e) {
-                e.preventDefault();
-                $window.hide();
-            });
-            if ($("body").data("show-coupon-window")) {
-                $window.show();
-            }
-
-        });
-    </script>
-</div>
-<div th:fragment="fiveCardWindow(quantity)" th:remove="tag">
-    <div class="float-layer none">
-        <div class="volume">
-            <div class="box">
-                <div class="t-img">
-                    <img th:src="@{/images/qk_03.png}" width="90%" class="img"/>
-                    <img th:src="@{/images/qk_03.png}" width="90%" style="opacity:0;"/>
-                </div>
-                <div class="con"><img th:src="@{/images/volume_3.png}" height="100%"/></div>
-                <div class="hidden btn">
-                    <a href="#"><img th:src="@{/images/qk_11.png}" height="25"/></a>
-                    <a href="#"><img th:src="@{/images/qk_13.png}" height="25"/></a>
-                </div>
             </div>
         </div>
     </div>

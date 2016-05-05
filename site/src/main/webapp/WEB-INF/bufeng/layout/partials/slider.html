@@ -2,7 +2,7 @@
 <div class="swiper-container">
     <div class="swiper-wrapper">
         <!---->
-        <div class="swiper-slide" th:each="product:${products}" th:object="${product}" th:if="${#maps.containsKey(product.media,'primary')}">
+        <div class="swiper-slide" th:each="product:${products}" th:object="${product}" th:if="${product!=null and product.media!=null and #maps.containsKey(product.media,'primary')}">
 			<!---是否火爆 -->
             <div class="explosive" th:if="*{featuredProduct}"></div>
             <div class="img"><img src="../images/ii_11.png" th:src="@{*{media['primary'].url}}" height="100"/></div>

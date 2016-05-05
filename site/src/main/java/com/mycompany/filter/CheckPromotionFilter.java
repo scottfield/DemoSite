@@ -40,25 +40,26 @@ public class CheckPromotionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //检查活动是否还在进行
         Promotion currentPromotion = promotionService.getPromotionById(1L);
-        request.setAttribute("startDate", currentPromotion.getStartDate().getTime());
-        request.setAttribute("endDate", currentPromotion.getEndDate().getTime());
+        int status = currentPromotion.getStatus();
+        request.setAttribute("startDate", currentPromotion.getStartDate().getTime());//活动开始时间
+        request.setAttribute("endDate", currentPromotion.getEndDate().getTime());//活动结束时间
+        request.setAttribute("promotionStatus", status);//当前活动状态-1：还未开始，0进行中，1结束
 
         if (!shouldProcessURI(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
         request.setAttribute("promotion", currentPromotion);
-        int status = currentPromotion.getStatus();
         LOG.info("当前活动状态==>" + status);
 
         switch (status) {
             case Promotion.NOT_START:
                 response.sendRedirect("/promotion/countdown");
                 return;
-            case Promotion.END:
             case Promotion.IN_PROCESS:
                 filterChain.doFilter(request, response);
                 break;
+            case Promotion.END:
         }
 
     }

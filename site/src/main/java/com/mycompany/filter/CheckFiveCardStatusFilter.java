@@ -15,6 +15,7 @@ import java.util.Objects;
 
 /**
  * Created by jackie on 5/1/2016.
+ * 检测五折卡是否激活
  */
 public class CheckFiveCardStatusFilter extends OncePerRequestFilter {
     @Override

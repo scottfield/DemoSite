@@ -1,0 +1,30 @@
+<!--提示激活五折卡弹窗，不同的弹窗更新里面的图片和文字即可-->
+<div th:fragment="fiveCardWindow" th:remove="tag">
+    <div th:class="${(visible!=null and visible==true)?'window':'window none'}">
+        <div class="window-content">
+            <div class="head">
+                <div class="container">激活五折卡</div>
+            </div>
+            <div class="middle">
+                <img th:src="@{/images/new/index/card-5.jpg}" width="60%"/>
+                <div class="text">哎呀不得了啦,五折卡只剩不到<span style="color:red;" th:text="${availableFiveCardQuantity}"></span>张啦</div>
+            </div>
+            <div class="bottom">
+                <a href="#"><img th:src="@{/images/new/button-active.png}"/></a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var $window = $(".window");
+            $window.find(".bottom img").click(function (e) {
+                e.preventDefault();
+                location.href = $("body").data("activate-five-card-url");
+            });
+            if ($("body").data("show-coupon-window")) {
+                $window.show();
+            }
+
+        });
+    </script>
+</div>

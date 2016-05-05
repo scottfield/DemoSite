@@ -24,6 +24,8 @@ public class CustomProductWrapper extends ProductWrapper {
     private Integer saleLimit;
     @XmlElement
     private Boolean isFeaturedProduct;
+    @XmlElement
+    private String url;
 
     @Override
     public void wrapSummary(Product model, HttpServletRequest request) {
@@ -33,5 +35,6 @@ public class CustomProductWrapper extends ProductWrapper {
         this.quantityAvailable = product.getDefaultSku().getQuantityAvailable();
         this.saleLimit = product.getLimit();
         this.isFeaturedProduct = product.isFeaturedProduct();
+        this.url = product.getUrl();
     }
 }

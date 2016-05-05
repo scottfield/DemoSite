@@ -1,8 +1,9 @@
 package com.mycompany.worklow.cart;
 
 import com.mycompany.sample.core.catalog.domain.CustomProduct;
-import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.catalog.service.CatalogService;
+import org.broadleafcommerce.core.order.domain.OrderItem;
+import org.broadleafcommerce.core.order.service.OrderItemService;
 import org.broadleafcommerce.core.order.service.call.OrderItemRequestDTO;
 import org.broadleafcommerce.core.order.service.workflow.CartOperationRequest;
 import org.broadleafcommerce.core.workflow.BaseActivity;
@@ -17,7 +18,6 @@ import java.util.Objects;
 public class CheckPurchageLimitActivity extends BaseActivity<ProcessContext<CartOperationRequest>> {
     @Resource(name = "blCatalogService")
     private CatalogService catalogService;
-
     @Override
     public ProcessContext<CartOperationRequest> execute(ProcessContext<CartOperationRequest> context) throws Exception {
         CartOperationRequest request = context.getSeedData();

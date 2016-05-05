@@ -289,12 +289,14 @@
         </div>
     </div>
 </div>
-<div th:replace="partials/footer::footer(showHome=false,showCart=false,showOrder=false)" th:if="${cardType==1 and cardStatus}"></div>
+<div th:if="${cardType==1 and cardStatus==true}">
+    <div th:replace="partials/footer::footer(showHome=false,showCart=false,showOrder=false)"></div>
+</div>
 <script type="text/javascript">
     $(function () {
         $("#shareFiveCardBtn").click(function (e) {
             e.preventDefault();
-            location.href='[[@{/fiveCard/share/page}]]';
+            location.href = '[[@{/fiveCard/share/page}]]';
         });
         $("#activateFiveCard").click(function (e) {
             e.preventDefault();

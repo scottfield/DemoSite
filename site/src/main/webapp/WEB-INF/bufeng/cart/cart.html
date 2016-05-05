@@ -56,7 +56,7 @@
                 </div>
                 <div class="pice">¥[[*{price}]]</div>
                 <div class="num">
-                    <div class="bx" th:attr="data-itemId=${item.id},data-csrfToken=${csrfToken}">
+                    <div class="bx" th:attr="data-itemId=${item.id},data-csrfToken=${session.csrfToken},data-product-id=${item.product.id},data-product-limit=${item.product.limit}">
                         <span class="mnus"><img th:src="@{/images/gd_07.png}" height="10"/></span>
                         <span class="number"><input type="text" id="number" th:value="*{quantity}"/></span>
                         <span class="add"><img th:src="@{/images/gd_09.png}" height="10"/></span>

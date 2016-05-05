@@ -8,6 +8,8 @@ import com.mycompany.sample.service.ShopService;
 import com.mycompany.sample.service.WeixinService;
 import com.mycompany.sample.util.CommonUtils;
 import com.mycompany.sample.util.NewImageUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.profile.core.domain.*;
 import org.broadleafcommerce.profile.core.service.AddressService;
 import org.broadleafcommerce.profile.core.service.CountryService;
@@ -54,6 +56,8 @@ public class FiveCardController {
     private ShopService shopService;
     @Resource
     private CountryService countryService;
+
+    private static final Log LOG = LogFactory.getLog(FiveCardController.class);
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String getFiveCardPage(HttpServletRequest request, String shopOutOfRange) {
@@ -218,6 +222,23 @@ public class FiveCardController {
         String cardNo = fiveCardXref.getFiveCard().getNo();
         ServletContextResource resourceFile = new ServletContextResource(request.getSession().getServletContext(), "WEB-INF/bufeng/images/fivecard/fivecard_backgroud.png");
         ServletContextResource waterFile = new ServletContextResource(request.getSession().getServletContext(), "WEB-INF/bufeng/images/fivecard/" + cardNo + ".png");
+        try {
+            File resource = resourceFile.getFile();
+            if (!resource.exists()) {
+                LOG.warn("resource not exist" + resource.getAbsolutePath());
+                return;
+            }
+            File waterResource = resourceFile.getFile();
+            if (!waterResource.exists()) {
+                LOG.warn("bar code resource not exist" + waterResource.getAbsolutePath());
+                return;
+            }
+
+
+        } catch (IOException e) {
+            LOG.error("cannot find file", e);
+        }
+
         NewImageUtils newImageUtils = new NewImageUtils();
         try {
             String parentDirectory = resourceFile.getFile().getParent();

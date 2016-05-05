@@ -31,15 +31,16 @@
         })
     </script>
 </head>
-<body class="has-tabbar" th:inline="text" th:attr="data-show-new-share-coupon-dialog=${showNewShareCouponDialog}">
+<body class="has-tabbar" th:inline="text"
+      th:attr="data-show-new-share-coupon-dialog=${showNewShareCouponDialog},data-show-fiveCard-alert=${showFiveCardAlert},data-activate-five-card-url=@{/fiveCard/activate}">
 <div class="img-panel">
-	<img src="images/new/index/head.jpg"/>
-	<a th:class="link" th:href="@{/fiveCard/guide}" style="width:12%;height:19%;top:10%;right:2%;"></a>
+    <img src="images/new/index/head.jpg"/>
+    <a th:class="link" th:href="@{/fiveCard/guide}" style="width:12%;height:19%;top:10%;right:2%;"></a>
 </div>
 
 <!-- 人气爆品 -->
 <div class="home-hot">
-	<div th:replace="layout/partials/slider::slider" ></div>
+    <div th:replace="layout/partials/slider::slider"></div>
 </div>
 <script type="text/javascript" src="../js/swiper.min.js"></script>
 <script language="javascript">
@@ -60,8 +61,14 @@
 <!--商品列表-->
 <div th:replace="/catalog/partials/productList::productList(showAdd=true)"></div>
 <blc:form th:id="addToCartForm" th:action="@{/cart/add}"></blc:form>
-<!-- 浮层 -->
-<div th:if="${showNewShareCouponDialog}" th:replace="/coupon/coupon_window::couponWindow('10','',${showNewShareCouponDialog})"></div>
+<!-- A卡用户通过分享获取优惠券时的通知浮层 -->
+<div th:if="${showNewShareCouponDialog}" th:remove="tag">
+    <div th:replace="/coupon/coupon_window::couponWindow('10','',${showNewShareCouponDialog})"></div>
+</div>
+<!-- 通知用户激活五折卡浮层 -->
+<div th:if="${showFiveCardAlert}" th:remove="tag">
+    <div th:replace="/fivecard/partials/fivecard_window::fiveCardWindow(visible=${showFiveCardAlert})"></div>
+</div>
 <div th:replace="partials/footer::footer"></div>
 <script type="text/javascript">
     $(function () {

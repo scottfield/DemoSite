@@ -18,6 +18,7 @@ import java.util.Set;
 
 /**
  * Created by jackie on 4/27/2016.
+ * 跨站点请求伪造token生成，会在session中生成32位的随机字符串参数csrfToken
  */
 @Component
 public class TokenFilter extends OncePerRequestFilter {
