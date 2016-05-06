@@ -34,11 +34,13 @@ public class CustomProductWrapper extends ProductWrapper {
     public void wrapSummary(Product model, HttpServletRequest request) {
         super.wrapSummary(model, request);
         LOG.info("start to wrap product:()" + model.getId());
-        CustomProduct product = (CustomProduct) model;
-        this.sales = product.getSales();
-        this.quantityAvailable = product.getDefaultSku().getQuantityAvailable();
-        this.saleLimit = product.getLimit();
-        this.isFeaturedProduct = product.isFeaturedProduct();
-        this.url = product.getUrl();
+        if (model instanceof CustomProduct) {
+            CustomProduct product = (CustomProduct) model;
+            this.sales = product.getSales();
+            this.quantityAvailable = product.getDefaultSku().getQuantityAvailable();
+            this.saleLimit = product.getLimit();
+            this.isFeaturedProduct = product.isFeaturedProduct();
+            this.url = product.getUrl();
+        }
     }
 }
