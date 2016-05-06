@@ -39,7 +39,7 @@
 </div>
 <!--这里要注意的是img-panel里面的图片的宽高比例一定要一样-->
 <div class="coupon-list" th:unless="${cards==null || #lists.size(cards)==0}" th:inline="text">
-    <div th:each="card:${cards}" th:remove="tag">
+    <div th:each="card,iterStat:${cards}" th:remove="tag">
 
 
         <div class="coupon" th:if="${card.type==0}" th:attr="data-card-status=${card.status},data-type=${card.type}">
@@ -58,6 +58,7 @@
             </div>
             <div class="desc">请于2016年5月19日-22日至各活动服务台领取</div>
         </div>
+        <div style="float:left;width:100%;height:1px;" th:if="${iterStat.index%2==1}"></div>
     </div>
 </div>
 

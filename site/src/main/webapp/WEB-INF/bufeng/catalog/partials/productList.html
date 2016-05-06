@@ -38,7 +38,6 @@
             var showAdd = product_list_panel.attr("showadd");
             var host = product_list_panel.attr("host");
             var categoryId = product_list_panel.attr("categoryid");
-
             $(window).scroll(function () {
                 var w_height = $(this).height();
                 if ($(this).scrollTop() + w_height >= product_list_panel.offset().top + product_list_panel.outerHeight()) {
@@ -46,7 +45,7 @@
                 }
             });
             var currentOffset = 1, loading = false, loadAll = false, pageLimit = 8, unlock = $("footer").data("unlock");
-
+            loadProductList(pageLimit, currentOffset);
             function loadProductList(limit, offset) {
                 if (loading || loadAll)return;
                 loading = true;
@@ -69,7 +68,7 @@
                         }
                         $.each(response.products.product, function (index) {
                             //判断是否需要显示解锁标志
-                            var locker = unlock ? '' : '<span class="unlock">解锁预购</span>';
+                            var locker = this.isFeaturedProduct=='false'||unlock ? '' : '<span class="unlock">解锁预购</span>';
                             listHtml.push([
                                 '<div class="card-box">',
                                 locker,
@@ -84,7 +83,7 @@
                                 '</div>',
                                 '<div class="hidden btn">',
                                 '<a href="#" class="addToCartBtn">',
-                                '<img src="/images/in_48', this.quantityAvailable == 0||!unlock ? '' : '_h', '.png" height="25" data-productid="', this.id, '" data-quantityAvailable="', this.quantityAvailable, '" />',
+                                '<img src="/images/in_48', (this.isFeaturedProduct=='true'&&!unlock)||this.quantityAvailable == 0 ? '' : '_h', '.png" height="25" data-productid="', this.id, '" data-isfeaturedproduct="',this.isFeaturedProduct,'" data-quantityavailable="', this.quantityAvailable, '" />',
                                 '</a>',
                                 '</div>',
                                 '</div>'

@@ -72,10 +72,11 @@ header .text{
 }
 
 .home-hot{
-	padding:20px 10px 0 10px;
+
 }
+.home-hot .swiper-slide img{width:100%;}
 .home-hot .swiper-container{
-	height:100px;
+	min-height:100px;
 }
 .home-hot .bottom-box{
 	margin-top:5px;
@@ -454,6 +455,8 @@ header .text{
 	font-size:.8rem;
 	-webkit-box-flex:1;
 	padding-left:10px;
+	text-overflow:ellipsis;
+	overflow:hidden;
 }
 .offline .pice{
 }
@@ -604,7 +607,6 @@ footer a{
 }
 .order-affirm-list .text .spec{
 	height:45px;
-	line-height:45px;
 }
 .order-affirm-list .text .num{
 }

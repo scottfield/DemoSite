@@ -27,6 +27,48 @@
 				},800);
 			},showtime)
 		}
+
+
+
+		$(function () {
+			//添加购物车绑定事件
+			$("body").on("click", ".addToCartBtn img", function (e) {
+				e.preventDefault();
+				var __this = this;
+				var quantityavailable = $(this).data("quantityavailable");
+				var isFeaturedProduct = $(this).data("isfeaturedproduct");
+				var unlock = $("footer").data("unlock");
+				if (quantityavailable==0 || (isFeaturedProduct&&!unlock)) {
+					//alert("暂时无货");
+					return;
+				}
+				var url = $("#addToCartForm").attr("action");
+				var productId = $(this).data("productid");
+				var quantity = 1;
+				var csrfToken = $('input[name="csrfToken"]').val();
+				$.ajax({
+					method: "post",
+					url: url,
+					data: {
+						productId: productId,
+						quantity: quantity,
+						csrfToken: csrfToken
+					},
+					dataType: 'json'
+				}).done(function (data) {
+					if($(__this).hasClass("right-now"))location.href = "/checkout";
+					if (data.quantityAdded) {
+						$(".container .tab4 .num").css("display", "block").html(data.cartItemCount);
+						showAjaxTips("已放入购物车！");
+					} else {
+						showAjaxTips(data.error);
+					}
+				}).fail(function (data) {
+					console.log(data);
+					//location.reload();
+				});
+			});
+		});
 		//]]>
 	</script>
 </div>

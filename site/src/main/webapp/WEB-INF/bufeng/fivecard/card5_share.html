@@ -7,6 +7,24 @@
     <title th:replace="/partials/title::title"></title>
     <div th:replace="/partials/header::header"></div>
     <link rel="stylesheet" th:href="@{/css/five_card_share.css}"/>
+    <style>
+        .circle{
+            width:45%;left:10%;bottom:94.5%;color:#ffcf01;font-size:12px;line-height:12px;
+            background-image:url(/images/new/card-5-share/circle.png);
+            background-repeat: no-repeat;
+            background-position: left bottom;
+            background-size: auto 70%;
+            padding-left:16px;
+        }
+        .crown{
+            left:8.5%;bottom:89%;color:#ffcf01;font-size:12px;
+            background-image:url(/images/new/card-5-share/crown.png);
+            background-repeat: no-repeat;
+            background-position: left bottom;
+            background-size: contain;
+            padding-left:22px;
+        }
+    </style>
 </head>
 <body class="has-navbar">
 <!--抢五折卡标题-->
@@ -29,10 +47,10 @@
             </div>
         </div>
     </div>
-			<span class="link" style="width:45%;left:14%;bottom:94.5%;color:#ffcf01;font-size:12px;line-height:12px">
+			<span class="link circle">
 				你已分享给<span style="font-size:20px;line-height:20px;" th:text="${#lists.size(owner.followers)}">12</span>位好友
 			</span>
-			<span class="link" style="left:66%;bottom:94.5%;color:#ffcf01;font-size:12px;">
+			<span class="link crown">
 				荣誉称号<span style="font-size:20px;line-height:20px;" th:text="${owner.title}">人气王</span>
 			</span>
     <span onclick="openShareGuide()" class="link" style="width:36%;height:5.5%;left:31%;top:63%;"></span>

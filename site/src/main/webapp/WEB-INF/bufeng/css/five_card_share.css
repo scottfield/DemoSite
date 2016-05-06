@@ -5,7 +5,7 @@
 .card5-share-main .text{color:#323232;font-size:2vw;text-align:center;display:none;}
 .card5-share-main .text .name{color:#fff;font-size:4vw;}
 .card5-share-main .me{width:45%;height:23%;top:26%;left:28%;z-index:1;}
-.card5-share-main .me .avatar{width:40%;height:40%;left:30%;top:19%;border-radius:50%;display:block;}
+.card5-share-main .me .avatar{width:40%;height:40%;left:27%;top:19%;border-radius:50%;display:block;}
 .card5-share-main .me .name{top:63%;left:30%;width:40%;font-size:3vw;text-align:center}
 .card5-share-main .me .bg{background-image:url(../images/new/card-5-share/me.png);}
 .card5-share-main .friend1{width:37%;height:15%;top:12%;left:30%;}

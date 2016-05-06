@@ -87,7 +87,7 @@
     <!--基本信息-->
     <div class="con" th:inline="text" th:object="${product}">
 
-        <h3 th:text="${product.defaultSku.description}">香奈儿清香黛尔香氛50ml香奈儿清香黛尔香氛50ml香奈儿清香黛尔香氛50ml</h3>
+        <h3 th:text="${product.defaultSku.name}">香奈儿清香黛尔香氛50ml香奈儿清香黛尔香氛50ml香奈儿清香黛尔香氛50ml</h3>
         <!--产品参数-->
         <p th:each="attr:*{productAttributes}" th:if="${#maps.size(product.productAttributes) gt 0}">
             [[${attr.key}]]：<span

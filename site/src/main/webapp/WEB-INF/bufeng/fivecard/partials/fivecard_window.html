@@ -19,10 +19,11 @@
             var $window = $(".window");
             $window.find(".bottom img").click(function (e) {
                 e.preventDefault();
-                location.href = $("body").data("activate-five-card-url");
+                $window.addClass("none");
+                //location.href = $("body").data("activate-five-card-url");
             });
             if ($("body").data("show-coupon-window")) {
-                $window.show();
+                $window.removeClass("none");
             }
 
         });

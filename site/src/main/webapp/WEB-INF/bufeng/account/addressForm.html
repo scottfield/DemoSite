@@ -12,6 +12,9 @@
             FastClick.attach(document.body);
         }, false);
     </script>
+    <style>
+        .error-tips{font-size:14px;color:red;padding-left:5px;}
+    </style>
 </head>
 <body th:inline="text" class="has-navbar">
 <header>
@@ -31,12 +34,14 @@
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
         <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
-        <input type="text" th:field="*{address.firstName}" placeholder="*请填写姓名"/>
+        <input type="text" th:field="*{address.firstName}"/>
+        <span th:if="${addressFirstName!=null}" th:text="'*'+${addressFirstName}" class="error-tips"></span>
     </div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电 &nbsp;&nbsp;&nbsp;&nbsp;话：</span>
-        <input type="text" th:field="*{address.phonePrimary.phoneNumber}"  placeholder="*请填写电话"/>
+        <input type="text" th:field="*{address.phonePrimary.phoneNumber}"/>
+        <span th:if="${addressPhonePrimary!=null}" th:text="'*'+${addressPhonePrimary}" class="error-tips"></span>
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>
@@ -54,8 +59,9 @@
                     </option>
                 </div>
             </select>
-            <textarea th:if="${defaultShop}" th:text="${defaultShop.address}"  placeholder="*请选择常去门店">default address</textarea>
-            <textarea th:unless="${defaultShop}" placeholder="*请选择常去门店"></textarea>
+            <textarea readonly="true" th:if="${defaultShop}" th:text="${defaultShop.address}" >default address</textarea>
+            <textarea readonly="true" th:unless="${defaultShop}" ></textarea>
+            <div th:if="${addressShopId!=null}" th:text="'*'+${addressShopId}" class="error-tips"></div>
         </div>
     </div>
     <input type="hidden" th:field="*{address.id}"/>
@@ -64,9 +70,9 @@
         <img src="/images/new/confirm-info-button.jpg" onclick="form.submit.click()" width="50%"/>
         <input type="submit" name="submit" class="none"/>
     </div>
-    <div th:text="${addressFirstName}"></div>
+    <!--<div th:text="${addressFirstName}"></div>
     <div th:text="${addressPhonePrimary}"></div>
-    <div th:text="${addressShopId}"></div>
+    <div th:text="${addressShopId}"></div>-->
 </blc:form>
 <script type="text/javascript">9
 $(function () {
