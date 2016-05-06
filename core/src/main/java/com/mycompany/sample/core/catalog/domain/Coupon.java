@@ -10,8 +10,8 @@ public interface Coupon {
     Integer TYPE_B = 1;
     Integer TYPE_C = 2;
     Integer TYPE_D = 3;
-    Integer TYPE_E = 4;//B卡用户线下优惠券
-    Integer TYPE_F = 5;//A卡用户线下优惠券
+    Integer OFFLINE_B = 4;//B卡用户线下优惠券
+    Integer OFFLINE_A = 5;//A卡用户线下优惠券
     Integer getAmount();
 
     void setAmount(Integer amount);

@@ -104,8 +104,8 @@ public class CouponController {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
 
 
-        Coupon couponE = couponService.readByType(Coupon.TYPE_E);//B卡用户优惠券
-        Coupon couponF = couponService.readByType(Coupon.TYPE_F);//A卡用户优惠券
+        Coupon couponE = couponService.readByType(Coupon.OFFLINE_B);//B卡用户优惠券
+        Coupon couponF = couponService.readByType(Coupon.OFFLINE_A);//A卡用户优惠券
         //发放B卡用户优惠券
         JsonResponse responseA = issueCoupon(couponE, customer);
         if (responseA.getCode() != JsonResponse.SUCCESS_CODE) {
