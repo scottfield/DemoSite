@@ -233,12 +233,12 @@
     -->
     <!--override template location-->
     <bean id="blWebTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-        <property name="prefix" value="/WEB-INF/bufeng/" />
-        <property name="suffix" value=".html" />
-        <property name="templateMode" value="HTML5" />
-        <property name="characterEncoding" value="UTF-8" />
+        <property name="prefix" value="/WEB-INF/bufeng/"/>
+        <property name="suffix" value=".html"/>
+        <property name="templateMode" value="HTML5"/>
+        <property name="characterEncoding" value="UTF-8"/>
         <property name="cacheable" value="${cache.page.templates}"/>
-        <property name="cacheTTLMs" value="${cache.page.templates.ttl}" />
+        <property name="cacheTTLMs" value="${cache.page.templates.ttl}"/>
         <property name="order" value="200"/>
     </bean>
 
@@ -277,8 +277,9 @@
     </bean>
     <!--override address dao-->
     <bean id="blAddressDao" class="com.mycompany.dao.CustomAddressDaoImpl"/>
-    <bean p:order="5010" id="blDecrementInventoryActivity" class="org.broadleafcommerce.core.checkout.service.workflow.DecrementInventoryActivity">
-        <property name="rollbackHandler" ref="blDecrementInventoryRollbackHandler" />
+    <bean p:order="5010" id="blDecrementInventoryActivity"
+          class="org.broadleafcommerce.core.checkout.service.workflow.DecrementInventoryActivity">
+        <property name="rollbackHandler" ref="blDecrementInventoryRollbackHandler"/>
     </bean>
 
     <bean id="blCheckoutWorkflow" class="org.broadleafcommerce.core.workflow.SequenceProcessor">
@@ -288,11 +289,11 @@
         <property name="activities">
             <list>
                 <!--<ref bean="blVerifyCustomerMaxOfferUsesActivity" />-->
-                <ref bean="blValidateProductOptionsActivity" />
+                <ref bean="blValidateProductOptionsActivity"/>
                 <!--<ref bean="blValidateAndConfirmPaymentActivity" />-->
                 <!--<ref bean="blRecordOfferUsageActivity" />-->
                 <!--<ref bean="blCommitTaxActivity" />-->
-                <ref bean="blCompleteOrderActivity" />
+                <ref bean="blCompleteOrderActivity"/>
                 <ref bean="blDecrementInventoryActivity"/>
             </list>
         </property>
@@ -310,4 +311,10 @@
     <!--bean override-->
     <bean id="blOrderService" class="com.mycompany.service.CustomOrderServiceImpl"/>
     <bean id="blOrderDao" class="com.mycompany.sample.dao.CustomOrderDaoImpl"/>
+    <bean id="featuredProductCategoryId" class="java.lang.Long">
+        <constructor-arg value="10050"/>
+    </bean>
+    <bean id="offLineProductCategoryId" class="java.lang.Long">
+        <constructor-arg value="10101"/>
+    </bean>
 </beans>

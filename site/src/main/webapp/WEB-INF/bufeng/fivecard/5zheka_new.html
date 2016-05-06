@@ -46,7 +46,7 @@
         }
     </style>
 </head>
-<body th:class="${cardType==0?'has-navbar':''}" th:inline="text" th:attr="data-shopoutrange=${shopOutRange}">
+<body th:class="${cardType==0?'has-navbar':''}" th:inline="text" th:attr="data-shopoutrange=${shopOutRange},data-featured-product-category-id=${featuredProductCategoryId},data-offLine-product-category-id=${offLineProductCategoryId}">
 <!-- header -->
 <header th:if="${param.referrerPage == null }">
     <div class="container">

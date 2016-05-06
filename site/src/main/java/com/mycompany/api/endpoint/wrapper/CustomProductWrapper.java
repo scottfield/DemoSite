@@ -1,6 +1,8 @@
 package com.mycompany.api.endpoint.wrapper;
 
 import com.mycompany.sample.core.catalog.domain.CustomProduct;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.web.api.wrapper.ProductWrapper;
 
@@ -16,6 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "product")
 @XmlAccessorType(value = XmlAccessType.FIELD)
 public class CustomProductWrapper extends ProductWrapper {
+    private static final Log LOG = LogFactory.getLog(CustomProductWrapper.class);
     @XmlElement
     private Integer sales;
     @XmlElement
@@ -30,6 +33,7 @@ public class CustomProductWrapper extends ProductWrapper {
     @Override
     public void wrapSummary(Product model, HttpServletRequest request) {
         super.wrapSummary(model, request);
+        LOG.info("start to wrap product:()" + model.getId());
         CustomProduct product = (CustomProduct) model;
         this.sales = product.getSales();
         this.quantityAvailable = product.getDefaultSku().getQuantityAvailable();
