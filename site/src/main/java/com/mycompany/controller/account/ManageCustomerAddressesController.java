@@ -213,12 +213,12 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
 
             CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
             CustomAddress followedShopAddress = customer.getFollowedShopAddress();
+            //如有关注门店就进行更新
             if (Objects.nonNull(followedShopAddress)) {
                 followedShopAddress.setShop(shop);
                 addressService.saveAddress(followedShopAddress);
                 return "redirect:/fiveCard/activate";
             }
-
             //添加关注门店地址
             CustomAddress address = new CustomAddressImpl();
             address.setAddressLine1("default");
@@ -229,6 +229,8 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             Phone phone = new PhoneImpl();
             phone.setPhoneNumber("none");
             address.setPhonePrimary(phone);
+            Country country = countryService.findCountryByAbbreviation("CA");
+            address.setCountry(country);
 
             address.setShop(shop);
             Address savedAddress = addressService.saveAddress(address);

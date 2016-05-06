@@ -12,6 +12,7 @@ public class CardWrapper {
     private Boolean status;
     private String cardNo;
     private Long id;
+    private String description;
 
     private CardWrapper() {
     }
@@ -60,5 +61,13 @@ public class CardWrapper {
 
     public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -63,6 +63,10 @@ public class FiveCardController {
     public String getFiveCardPage(HttpServletRequest request, String shopOutOfRange) {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
+        //检测是否有五折卡,没有五折卡则跳转到发卡页面
+        if (Objects.isNull(cardXref)) {
+            return "redirect:/fiveCard/issue";
+        }
         request.setAttribute("cardType", cardXref.getType());
         request.setAttribute("cardStatus", cardXref.getStatus());
         request.setAttribute("referrer", cardXref.getReferer());
@@ -97,16 +101,11 @@ public class FiveCardController {
         }
         //判断用户是否已经拥有五张卡
         if (Objects.nonNull(fiveCardXref)) {
-            //A卡返回首页
-            if (fiveCardXref.getType() == FiveCard.CARD_TYPE_A) {
-                return "redirect:/index";
-            } else {
-                //B卡返回五折卡页面
-                if (Objects.nonNull(referrer)) {
-                    retView = retView + "?referrerPage=true";
-                }
-                return retView;
+            //B卡并且是通过分享链接进入
+            if (fiveCardXref.getType() == FiveCard.CARD_TYPE_B && Objects.nonNull(referrer)) {
+                retView = retView + "?referrerPage=true";
             }
+            return retView;
         }
         //判断五折卡类型
         int type = 1;//默认五折卡类型为分享获取的
@@ -176,12 +175,13 @@ public class FiveCardController {
                     Shop shop = shopService.readShopByCode((String) vipInfo.get("unit_code"));
                     //检查门店是否在活动范围内
                     if (Objects.nonNull(shop)) {
+                        //保存关注门店的地址
                         CustomerAddress customerAddress = addAddress(shop, ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME);
-                        CustomAddress pickupAddress = customer.getPickupAddress();
+                       /* CustomAddress pickupAddress = customer.getPickupAddress();
 //                        如果用户没有收货地址则添加关注的门店地址为收货地址
                         if (Objects.isNull(pickupAddress)) {
                             addAddress(shop, ManageCustomerAddressesController.PICKUP_ADDRESS_NAME);//添加门店地址到收获地址
-                        }
+                        }*/
                         followedAddress = customerAddress;
                     }
                 }

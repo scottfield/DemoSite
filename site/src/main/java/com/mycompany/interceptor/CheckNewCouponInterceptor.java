@@ -25,7 +25,7 @@ public class CheckNewCouponInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         List<CustomerCouponXref> couponXrefs = customer.getCouponXrefs();
-        boolean hasNewShareCoupon = couponXrefs.stream().anyMatch(xref -> xref.getCoupon().getType() == Coupon.TYPE_E && xref.isNewCoupon());
+        boolean hasNewShareCoupon = couponXrefs.stream().anyMatch(xref -> xref.getCoupon().getType() == Coupon.TYPE_F && xref.isNewCoupon());
         if (hasNewShareCoupon) {
             couponXrefs.stream().forEach(couponXref -> couponXref.setNewCoupon(false));
             customerService.saveCustomer(customer);

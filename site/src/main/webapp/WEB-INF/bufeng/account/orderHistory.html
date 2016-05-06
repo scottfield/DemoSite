@@ -50,7 +50,7 @@
 
     <div class="myorder-list hidden" th:each="item:${order.orderItems}" th:object="${item}" th:attr="totalQuantity=totalQuantity+ *{quantity}">
         <div class="box">
-            <div class="img"><img th:src="@{/images/ii_11.png}"/></div>
+            <div class="img"><a th:href="@{*{product.url}}"><img th:src="@{*{product.media['primary'].url}}"/></a></div>
             <div class="text">
                 <div class="title" th:text="*{name}">香奈儿清香黛尔香氛香奈儿清香黛尔香氛香奈儿清香黛尔香氛</div>
                 <div class="spec" th:object="${item.product}">

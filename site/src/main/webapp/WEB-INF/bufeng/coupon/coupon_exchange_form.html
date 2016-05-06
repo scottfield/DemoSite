@@ -26,49 +26,25 @@
 </header>
 
 <!---->
-<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/coupon/exchange/confirm}" th:method="post">
+<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/coupon/exchange/confirm}" th:object="${couponExchangeForm}" th:method="post">
     <div class="take-cargo-sm"><em>1</em> 请填写您的信息</div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
         <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
-        <input type="text" name="reciever"/>
+        <input type="text" th:field="*{reciever}"/>
     </div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：</span>
-        <input type="text" name="recieverPhone"/>
+        <input type="text" th:field="*{recieverPhone}"/>
     </div>
     <div class="take-cargo-sm"><em>2</em> 请服务台工作人员输入验证码</div>
     <div class="pb-box">
         <div class="take-cargo-yz">
             <span>验证码</span>
-            <input type="text" name="verifyCode"/>
+            <input type="text" th:field="*{verifyCode}"/>
         </div>
     </div>
-
-    <!--这里建议下拉列表的样式不要刻意去修改，浏览器默认即可-->
-    <!-- <div class="take-cargo-info adress">
-         <em><img src="../images/qro_08.png" width="20"/></em>
-         <span>提货门店：</span>
-
-         <div class="select" th:each="area:${areas}">
-             <select>
-                 <option th:text="${area.key}">中国大陆</option>
-             </select>
-             <select id="shopList" name="address.shop.id">
-                 <option th:each="shop:${area.value}" th:object="${shop}" th:text="*{province+'/'+city+'/'+name}"
-                         th:attr="data-address=*{address},data-shopid=*{id}" th:value="*{id}"
-                         th:if="${defaultShop ne null and defaultShop.id == shop.id}" th:selected="true">四川省/成都市/青羊区/苏坡街道
-                 </option>
-                 <option th:each="shop:${area.value}" th:object="${shop}" th:text="*{province+'/'+city+'/'+name}"
-                         th:attr="data-address=*{address},data-shopid=*{id}" th:value="*{id}"
-                         th:unless="${defaultShop ne null and defaultShop.id == shop.id}">四川省/成都市/青羊区/苏坡街道
-                 </option>
-             </select>
-             <textarea th:if="${defaultShop}" th:text="${defaultShop.address}">default address</textarea>
-             <textarea th:unless="${defaultShop}"></textarea>
-         </div>
-     </div>-->
     <div class="take-cargo-btn">
         <img th:id="submitBtn" th:src="@{/images/new/confirm-coupon-exchange.png}" width="50%"/>
         <input type="submit" name="submit" class="none"/>
@@ -77,38 +53,6 @@
 </blc:form>
 <script type="text/javascript" th:inline="text">
     $(function () {
-       /* $("#submitBtn").click(function (e) {
-            e.preventDefault();
-            var $form = $("form");
-            var param = $form.serialize();
-            var reciever = $('[name="reciever"]').val();
-            var recieverPhone = $('[name="recieverPhone"]').val();
-            var verifyCode = $('[name="verifyCode"]').val();
-            var csrfToken = encodeURIComponent($('[name="csrfToken"]').val());
-            var couponXrefId = $('[name="couponXrefId"]').val();
-            var param = {
-                reciever: reciever,
-                recieverPhone: recieverPhone,
-                verifyCode: verifyCode,
-                couponXrefId: couponXrefId
-            };
-            var url = $form.attr("action");
-            var method = $form.attr("method");
-            $.post(url, param).done(function (res) {
-                if (res.code == 1000) {
-                    location.href = '[[@{/manage/couponAndFiveCard}]]';
-                } else {
-                    alert(res.message);
-                }
-            });
-            /!*$.ajax({url: url, method: method, data: {}, dataType: 'json'}).done(function (res) {
-             if (res.code == 1000) {
-             location.href = '[[@{/manage/couponAndFiveCard}]]';
-             } else {
-             alert(res.message);
-             }
-             });*!/
-        });*/
         $("#submitBtn").click(function (e) {
             e.preventDefault();
             var $form = $("form");

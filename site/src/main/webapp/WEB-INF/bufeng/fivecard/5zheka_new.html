@@ -48,7 +48,7 @@
 </head>
 <body th:class="${cardType==0?'has-navbar':''}" th:inline="text" th:attr="data-shopoutrange=${shopOutRange}">
 <!-- header -->
-<header th:if="${cardType==0}">
+<header th:if="${param.referrerPage == null }">
     <div class="container">
         <div class="left"><a th:href="@{/index}" class="left-arrow">感恩五折卡</a></div>
         <div class="center"></div>
@@ -266,12 +266,16 @@
 <!--<div th:if="!${cardType==1 and cardStatus==true}">
     <div th:replace="partials/footer::footer(showHome=false,showCart=false,showOrder=false)"></div>
 </div>-->
-<footer th:if="${param.referrerPage!=null and param.referrerPage[0]=='true'}">
+<!--通过分享链接过来是显示-->
+<div th:if="${param.referrerPage!=null and param.referrerPage[0]=='true'}">
+    <div th:replace="partials/footer::footer(showHomeIcon=false,showCartIcon=false,showOrderIcon=false)"></div>
+</div>
+<!--<footer th:if="${param.referrerPage!=null and param.referrerPage[0]=='true'}">
     <div class="container">
         <a class="scan" id="qrscan"></a>
         <a class="coupon" th:href="@{/manage/couponAndFiveCard}"></a>
     </div>
-</footer>
+</footer>-->
 <script type="text/javascript" th:inline="text">
     //<![CDATA[
     $(function () {

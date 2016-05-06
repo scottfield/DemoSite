@@ -16,7 +16,7 @@
 <header>
     <div class="container">
         <div class="left">
-            <a href="/manage/couponAndFiveCard" class="left-arrow">现金券</a>
+            <a href="/manage/couponAndFiveCard" class="left-arrow">兑换现金券</a>
         </div>
 
         <div class="center"></div>
@@ -31,7 +31,7 @@
         <span class="link" th:text="${card.value}">6</span>
     </div>
     <div class="text-content">
-        <div style="text-align:center;">超市购物任意消费立减00元</div>
+        <div style="text-align:center;" th:text="${card.description}">超市购物任意消费立减00元</div>
         <br/>
         <div class="h-box">
             <span style="width:40px;">（1）</span><span class="flex">请在2016年3月6日前至广东活动门店领取</span>
@@ -39,7 +39,8 @@
         <div class="h-box">
             <span style="width:40px;">（2）</span><span class="flex">2016年3月4日-3月6日在活动门店购物，结账时可凭纸质现金券立享优惠</span>
         </div>
-        <a th:href="@{'/coupon/exchange?couponXrefId='+${card.id}}" title="兑换" class="button"><img th:src="@{/images/new/coupon/exchange-button.png}" width="100%"/></a>
+        <a th:if="${card.status==false}" th:href="@{'/coupon/exchange?couponXrefId='+${card.id}}" title="兑换" class="button"><img th:src="@{/images/new/coupon/exchange-button.jpg}" width="100%"/></a>
+        <a th:if="${card.status==true}" th:href="@{${#httpServletRequest.getHeader('Referer')}}" title="返回" class="button"><img th:src="@{/images/new/coupon/return.jpg}" width="100%"/></a>
     </div>
 </div>
 

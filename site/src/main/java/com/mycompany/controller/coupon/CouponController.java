@@ -1,5 +1,6 @@
 package com.mycompany.controller.coupon;
 
+import com.mycompany.controller.account.QRCodeController;
 import com.mycompany.controller.form.CouponExchangeForm;
 import com.mycompany.controller.wrapper.CardWrapper;
 import com.mycompany.sample.core.catalog.domain.*;
@@ -12,6 +13,7 @@ import com.mycompany.sample.util.JsonResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.profile.core.domain.Customer;
+import org.broadleafcommerce.profile.core.domain.Phone;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,14 +89,24 @@ public class CouponController {
      */
     @RequestMapping(value = "/issue/offline", method = RequestMethod.GET)
     @ResponseBody
-    public Object issueOfflineCoupon() {
-        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+    public Object issueOfflineCoupon(@RequestParam String token, HttpSession session) {
         JsonResponse result = JsonResponse.response("发放优惠券成功.");
         Map<String, Object> others = new HashMap<>();
+        //校验token是否正确
+        Object tokenInSession = session.getAttribute(QRCodeController.issueCouponTokenName);
+        if (!token.equals(tokenInSession)) {
+            result.setCode(JsonResponse.FAIL_CODE);
+            result.setMessage("验证口令错误");
+            LOG.warn("发放优惠券失败,错误口令:" + token + ",正确口令:" + (Objects.isNull(tokenInSession) ? "" : tokenInSession.toString()));
+            return result;
+        }
 
-        Coupon couponE = couponService.readByType(Coupon.TYPE_E);//A卡用户优惠券
-        Coupon couponF = couponService.readByType(Coupon.TYPE_F);//B卡用户优惠券
-        //发放A卡用户优惠券
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+
+
+        Coupon couponE = couponService.readByType(Coupon.TYPE_E);//B卡用户优惠券
+        Coupon couponF = couponService.readByType(Coupon.TYPE_F);//A卡用户优惠券
+        //发放B卡用户优惠券
         JsonResponse responseA = issueCoupon(couponE, customer);
         if (responseA.getCode() != JsonResponse.SUCCESS_CODE) {
             result.setCode(JsonResponse.FAIL_CODE);
@@ -105,7 +118,7 @@ public class CouponController {
             result.setMessage("还没领取五折卡哦");
             return result;
         }
-        //发放B卡用户优惠券
+        //发放A卡用户优惠券
         JsonResponse responseB = issueCoupon(couponF, fiveCardXref.getReferer());
         if (responseB.getCode() != JsonResponse.SUCCESS_CODE) {
             result.setCode(JsonResponse.FAIL_CODE);
@@ -138,6 +151,7 @@ public class CouponController {
         couponXref.setStatus(CustomerCouponXref.STATUS_UNUSE);
         couponXref.setCreatedOn(CommonUtils.currentDate());
         couponXref.setUpdatedOn(CommonUtils.currentDate());
+        couponXref.setNewCoupon(true);
         couponXrefService.saveCustomerXref(couponXref);
         LOG.info("优惠券剩余数量==>" + coupon.getAmount());
         return result;
@@ -169,7 +183,11 @@ public class CouponController {
             CardWrapper card = CardWrapper.getInstance();
             card.setType(CardWrapper.COUPON_TYPE);
             card.setStatus(couponXref.getStatus());
-            card.setValue(couponXref.getCoupon().getValue());
+            Coupon coupon = couponXref.getCoupon();
+            if (Objects.nonNull(coupon)) {
+                card.setValue(coupon.getValue());
+                card.setDescription(coupon.getDesc());
+            }
             card.setId(couponXref.getId());
             model.addAttribute("card", card);
         }
@@ -219,7 +237,14 @@ public class CouponController {
     }
 
     @RequestMapping(value = "/exchange", method = RequestMethod.GET)
-    public String exchangeCouponForm(@RequestParam(value = "couponXrefId") Long couponXrefId) {
+    public String exchangeCouponForm(@RequestParam(value = "couponXrefId") Long couponXrefId, CouponExchangeForm form) {
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        CustomAddress pickupAddress = customer.getPickupAddress();
+        if (Objects.nonNull(pickupAddress)) {
+            form.setReciever(pickupAddress.getFirstName());
+            Phone phone = pickupAddress.getPhonePrimary();
+            form.setRecieverPhone(Objects.isNull(phone) ? null : phone.getPhoneNumber());
+        }
         return "coupon/coupon_exchange_form";
     }
 }

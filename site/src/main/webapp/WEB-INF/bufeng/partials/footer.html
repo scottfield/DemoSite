@@ -1,25 +1,28 @@
 <div th:fragment="footer" th:remove="tag" th:inline="text">
     <footer th:attr="data-item-count=${cart.itemCount},data-unlock=${isUnlocked}">
         <div class="container">
-            <a th:if="${showHome?:true}" th:href="@{/}" title="首页" class="tab1"></a>
-            <a th:if="${showCoupon?:true}" class="tab2" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>
-            <a th:if="${showQrScan?:true}" class="tab3">
+            <a th:if="${showHomeIcon?:true}" th:href="@{/}" title="首页" class="tab1"></a>
+            <a th:if="${showCouponIcon?:true}" class="tab2" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>
+            <a th:if="${showQrScanIcon?:true}" class="tab3">
                 <span th:id="qrscan"></span>
             </a>
-            <a th:if="${showCart?:true}" th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"><span th:style="'display:'+${cart.itemCount==0?'none':'block'}" class="num" th:text="${cart.itemCount}">0</span></a>
-            <a th:if="${showOrder?:true}" th:href="@{/account/orders}" title="我的订单" class="tab5"></a>
+            <a th:if="${showCartIcon?:true}" th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"><span
+                    th:style="'display:'+${cart.itemCount==0?'none':'block'}" class="num"
+                    th:text="${cart.itemCount}">0</span></a>
+            <a th:if="${showOrderIcon?:true}" th:href="@{/account/orders}" title="我的订单" class="tab5"></a>
         </div>
     </footer>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script th:src="@{/js/common.js}"></script>
     <script type="text/javascript">
         //购物车
         $(function () {
             //添加购物车绑定事件
-            $("body").on("click",".addToCartBtn img",function (e) {
+            $("body").on("click", ".addToCartBtn img", function (e) {
                 e.preventDefault();
                 var quantityavailable = $(this).data("quantityavailable");
                 var unlock = $("footer").data("unlock");
-                if (!quantityavailable||unlock=='false'||unlock==false) {
+                if (!quantityavailable || unlock == 'false' || unlock == false) {
                     //alert("暂时无货");
                     return;
                 }
@@ -37,10 +40,10 @@
                     },
                     dataType: 'json'
                 }).done(function (data) {
-                    if(data.quantityAdded){
-                        $(".container .tab4 .num").css("display","block").html(data.cartItemCount);
+                    if (data.quantityAdded) {
+                        $(".container .tab4 .num").css("display", "block").html(data.cartItemCount);
                         showAjaxTips("已放入购物车！");
-                    }else{
+                    } else {
                         showAjaxTips(data.error);
                     }
                 }).fail(function (data) {
@@ -118,7 +121,7 @@
                     }
                 });
                 //微信扫一扫功能
-                $("body").on("click","#qrscan",function () {
+                $("body").on("click", "#qrscan", function () {
                     wx.scanQRCode({
                         needResult: 1,
                         desc: 'scanQRCode desc',
@@ -137,7 +140,7 @@
         });
         function qrScanCallback(res) {
             //mock data
-//            res = {"resultStr": "CODE_128,7400045945206", "errMsg": "scanQRCode:ok"};
+//            res = {"resultStr": "CODE_128,1234567891245", "errMsg": "scanQRCode:ok"};
             //检测是否扫码成功
             if (res.errMsg != "scanQRCode:ok") {
                 alert(res.errMsg);
@@ -146,31 +149,18 @@
             //提取二维码
             var code = res.resultStr.split(",")[1];
             console.log("the qr code==>" + code);
-            verifyQRCode(code);
-            //检测扫码结果是否可用
-            function verifyQRCode(code) {
-                $.get("[[@{/qr/verify/}]]" + code)
-                        .done(function (data) {
-                            console.log(data);
-//                            alert(data.message);
-                            //兑换二维码
-                            if (data.code == 1000) {
-                                exhangeQRCode();
-                            }
-                        })
-                        .fail(function (data) {
-                            console.log(data);
-                            alert("验证二维码失败,错误信息:" + data.responseText);
-                        });
-            }
-
+            exhangeQRCode(code);
             //兑换二维码
-            function exhangeQRCode() {
+            function exhangeQRCode(code) {
                 $.get("[[@{/qr/exchange/}]]" + code)
                         .done(function (data) {
                             console.log(data);
-//                            alert(data.message);
-                            issueCoupon();
+                            if (data.code === 1000) {
+                                var token = data.others.issueCouponToken;
+                                issueCoupon(token);
+                            } else {
+                                alert(data.message);
+                            }
                         })
                         .fail(function (data) {
                             console.log(data);
@@ -179,12 +169,11 @@
             }
 
             //发放优惠券
-            function issueCoupon() {
-                var url = '[[@{/coupon/issue/offline}]]';
+            function issueCoupon(token) {
+                var url = '[[@{/coupon/issue/offline}]]' + '?token=' + token;
                 $.get(url).done(function (res) {
                     if (res.code == 1000) {
-//                        alert(res.message);
-                        location.href = '[[@{/manage/couponAndFiveCard}]]';
+                        dialogUtil.couponWindow.show();
                     } else {
                         alert("优惠券已派完");
                     }
