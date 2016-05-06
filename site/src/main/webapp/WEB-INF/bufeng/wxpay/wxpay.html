@@ -19,7 +19,7 @@
                     },
                     function (res) {
                         WeixinJSBridge.log(res.err_msg);
-                        alert("err_code:" + res.err_code + ",err_desc:" + res.err_desc + ",err_msg:" + res.err_msg);
+//                        alert("err_code:" + res.err_code + ",err_desc:" + res.err_desc + ",err_msg:" + res.err_msg);
                         paymentCallback(res.err_msg);
                     }
             )
