@@ -5,6 +5,7 @@
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title th:replace="/partials/title::title"></title>
+
     <div th:replace="/partials/header::header"></div>
     <script type="text/javascript">
         window.addEventListener('load', function () {
@@ -46,7 +47,8 @@
         }
     </style>
 </head>
-<body th:class="${param.referrerPage == null?'has-navbar':''}" th:inline="text" th:attr="data-shopoutrange=${shopOutRange},data-featured-product-category-id=${featuredProductCategoryId},data-offLine-product-category-id=${offLineProductCategoryId}">
+<body th:class="${param.referrerPage == null?'has-navbar':''}" th:inline="text"
+      th:attr="data-shopoutrange=${shopOutRange},data-featured-product-category-id=${featuredProductCategoryId},data-offLine-product-category-id=${offLineProductCategoryId}">
 <!-- header -->
 <header th:if="${param.referrerPage == null }">
     <div class="container">
@@ -170,10 +172,14 @@
         });
         $("#activateFiveCard").click(function (e) {
             e.preventDefault();
-            location.href = '[[@{/fiveCard/activate}]]';
+            var url = '[[@{/fiveCard/activate}]]';
+            if (location.search.indexOf("referrerPage") > 0) {
+                url = url + location.search;
+            }
+            location.href = url;
         });
     });
-    $(document).ready(function(){
+    $(document).ready(function () {
 
         var product_list_panel = $("#product_offline_list_panel");
         var host = product_list_panel.attr("host");
@@ -214,7 +220,7 @@
                         var locker = unlock ? '' : '<span class="unlock">解锁预购</span>';
                         listHtml.push([
                             '<div class="box">',
-                            '<div class="img"><img src="',this.primaryMedia.url,'" height="100%"/></div>',
+                            '<div class="img"><img src="', this.primaryMedia.url, '" height="100%"/></div>',
                             '<div class="title">', this.name, '</div>',
                             '<div class="pice">',
                             '<span>￥', this.salePrice.amount, '</span>',
@@ -240,8 +246,9 @@
                 }
             });
         }
+
         loadFeaturedProductList();
-        function loadFeaturedProductList(){
+        function loadFeaturedProductList() {
             var categoryId = $("body").data("featured-product-category-id");
             $.ajax({
                 url: host + '/api/v1/catalog/category/' + categoryId,
@@ -249,25 +256,25 @@
                     productLimit: 30,
                     productOffset: 1
                 },
-                success:function(response){
+                success: function (response) {
                     var html = [];
-                    $.each(response.products.product,function(index){
-                        if(index%3==0){
+                    $.each(response.products.product, function (index) {
+                        if (index % 3 == 0) {
                             html.push('<div class="swiper-slide">');
                         }
                         html.push([
                             '<div class="card-box">',
-                            (this.isFeaturedProduct=='false'||unlock ? '' : '<span class="unlock">解锁预购</span>'),
-                            '<div class="img" style="background-image:url(',this.primaryMedia.url,');"></div>',
+                            (this.isFeaturedProduct == 'false' || unlock ? '' : '<span class="unlock">解锁预购</span>'),
+                            '<div class="img" style="background-image:url(', this.primaryMedia.url, ');"></div>',
                             '<div class="t hidden">', this.name, '</div>',
                             '<div class="pice hidden">',
                             '<span>￥', this.salePrice.amount, '</span>',
                             '<font>￥', this.retailPrice.amount, '</font>',
                             '</div>',
-                            '<div class="hidden btn"><a  class="addToCartBtn"><img class="right-now" src="/images/5_c_', (this.isFeaturedProduct=='true'&&!unlock)||this.quantityAvailable == 0 ? '06' : '03', '.png" height="25" data-productid="', this.id, '" data-isfeaturedproduct="',this.isFeaturedProduct,'" data-quantityavailable="', this.quantityAvailable, '" /></a></div>',
+                            '<div class="hidden btn"><a  class="addToCartBtn"><img class="right-now" src="/images/5_c_', (this.isFeaturedProduct == 'true' && !unlock) || this.quantityAvailable == 0 ? '06' : '03', '.png" height="25" data-productid="', this.id, '" data-isfeaturedproduct="', this.isFeaturedProduct, '" data-quantityavailable="', this.quantityAvailable, '" /></a></div>',
                             //'<div class="hidden btn"><a href="#"><img src="/images/5_c_06.png" height="20"/></a></div>',
                             '</div>'].join(""));
-                        if(index%3==2){
+                        if (index % 3 == 2) {
                             html.push('</div>');
                         }
                     });
@@ -281,7 +288,8 @@
                         loopAdditionalSlides: 1,
                     })
                 },
-                error:function(){}
+                error: function () {
+                }
             });
         }
     });

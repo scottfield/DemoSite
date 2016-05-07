@@ -46,7 +46,7 @@
             <div class="img-panel">
                 <img th:src="'/images/new/index/'+${card.status?'card-5-1.jpg':'card-5-1-gray.jpg'}"/>
             </div>
-            <div class="desc" th:text="${card.status?'请于2015年5月20日-22日至各活动门店使用':'请于2015年5月19日前激活使用'}">请于2020年使用</div>
+            <div class="desc" th:text="${card.status?'请于2016年5月20日-22日至各活动门店使用':'请于2016年5月19日前激活使用'}">请于2020年使用</div>
         </div>
         <div class="coupon" th:if="${card.type==1}"
              th:attr="data-card-status=${card.status},data-type=${card.type},data-coupon-xref=${card.id}">

@@ -97,8 +97,8 @@ public class CheckoutController extends BroadleafCheckoutController {
                            @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
                            @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
                            RedirectAttributes redirectAttributes) {
+        CustomOrder cart = (CustomOrder) CartState.getCart();
         try {
-            CustomOrder cart = (CustomOrder) CartState.getCart();
             CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
             CustomAddress pickupAddress = customer.getPickupAddress();
             model.addAttribute("pickupAddress", pickupAddress);
@@ -133,7 +133,7 @@ public class CheckoutController extends BroadleafCheckoutController {
             model.addAttribute("errorMsg", "下单失败!");
             return checkoutView;
         }
-        return "redirect:/account/orders";
+        return "redirect:/wechatpay/index/pay?orderId=" + cart.getId();
     }
 
     public String updateOrder() {

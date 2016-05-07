@@ -20,7 +20,7 @@
 <header>
     <div class="container">
         <div class="left">
-            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}">提货信息</a>
+            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}" th:text="${param.referrerPage!=null?'办理开卡':'提货信息'}"></a>
         </div>
 
         <div class="center"></div>
@@ -29,7 +29,7 @@
 </header>
 
 <!---->
-<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{/account/addresses}"
+<blc:form th:name="form" th:style="'padding-top:30px;'" th:action="@{${param.referrerPage!=null?'/account/addresses?referrerPage=true':'/account/addresses'}}"
           th:object="${customerAddressForm}" th:method="post">
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
@@ -65,6 +65,7 @@
         </div>
     </div>
     <input type="hidden" th:field="*{address.id}"/>
+    <input type="hidden" name="referrerPage" th:value="${#maps.containsKey(param,'referrerPage')}"/>
 
     <div class="take-cargo-btn">
         <img src="/images/new/confirm-info-button.jpg" onclick="form.submit.click()" width="50%"/>
