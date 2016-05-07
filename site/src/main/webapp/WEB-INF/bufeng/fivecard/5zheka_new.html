@@ -181,7 +181,7 @@
 
         $(window).scroll(function () {
             var w_height = $(this).height();
-            if ($(this).scrollTop() + w_height >= product_list_panel.offset().top + product_list_panel.outerHeight()) {
+            if ($(this).scrollTop() + w_height >= parseInt(product_list_panel.offset().top) + product_list_panel.outerHeight()-44) {
                 loadProductList(pageLimit, currentOffset);
             }
         });
