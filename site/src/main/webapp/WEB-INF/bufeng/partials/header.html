@@ -37,7 +37,7 @@
 				var __this = this;
 				var quantityavailable = $(this).data("quantityavailable");
 				var isFeaturedProduct = $(this).data("isfeaturedproduct");
-				var unlock = $("footer").data("unlock");
+				var unlock = $("footer").data("unlock")==null?$("body").data("unlock"):$("footer").data("unlock");
 				if (quantityavailable==0 || (isFeaturedProduct&&!unlock)) {
 					//alert("暂时无货");
 					return;

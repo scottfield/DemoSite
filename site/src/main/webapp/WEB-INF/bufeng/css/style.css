@@ -1397,7 +1397,7 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 .vertical-middle-box:before{content:'';display:inline-block;width:1px;height:100%;vertical-align:middle;margin-left:-1px;}
 .vertical-middle-box .content{display:inline-block;vertical-align:middle;width:calc(100% - 1px);font-size:14px;}
 .ajax-tips{position:fixed;width:100%;top:50%;text-align:center;opacity:0;-webkit-transition-duration:800ms;transition-duration:800ms;}
-.ajax-tips .content{font-size:14px;display:inline-block;padding:8px 10px;background-color:#fff5f6;color:#000;border-radius:8px;}
+.ajax-tips .content{font-size:14px;display:inline-block;padding:8px 10px;background-color:#fff5f6;color:#000;border-radius:8px;border:1px solid #e74970;}
 .goods-info .xq img{width:100%;}
 .order-list-address-tips{background-color:#ececec;color:#666666;font-size:12px;line-height:20px;text-align:left;padding-left:3%;}
 
