@@ -63,8 +63,8 @@
     </div>
     <div class="img-panel card5-texthead">
         <img src="images/new/card-5/card5-1-1.png"/>
-        <a class="link" style="top:45%;left:4%;width:44%;height:32%;" th:id="shareFiveCardBtn" href="送人连接"></a>
-        <a class="link" style="top:45%;left:52%;width:44%;height:32%;" th:id="activateFiveCard" href="激活连接"></a>
+        <a class="link" style="top:45%;left:4%;width:44%;height:32%;" th:id="shareFiveCardBtn" href="/fiveCard/share/page"></a>
+        <a class="link" style="top:45%;left:52%;width:44%;height:32%;" cardtype="0" th:id="activateFiveCard"></a>
     </div>
     <div class="img-panel" style="margin-top:-1px;">
         <img src="images/new/card-5/card5-cloud.jpg"/>
@@ -75,10 +75,11 @@
 <div th:if="${cardType==0 and cardStatus==true}" th:remove="tag">
     <div class="img-panel card5-texthead">
         <img th:src="@{/images/fivecard/__${cardCode}___card.png}"/>
+        <span style="font-size:12px;color:#fff;">长按上面五折条码，一键保存至本地手机</span>
     </div>
     <div class="img-panel card5-texthead">
         <img th:src="@{/images/new/card-5/card5-1-2.png}"/>
-        <a class="link" style="top:22%;left:48%;width:44%;height:70%;" th:id="shareFiveCardBtn" href="送人连接"></a>
+        <a class="link" style="top:22%;left:48%;width:44%;height:70%;" th:id="shareFiveCardBtn" href="/fiveCard/share/page"></a>
     </div>
     <div class="img-panel" style="margin-top:-1px;">
         <img src="images/new/card-5/card5-cloud.jpg"/>
@@ -94,7 +95,7 @@
         <img src="images/new/card-5/card5-2-1.png"/>
         <span class="link" style="top:1.5vh;left:34%;width:50%;height:15%;font-size:6vw;line-height:6vw;color:#fff;"
               th:text="${referrer.firstName}" th:if="${referrer!=null}">老王abc</span>
-        <a class="link" style="top:50%;left:30%;width:44%;height:27%;" th:id="activateFiveCard" href="开卡连接"></a>
+        <a class="link" style="top:50%;left:30%;width:44%;height:27%;" th:id="activateFiveCard"></a>
     </div>
     <div class="img-panel" style="margin-top:-1px;">
         <img src="images/new/card-5/card5-cloud.jpg"/>
@@ -155,6 +156,20 @@
     <div th:replace="partials/footer::footer(showHomeIcon=false,showCartIcon=false,showOrderIcon=false)"></div>
 </div>
 <blc:form th:id="addToCartForm" th:action="@{/cart/add}"></blc:form>
+<div class="window none">
+    <div class="window-content">
+        <div class="head">
+            <div class="container" style="font-size:5vw;">恭喜获得五折卡</div>
+        </div>
+        <div class="middle">
+            <img src="../images/new/index/card-5.jpg" width="60%"/>
+            <div class="text">2016年5月20日~22日线下五折购商品，返全场通用现金券，记得来哟</div>
+        </div>
+        <div class="bottom">
+            <a href="#"><img src="../images/qk_13.png"/></a>
+        </div>
+    </div>
+</div>
 <!--<footer th:if="${param.referrerPage!=null and param.referrerPage[0]=='true'}">
     <div class="container">
         <a class="scan" id="qrscan"></a>
@@ -166,13 +181,16 @@
     $(function () {
         $("#shareFiveCardBtn").click(function (e) {
             e.preventDefault();
-            location.href = '[[@{/fiveCard/share/page}]]';
+            //location.href = '[[@{/fiveCard/share/page}]]';
         });
         $("#activateFiveCard").click(function (e) {
+            var cardtype = $(this).attr("cardtype")
             e.preventDefault();
             var url = '[[@{/fiveCard/activate}]]';
             if (location.search.indexOf("referrerPage") > 0) {
-                url = url + location.search;
+                url = url + location.search + (cardtype=='0'?'&cardtype=0':'');
+            }else{
+                url = url+(cardtype=='0'?'?cardtype=0':'')
             }
             location.href = url;
         });

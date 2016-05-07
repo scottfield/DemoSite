@@ -15,7 +15,7 @@
 <body th:inline="text" class="has-navbar">
 <header>
     <div class="container">
-        <div class="left"><a th:href="@{${#httpServletRequest.getHeader('Referer')}}" class="left-arrow">办理开卡</a></div>
+        <div class="left"><a th:href="@{${#httpServletRequest.getHeader('Referer')}}" class="left-arrow" th:text="${(param.cardtype!=null and param.cardtype=='0')?'办理开卡':'一键领卡'}"></a></div>
         <div class="center"></div>
         <div class="right"></div>
     </div>
@@ -27,15 +27,17 @@
         <em><img th:src="@{/images/qro_03.png}" width="20"/></em>
         <span>姓 &nbsp;&nbsp;&nbsp;&nbsp; 名：</span>
         <input type="text" name="address.firstName"/>
+        <span th:if="${addressFirstName!=null}" th:text="'*'+${addressFirstName}" class="error-tips"></span>
     </div>
     <div class="take-cargo-info">
         <em><img th:src="@{/images/qro_06.png}" width="20"/></em>
         <span>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：</span>
         <input type="text" name="address.phonePrimary"/>
+        <span th:if="${addressPhonePrimary!=null}" th:text="'*'+${addressPhonePrimary}" class="error-tips"></span>
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>
-        <span>提货门店：</span>
+        <span>最近门店：</span>
 
         <div class="select">
             <select id="cityList" th:attr="data-defaultshopid=${defaultShopId}">
@@ -49,8 +51,9 @@
                     </option>
                 </div>
             </select>
-            <textarea th:if="${defaultShop}" th:text="${defaultShop.address}">default address</textarea>
-            <textarea th:unless="${defaultShop}"></textarea>
+            <textarea readonly="true" th:if="${defaultShop}" th:text="${defaultShop.address}">default address</textarea>
+            <textarea readonly="true" th:unless="${defaultShop}"></textarea>
+            <div th:if="${addressShopId!=null}" th:text="'*'+${addressShopId}" class="error-tips"></div>
         </div>
     </div>
     <input type="hidden" name="address.id"/>
