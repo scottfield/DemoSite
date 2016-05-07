@@ -17,7 +17,7 @@ public class CustomCustomerAddressFormValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.firstName","addressFirstName", "姓名必填");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.phonePrimary","addressPhonePrimary", "电话号码必填");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.phonePrimary.phoneNumber","addressPhonePrimary", "电话号码必填");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.shop.id", "addressShopId","门店必选");
     }
 }

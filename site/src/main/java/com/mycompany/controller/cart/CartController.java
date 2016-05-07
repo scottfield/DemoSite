@@ -18,6 +18,7 @@ package com.mycompany.controller.cart;
 
 
 import com.mycompany.worklow.cart.ExceededMaxPurchaseQuantityLimitException;
+import com.mycompany.worklow.cart.FiveCardUnlockException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
@@ -100,6 +101,8 @@ public class CartController extends BroadleafCartController {
             } else if (ExceptionUtils.getRootCause(e) instanceof ExceededMaxPurchaseQuantityLimitException) {
                 ExceededMaxPurchaseQuantityLimitException exception = (ExceededMaxPurchaseQuantityLimitException) ExceptionUtils.getRootCause(e);
                 responseMap.put("error", "超出最大购买数量限制:" + exception.getMaxQuantityLimit() + ",已经添加数量:" + (exception.getQuantityRrequested() - 1));
+            } else if (ExceptionUtils.getRootCause(e) instanceof FiveCardUnlockException) {
+                responseMap.put("error", "五折卡还未解锁哦，赶快去解锁吧!");
             } else {
                 throw e;
             }
@@ -113,8 +116,8 @@ public class CartController extends BroadleafCartController {
      * when JavaScript is disabled. When this occurs, we will redirect the user to the full product details page 
      * for the given product so that the required options may be chosen.
      */
-    @RequestMapping(value = "/add", produces = {"text/html", "*/*"})
-    public String add(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
+    // @RequestMapping(value = "/add", produces = {"text/html", "*/*"})
+    /*public String add(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
                       @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
         try {
             return super.add(request, response, model, addToCartItem);
@@ -122,7 +125,7 @@ public class CartController extends BroadleafCartController {
             Product product = catalogService.findProductById(addToCartItem.getProductId());
             return "redirect:" + product.getUrl();
         }
-    }
+    }*/
 
     @RequestMapping("/updateQuantity")
     @ResponseBody

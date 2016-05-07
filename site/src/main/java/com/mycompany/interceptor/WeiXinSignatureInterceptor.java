@@ -33,7 +33,7 @@ public class WeiXinSignatureInterceptor implements HandlerInterceptor {
         if (Objects.nonNull(ticket)) {
             HashMap<String, Object> ticketMap = (HashMap) ticket;
             Integer expiresIn = (Integer) ticketMap.get("expires_in");
-            long time = (long) ticketMap.get("timestamp");
+            long time = Long.valueOf(ticketMap.get("timestamp").toString());
             long beforeDate = time + expiresIn * 1000;
             long now = new Date().getTime();
             //检测ticket是否过期
@@ -65,7 +65,7 @@ public class WeiXinSignatureInterceptor implements HandlerInterceptor {
         ServletContext servletContext = request.getSession().getServletContext();
         Map<String, Object> ticketMap = (Map<String, Object>) servletContext.getAttribute("ticketMap");
         String nonce = (String) ticketMap.get("nonce");
-        long timestamp = (long) ticketMap.get("timestamp");
+        String timestamp = (String) ticketMap.get("timestamp");
         String ticket = (String) ticketMap.get("ticket");
         String url = request.getRequestURL().toString();
         //填写签名参数

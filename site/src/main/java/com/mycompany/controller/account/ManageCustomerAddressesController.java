@@ -92,18 +92,12 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
 
     @RequestMapping(method = RequestMethod.GET)
     public String viewCustomerAddresses(HttpServletRequest request, @ModelAttribute("customerAddressForm") CustomCustomerAddressForm form) {
-        String activeFiveCard = request.getParameter("activeFiveCard");
-        if (Objects.nonNull(activeFiveCard)) {
-            request.getSession().setAttribute("activeFiveCard", true);
-            return "fivecard/active_form";
-        } else {
-            CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
-            CustomAddress pickupAddress = customer.getPickupAddress();
-            if (Objects.nonNull(pickupAddress)) {
-                form.setAddress(pickupAddress);
-            }
-            return "account/addressForm";
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        CustomAddress pickupAddress = customer.getPickupAddress();
+        if (Objects.nonNull(pickupAddress)) {
+            form.setAddress(pickupAddress);
         }
+        return "account/addressForm";
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -113,7 +107,6 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             List<ObjectError> allErrors = result.getAllErrors();
             for (ObjectError error : allErrors) {
                 model.addAttribute(error.getCode(), error.getDefaultMessage());
-
             }
             return "account/addressForm";
         }
@@ -147,8 +140,7 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             customerAddressService.saveCustomerAddress(customerAddress);
         }
         //如果是激活B类五折卡则跳转到激活链接
-        HttpSession session = request.getSession();
-        if (Objects.nonNull(session.getAttribute("activeFiveCard"))) {
+        if ("true".equals(request.getParameter("referrerPage"))) {
             return "redirect:/fiveCard/activate";
         }
 
@@ -195,52 +187,6 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
 
     @RequestMapping("/followShop/callBack")
     public String followShopCallBack(HttpServletRequest request, String openid) {
-        String referrer = request.getHeader("Referer");
-
-        //关注门店成功,添加关注门店地址
-        if (Objects.nonNull(openid) && Objects.nonNull(referrer) && (referrer.contains(ManageCustomerAddressesController.referer) || referrer.contains("/fiveCard/activate"))) {
-            Map<String, Object> vipInfo = weixinService.getVipInfo(openid);
-            //模拟数据
-//            Map<String, Object> vipInfo = new HashMap<>();
-//            vipInfo.put("unit_code", "097");
-//            vipInfo.put("unit_name", "乐从店");
-
-            Shop shop = shopService.readShopByCode((String) vipInfo.get("unit_code"));
-            //检测关注门店是否在活动范围
-            if (Objects.isNull(shop)) {
-                return "redirect:/fiveCard/activate";
-            }
-
-            CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
-            CustomAddress followedShopAddress = customer.getFollowedShopAddress();
-            //如有关注门店就进行更新
-            if (Objects.nonNull(followedShopAddress)) {
-                followedShopAddress.setShop(shop);
-                addressService.saveAddress(followedShopAddress);
-                return "redirect:/fiveCard/activate";
-            }
-            //添加关注门店地址
-            CustomAddress address = new CustomAddressImpl();
-            address.setAddressLine1("default");
-            address.setPostalCode("default");
-            address.setLastName("default");
-            address.setCity("default");
-            address.setFirstName("none");
-            Phone phone = new PhoneImpl();
-            phone.setPhoneNumber("none");
-            address.setPhonePrimary(phone);
-            Country country = countryService.findCountryByAbbreviation("CA");
-            address.setCountry(country);
-
-            address.setShop(shop);
-            Address savedAddress = addressService.saveAddress(address);
-
-            CustomerAddress customerAddress = customerAddressService.create();
-            customerAddress.setAddress(savedAddress);
-            customerAddress.setAddressName(FOLLOWED_ADDRESS_NAME);
-            customerAddress.setCustomer(customer);
-            customerAddressService.saveCustomerAddress(customerAddress);
-        }
         return "redirect:/fiveCard/activate";
     }
 

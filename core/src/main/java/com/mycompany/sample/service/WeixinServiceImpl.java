@@ -26,7 +26,7 @@ public class WeixinServiceImpl implements WeixinService {
         Map<String, Object> param = new HashMap<>();
         param.put("app_key", WeiXinConstants.APP_KEY);
         param.put("nonce", CommonUtils.getRandomStr());
-        param.put("timestamp", CommonUtils.currentTimeStamp());
+        param.put("timestamp", CommonUtils.currentTimeStamp() + "");//将timestamp转为字符串
         param.put("stat_src", WeiXinConstants.STATIC_SRC);
         if (Objects.nonNull(extraParam)) {
             param.putAll(extraParam);

@@ -170,7 +170,11 @@
         });
         $("#activateFiveCard").click(function (e) {
             e.preventDefault();
-            location.href = '[[@{/fiveCard/activate}]]';
+            var url = '[[@{/fiveCard/activate}]]';
+            if (location.search.indexOf("referrerPage") > 0) {
+                url = url + location.search;
+            }
+            location.href = url;
         });
     });
     $(document).ready(function(){
