@@ -46,7 +46,7 @@
         }
     </style>
 </head>
-<body th:class="${param.referrerPage == null?'has-navbar':''}" th:inline="text" th:attr="data-shopoutrange=${shopOutRange},data-featured-product-category-id=${featuredProductCategoryId},data-offLine-product-category-id=${offLineProductCategoryId}">
+<body th:class="${param.referrerPage == null?'has-navbar':''}" th:inline="text" th:attr="data-shopoutrange=${shopOutRange},data-featured-product-category-id=${featuredProductCategoryId},data-offLine-product-category-id=${offLineProductCategoryId},data-unlock=${isUnlocked}">
 <!-- header -->
 <header th:if="${param.referrerPage == null }">
     <div class="container">
@@ -177,7 +177,7 @@
 
         var product_list_panel = $("#product_offline_list_panel");
         var host = product_list_panel.attr("host");
-        var categoryId = $("body").data("offline-product-category-id");
+        var categoryId = $("body").data("offline-product-category-id")||10101;
 
         $(window).scroll(function () {
             var w_height = $(this).height();
@@ -185,7 +185,7 @@
                 loadProductList(pageLimit, currentOffset);
             }
         });
-        var currentOffset = 1, loading = false, loadAll = false, pageLimit = 8, unlock = $("footer").data("unlock");
+        var currentOffset = 1, loading = false, loadAll = false, pageLimit = 8, unlock = $("body").data("unlock");
         loadProductList(pageLimit, currentOffset);
         $(window).scroll();
 
@@ -214,7 +214,7 @@
                         var locker = unlock ? '' : '<span class="unlock">解锁预购</span>';
                         listHtml.push([
                             '<div class="box">',
-                            '<div class="img"><img src="',this.primaryMedia.url,'" height="100%"/></div>',
+                            '<div class="img"><img src="',(this.primaryMedia?this.primaryMedia.url:''),'" height="100%"/></div>',
                             '<div class="title">', this.name, '</div>',
                             '<div class="pice">',
                             '<span>￥', this.salePrice.amount, '</span>',
@@ -242,7 +242,7 @@
         }
         loadFeaturedProductList();
         function loadFeaturedProductList(){
-            var categoryId = $("body").data("featured-product-category-id");
+            var categoryId = $("body").data("featured-product-category-id")||10050;
             $.ajax({
                 url: host + '/api/v1/catalog/category/' + categoryId,
                 data: {
@@ -256,9 +256,9 @@
                             html.push('<div class="swiper-slide">');
                         }
                         html.push([
-                            '<div class="card-box">',
+                            '<div class="card-box" href="',this.url,'">',
                             (this.isFeaturedProduct=='false'||unlock ? '' : '<span class="unlock">解锁预购</span>'),
-                            '<div class="img" style="background-image:url(',this.primaryMedia.url,');"></div>',
+                            '<a href="',this.url,'"><div class="img" style="background-image:url(',this.primaryMedia?this.primaryMedia.url:'',');"></div></a>',
                             '<div class="t hidden">', this.name, '</div>',
                             '<div class="pice hidden">',
                             '<span>￥', this.salePrice.amount, '</span>',

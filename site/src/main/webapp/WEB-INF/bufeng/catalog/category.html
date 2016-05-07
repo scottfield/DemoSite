@@ -83,6 +83,7 @@
 </div>
 <div th:replace="/catalog/partials/productList::productList"></div>
 <div th:replace="partials/footer::footer"></div>
+<blc:form th:id="addToCartForm" th:action="@{/cart/add}"></blc:form>
 <!-- 浮层 -->
 <div class="float-layer none">
     <div class="volume">
