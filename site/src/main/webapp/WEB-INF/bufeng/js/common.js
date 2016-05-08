@@ -7,9 +7,18 @@ var dialogUtil = {
             var dialog = $('<div class="window"></div>');
             var content = $('<div class="window-content"></div>');
             var head = $('<div class="head"><div class="container">' + param.title + '</div></div>');
-            var middle = $('<div class="middle">' +
-                '<img src="/images/new/coupon/coupon_1_bg.jpg" width="60%"/>' +
-                '<span class="coupon-num" style="right:40%">' + param.couponValue + '</span>' +
+            var middle =
+                $('<div class="middle">' +
+                //'<img src="/images/new/coupon/coupon_1_bg.jpg" width="60%"/>' +
+                //'<span class="coupon-num" style="right:40%">' + param.couponValue + '</span>' +
+                '<div class="coupon">' +
+                    '<div class="img-panel">' +
+                    '<img src="/images/new/coupon/coupon_1_bg.jpg"/>' +
+                    '<a class="num-panel"><span class="num">5</span><span class="unit">元</span></a>' +
+                    '<span class="cdesc">全场通用现金券</span>' +
+                    '<span class="status">未兑换</span>' +
+                    '</div>' +
+                '</div>' +
                 '<div class="text" ></div>' +
                 '<div class="text">已存入“卡券”中了哟，<a href="/manage/couponAndFiveCard">立刻查看</a>！</div>' +
                 '</div>');
