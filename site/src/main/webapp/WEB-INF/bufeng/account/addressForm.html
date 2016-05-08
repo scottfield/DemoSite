@@ -45,7 +45,7 @@
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>
-        <span>提货门店：</span>
+        <span th:text="${#maps.containsKey(param,'referrerPage')?'最近门店：':'提货门店：'}">提货门店：</span>
 
         <div class="select">
             <select id="cityList" th:attr="data-defaultshopid=${defaultShopId}">
@@ -68,7 +68,7 @@
     <input type="hidden" name="referrerPage" th:value="${#maps.containsKey(param,'referrerPage')}"/>
 
     <div class="take-cargo-btn">
-        <img src="/images/new/confirm-info-button.jpg" onclick="form.submit.click()" width="50%"/>
+        <img th:src="${#maps.containsKey(param,'referrerPage')?'/images/new/confirm-activate-card-btn.png':'/images/new/confirm-info-button.jpg'}" onclick="form.submit.click()" width="50%"/>
         <input type="submit" name="submit" class="none"/>
     </div>
     <!--<div th:text="${addressFirstName}"></div>
