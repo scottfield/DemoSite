@@ -455,9 +455,12 @@ header .text{
 	font-size:.8rem;
 	-webkit-box-flex:1;
 	padding-left:10px;
-	text-overflow:ellipsis;
-	overflow:hidden;
+	word-break:break-all;
+	word-wrap:break-word;
+	line-height:24px;
+	vertical-align:middle;
 }
+.offline .title.vertical-middle-box:before{height:60px;}
 .offline .pice{
 }
 .offline .pice span{
