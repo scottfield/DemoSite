@@ -38,7 +38,7 @@
             var issueCouponUrl = $("body").data("issue-coupon-url");
             $.post(issueCouponUrl, {csrfToken: csrfToken}).done(function (res) {
                 if (res.code == 1000) {
-                    orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc;
+                    orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc+"&couponType="+res.others.couponType;
                 }
                 location.href = orderUrl;
             })
