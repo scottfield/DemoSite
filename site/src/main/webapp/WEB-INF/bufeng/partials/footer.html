@@ -10,8 +10,7 @@
                 </a>
             </div>
             <div th:remove="tag" th:if="${(showHomeIcon!=null and showHomeIcon==false) and (showCartIcon!=null and showCartIcon==false)}">
-                <a th:if="${showQrScanIcon?:true}" class="scan">
-                    <span th:id="qrscan"></span>
+                <a th:if="${showQrScanIcon?:true}" class="scan" th:id="qrscan">
                 </a>
                 <a th:if="${showCouponIcon?:true}" class="coupon" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>
             </div>

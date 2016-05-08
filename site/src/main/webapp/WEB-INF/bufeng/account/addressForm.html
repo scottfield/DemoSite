@@ -20,7 +20,7 @@
 <header>
     <div class="container">
         <div class="left">
-            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}" th:text="${param.referrerPage!=null?'一键领卡':'办理开卡'}"></a>
+            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}" th:text="${(param.type!=null and param.type[0]=='checkout')?'提货信息':(customer.fiveCardXref!=null and customer.fiveCardXref.type==1?'一键领卡':'办理开卡')}"></a>
         </div>
 
         <div class="center"></div>
@@ -45,7 +45,7 @@
     </div>
     <div class="take-cargo-info adress">
         <em><img th:src="@{/images/qro_08.png}" width="20"/></em>
-        <span th:text="${#maps.containsKey(param,'referrerPage')?'最近门店：':'提货门店：'}">提货门店：</span>
+        <span th:text="${customer.fiveCardXref!=null and customer.fiveCardXref.type==0 || (param.type!=null and param.type[0]=='checkout')?'提货门店：':'最近门店：'}">提货门店：</span>
 
         <div class="select">
             <select id="cityList" th:attr="data-defaultshopid=${defaultShopId}">
@@ -68,7 +68,7 @@
     <input type="hidden" name="referrerPage" th:value="${#maps.containsKey(param,'referrerPage')}"/>
 
     <div class="take-cargo-btn">
-        <img th:src="${#maps.containsKey(param,'referrerPage')?'/images/new/confirm-activate-card-btn.png':'/images/new/confirm-info-button.jpg'}" onclick="form.submit.click()" width="50%"/>
+        <img th:src="${customer.fiveCardXref!=null and customer.fiveCardXref.type==0 || (param.type!=null and param.type[0]=='checkout')?'/images/new/confirm-info-button.jpg':'/images/new/confirm-activate-card-btn.png'}" onclick="form.submit.click()" width="50%"/>
         <input type="submit" name="submit" class="none"/>
     </div>
     <!--<div th:text="${addressFirstName}"></div>
@@ -113,7 +113,7 @@ $(function () {
     } else {
     }
     //自动选中第一个
-    //$("#cityList").change();
+    $("#cityList").change();
     //$("#shopList").change();
 
 });
