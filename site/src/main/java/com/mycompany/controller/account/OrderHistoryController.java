@@ -16,6 +16,11 @@
 
 package com.mycompany.controller.account;
 
+import com.mycompany.sample.core.catalog.domain.CustomOrder;
+import com.mycompany.sample.core.catalog.domain.Shop;
+import com.mycompany.sample.payment.weixin.protocol.QueryOrderReqData;
+import com.mycompany.sample.payment.weixin.service.WxPayApi;
+import com.mycompany.sample.util.JsonHelper;
 import com.mycompany.sample.util.JsonResponse;
 import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
@@ -32,13 +37,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.xml.sax.SAXException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -110,6 +115,33 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
             result.setMessage("更新订单失败，订单号:" + orderId + " 不存在");
             result.setCode(JsonResponse.FAIL_CODE);
             return result;
+        }
+
+
+        try {
+            //调用微信支付订单查询接口确认订单状态
+            if (order instanceof CustomOrder) {
+                CustomOrder customOrder = (CustomOrder) order;
+                Shop shop = customOrder.getAddress().getShop();
+                String appid = shop.getAppId();
+                String mch_id = shop.getMchid();
+                String out_trade_no = order.getOrderNumber();
+                QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(appid).setMch_id(mch_id).setOut_trade_no(out_trade_no).build();
+                Map<String, Object> queryOrderResult = WxPayApi.queryOrder(reqData);
+                if (!"SUCCESS".equals(queryOrderResult.get("trade_state"))) {
+                    result.setCode(JsonResponse.FAIL_CODE);
+                    result.setMessage("微信订单支付失败！");
+                    LOG.warn(JsonHelper.toJsonStr(queryOrderResult));
+                    return result;
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
         }
         order.setStatus(PAID);
         try {
