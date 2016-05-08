@@ -140,7 +140,7 @@ public class ManageCustomerAddressesController extends BroadleafManageCustomerAd
             customerAddressService.saveCustomerAddress(customerAddress);
         }
         //如果是激活B类五折卡则跳转到激活链接
-        if ("true".equals(request.getParameter("referrerPage"))) {
+        if ("true".equals(request.getParameter("activeFiveCard"))) {
             return "redirect:/fiveCard/activate";
         }
 

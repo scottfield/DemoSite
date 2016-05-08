@@ -165,7 +165,7 @@ public class FiveCardController {
         if (cardXref.getType() == FiveCard.CARD_TYPE_B && (Objects.isNull((customer.getCustomerAddresses())) || customer.getCustomerAddresses().size() == 0)) {
             //通过分享链接访问时,添加分享链接标示参数,方便前端显示对应的提示信息
             if (Objects.nonNull(request.getParameter("referrerPage"))) {
-                return "redirect:/account/addresses?referrerPage=true";
+                return "redirect:/account/addresses?activeFiveCard=true&referrerPage=true";
             }
             return "redirect:/account/addresses?activeFiveCard=true";
         } else if (cardXref.getType() == FiveCard.CARD_TYPE_A) {

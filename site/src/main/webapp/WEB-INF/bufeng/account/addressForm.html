@@ -66,6 +66,7 @@
     </div>
     <input type="hidden" th:field="*{address.id}"/>
     <input type="hidden" name="referrerPage" th:value="${#maps.containsKey(param,'referrerPage')}"/>
+    <input type="hidden" name="activeFiveCard" th:value="${#maps.containsKey(param,'activeFiveCard')}"/>
 
     <div class="take-cargo-btn">
         <img th:src="${customer.fiveCardXref!=null and customer.fiveCardXref.type==0 || (param.type!=null and param.type[0]=='checkout')?'/images/new/confirm-info-button.jpg':'/images/new/confirm-activate-card-btn.png'}" onclick="form.submit.click()" width="50%"/>
