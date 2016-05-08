@@ -163,6 +163,7 @@ public class FiveCardController {
         }
         //检查五折卡类型,B卡则需要填写收货地址则可以激活卡
         if (cardXref.getType() == FiveCard.CARD_TYPE_B && (Objects.isNull((customer.getCustomerAddresses())) || customer.getCustomerAddresses().size() == 0)) {
+            //通过分享链接访问时,添加分享链接标示参数,方便前端显示对应的提示信息
             if (Objects.nonNull(request.getParameter("referrerPage"))) {
                 return "redirect:/account/addresses?referrerPage=true";
             }
@@ -192,6 +193,10 @@ public class FiveCardController {
         //符合激活条件,激活相应类型的五折卡
         bindFiveCard(customer);
         generateFiveCardImage(customer, request);
+        //B卡激活后添加提示参数，方便前端显示对话框
+        if (FiveCard.CARD_TYPE_B.equals(cardXref.getType())) {
+            return "redirect:/fiveCard?showFiveCardActivatedWindow=true";
+        }
         return "redirect:/fiveCard";
     }
 

@@ -156,7 +156,7 @@
     <div th:replace="partials/footer::footer(showHomeIcon=false,showCartIcon=false,showOrderIcon=false)"></div>
 </div>
 <blc:form th:id="addToCartForm" th:action="@{/cart/add}"></blc:form>
-<div class="window none">
+<div th:class="${#maps.containsKey(param,'showFiveCardActivatedWindow')==false?'window none':'window'}">
     <div class="window-content">
         <div class="head">
             <div class="container" style="font-size:5vw;">恭喜获得五折卡</div>
@@ -180,7 +180,7 @@
     //<![CDATA[
     $(function () {
         $("#shareFiveCardBtn").click(function (e) {
-            e.preventDefault();
+            //e.preventDefault();
             //location.href = '[[@{/fiveCard/share/page}]]';
         });
         $("#activateFiveCard").click(function (e) {
@@ -306,6 +306,14 @@
                 error:function(){}
             });
         }
+    });
+    //绑定关闭五折卡按钮事件
+    $(function () {
+        var $window = $(".window");
+        $window.find(".bottom img").click(function (e) {
+            e.preventDefault();
+            $window.addClass("none");
+        });
     });
     //]]>
 </script>

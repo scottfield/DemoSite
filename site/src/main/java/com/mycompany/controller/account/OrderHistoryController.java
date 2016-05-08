@@ -26,6 +26,8 @@ import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.order.domain.OrderAttribute;
+import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafOrderHistoryController;
@@ -133,6 +135,23 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
                     result.setMessage("微信订单支付失败！");
                     LOG.warn(JsonHelper.toJsonStr(queryOrderResult));
                     return result;
+                } else {
+                    LOG.info("-----保存微信支付信息------");
+                    OrderAttribute wxTransactionId = new OrderAttributeImpl();
+                    wxTransactionId.setName("transaction_id");
+                    wxTransactionId.setValue(queryOrderResult.get("transaction_id").toString());
+                    wxTransactionId.setOrder(order);
+
+                    OrderAttribute wxTimeEnd = new OrderAttributeImpl();
+                    wxTimeEnd.setName("time_end");
+                    wxTimeEnd.setValue(queryOrderResult.get("time_end").toString());
+                    wxTimeEnd.setOrder(order);
+
+                    wxTransactionId.setOrder(order);
+                    Map<String, OrderAttribute> orderAttributes = order.getOrderAttributes();
+                    orderAttributes.put("transaction_id", wxTransactionId);
+                    orderAttributes.put("time_end", wxTimeEnd);
+                    order.setOrderAttributes(orderAttributes);
                 }
             }
 
