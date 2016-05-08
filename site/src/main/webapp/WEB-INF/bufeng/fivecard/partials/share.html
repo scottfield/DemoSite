@@ -4,22 +4,21 @@
         $(function () {
             //微信
             $(function () {
-                var title = $("title").text();
                 wx.config({
                     debug: false,
                     appId: 'wx937fba8914a5d9a9',
                     timestamp: '[[${ticketMap.timestamp}]]',
                     nonceStr: '[[${ticketMap.nonce}]]',
                     signature: '[[${ticketMap.signature}]]',
-                    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+                    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'scanQRCode']
                 });
                 wx.ready(function () {
                     //分享给朋友
                     wx.onMenuShareAppMessage({
-                        title: title, // 分享标题
+                        title: '[[${shareTitle}]]', // 分享标题
                         desc: '[[${shareDesc}]]', // 分享描述
                         link: '[[${shareLink}]]', // 分享链接
-                        imgUrl: '[[@{${shareImageUrl}}]]', // 分享图标
+                        imgUrl: '[[${shareImageUrl}]]', // 分享图标
                         type: 'link', // 分享类型,music、video或link，不填默认为link
                         dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
                         success: function () {
@@ -34,10 +33,10 @@
                     });
                     //分享到朋友圈
                     wx.onMenuShareTimeline({
-                        title: title, // 分享标题
+                        title: '[[${shareTitle}]]', // 分享标题
                         desc: '[[${shareDesc}]]', // 分享描述
                         link: '[[${shareLink}]]', // 分享链接
-                        imgUrl: '[[@{${shareImageUrl}}]]', // 分享图标
+                        imgUrl: '[[${shareImageUrl}]]', // 分享图标
                         success: function () {
                             // 用户确认分享后执行的回调函数
 //                       //todo 分享统计

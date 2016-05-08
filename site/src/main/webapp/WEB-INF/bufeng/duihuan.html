@@ -43,7 +43,7 @@
         <a th:if="${card.status==true}" th:href="@{${#httpServletRequest.getHeader('Referer')}}" title="返回" class="button"><img th:src="@{/images/new/coupon/return.jpg}" width="100%"/></a>
     </div>
 </div>
-
+<div th:replace="/fivecard/partials/share::shareFiveCard"></div>
 
 </body>
 </html>
