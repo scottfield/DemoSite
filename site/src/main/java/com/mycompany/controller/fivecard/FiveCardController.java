@@ -16,6 +16,7 @@ import org.broadleafcommerce.profile.core.service.CountryService;
 import org.broadleafcommerce.profile.core.service.CustomerAddressService;
 import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -221,8 +222,8 @@ public class FiveCardController {
     private void generateFiveCardImage(CustomCustomer customer, HttpServletRequest request) {
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
         String cardNo = fiveCardXref.getFiveCard().getNo();
-        ServletContextResource resourceFile = new ServletContextResource(request.getSession().getServletContext(), "WEB-INF/bufeng/images/fivecard/fivecard_backgroud.png");
-        ServletContextResource waterFile = new ServletContextResource(request.getSession().getServletContext(), "WEB-INF/bufeng/images/fivecard/" + cardNo + ".png");
+        org.springframework.core.io.Resource resourceFile = new FileSystemResource("D:\\fivecard/fivecard/fivecard_backgroud.png");
+        org.springframework.core.io.Resource waterFile = new FileSystemResource("D:\\fivecard/fivecard/" + cardNo + ".png");
         try {
             File resource = resourceFile.getFile();
             if (!resource.exists()) {
