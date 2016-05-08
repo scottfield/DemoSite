@@ -51,7 +51,7 @@ public class WeiXinPayController {
         ShopAccount shopAccount = shop.getShopAccount();
         String appid = shopAccount.getAppid();
         String mch_id = shopAccount.getMchid();
-        String body = "测试支付";
+        String body = order.getOrderNumber();
         String out_trade_no = order.getOrderNumber();
         String spbill_create_ip = request.getRemoteAddr();
         String requestUrl = requestURL.toString();
@@ -60,7 +60,7 @@ public class WeiXinPayController {
 //        String notify_url = "http://discount.lzzyad.com";
         String trade_type = "JSAPI";
         String openId = customer.getUsername();
-        Integer total_fee = 1;
+        Integer total_fee = order.getTotal().getAmount().intValue() * 100;
         UnifiedOrderReqData reqData = new UnifiedOrderReqData.UnifiedOrderReqDataBuilder(appid, mch_id,
                 body, out_trade_no, total_fee, spbill_create_ip, notify_url, trade_type).setOpenid(openId).build();
         try {
