@@ -20,7 +20,7 @@
 <header>
     <div class="container">
         <div class="left">
-            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}" th:text="${param.referrerPage!=null?'办理开卡':'提货信息'}"></a>
+            <a class="left-arrow" th:href="@{${#httpServletRequest.getHeader('Referer')}}" th:text="${param.referrerPage!=null?'一键领卡':'办理开卡'}"></a>
         </div>
 
         <div class="center"></div>
