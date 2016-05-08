@@ -94,6 +94,7 @@ public class CouponController {
         Map<String, Object> others = new HashMap<>();
         others.put("couponValue", coupon.getValue());
         others.put("couponDesc", coupon.getDesc());
+        others.put("couponType", coupon.getType());
         result.setOthers(others);
         return result;
     }
@@ -129,6 +130,11 @@ public class CouponController {
         Coupon offlineTypeA = couponService.readByType(Coupon.OFFLINE_A);//A卡用户优惠券
         //发放B卡用户优惠券
         result = issueCoupon(offlineTypeB, customer);
+        Map<String, Object> others = new HashMap<>();
+        others.put("couponValue", offlineTypeB.getValue());
+        others.put("couponDesc", offlineTypeB.getDesc());
+        others.put("couponType", offlineTypeB.getType());
+        result.setOthers(others);
         //发放A卡用户优惠券
         issueCoupon(offlineTypeA, fiveCardXref.getReferer());
         return result;
