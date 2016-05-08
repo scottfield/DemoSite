@@ -24,7 +24,7 @@
 <!--info-->
 <div class="pb-box" th:if="${pickupAddress==null}">
     <div class="order-fillIn-img">
-        <a th:href="@{/account/addresses}">
+        <a th:href="@{/account/addresses?type=checkout}">
             <div class="img"></div>
         </a>
     </div>
@@ -45,7 +45,7 @@
             <div class="con ls">
                 <em><img src="images/qro_08.png" height="20"/></em>
                 <span>[[*{shop.province}]] [[*{shop.city}]] [[*{shop.name}]]<br/> [[*{shop.address}]]</span>
-				<a th:href="@{/account/addresses}"><img src="images/qro_11.png" height="25"/></a>
+				<a th:href="@{/account/addresses?type=checkout}"><img src="images/qro_11.png" height="25"/></a>
             </div>
         </div>
     </div>

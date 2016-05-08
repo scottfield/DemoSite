@@ -10,7 +10,7 @@
                 <div class="text">哎呀不得了啦,五折卡只剩不到<span style="color:red;" th:text="${availableFiveCardQuantity}"></span>张啦</div>
             </div>
             <div class="bottom">
-                <a href="#"><img th:src="@{/images/new/button-active.png}"/></a>
+                <a href="/fiveCard"><img th:src="@{/images/new/button-active.png}"/></a>
             </div>
         </div>
     </div>
@@ -18,8 +18,8 @@
         $(function () {
             var $window = $(".window");
             $window.find(".bottom img").click(function (e) {
-                e.preventDefault();
-                $window.addClass("none");
+                //e.preventDefault();
+                //$window.addClass("none");
                 //location.href = $("body").data("activate-five-card-url");
             });
             if ($("body").data("show-coupon-window")) {
