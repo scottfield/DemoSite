@@ -56,7 +56,7 @@
     </div>
 </header>
 
-<!--5折卡方式1未激活-->
+<!--A卡未激活-->
 <div th:if="${cardType==0 and cardStatus==false}" th:remove="tag">
     <div class="img-panel">
         <img src="images/new/card-5/card5-head.jpg"/>
@@ -71,7 +71,7 @@
         <span class="tips">以下商品，一键激活立刻购！</span>
     </div>
 </div>
-<!--5折卡方式1激活-->
+<!--A卡激活-->
 <div th:if="${cardType==0 and cardStatus==true}" th:remove="tag">
     <div class="img-panel card5-texthead">
         <img th:src="@{/images/fivecard/__${cardCode}___card.png}"/>
@@ -86,7 +86,7 @@
         <span class="tips">哎哟，不错哟，爆款已经解锁，立刻购买！</span>
     </div>
 </div>
-<!--5折卡方式2未激活-->
+<!--B卡未激活-->
 <div th:if="${cardType==1 and cardStatus==false}" th:remove="tag">
     <div class="img-panel">
         <img src="images/new/card-5/card5-head.jpg"/>
@@ -103,8 +103,8 @@
     </div>
 
 </div>
-<!--5折卡方式2激活-->
-<div th:remove="tag" th:if="${cardType==1 and cardStatus}">
+<!--B卡激活-->
+<div th:remove="tag" th:if="${cardType==1 and cardStatus==true}">
     <div class="img-panel card5-texthead">
         <img th:src="@{/images/fivecard/__${cardCode}___card.png}"/>
     </div>
@@ -153,9 +153,9 @@
     <div th:replace="partials/footer::footer(showHome=false,showCart=false,showOrder=false)"></div>
 </div>-->
 <!--通过分享链接过来是显示-->
-<div th:if="${param.referrerPage!=null and param.referrerPage[0]=='true'}">
+<!--<div th:if="${param.referrerPage!=null and param.referrerPage[0]=='true'}">
     <div th:replace="partials/footer::footer(showHomeIcon=false,showCartIcon=false,showOrderIcon=false)"></div>
-</div>
+</div>-->
 <blc:form th:id="addToCartForm" th:action="@{/cart/add}"></blc:form>
 <div th:class="${#maps.containsKey(param,'showFiveCardActivatedWindow')==false?'window none':'window'}">
     <div class="window-content">

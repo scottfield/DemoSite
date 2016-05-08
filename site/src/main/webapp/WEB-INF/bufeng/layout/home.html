@@ -68,7 +68,7 @@
 <blc:form th:id="addToCartForm" th:action="@{/cart/add}"></blc:form>
 <!-- A卡用户通过分享获取优惠券时的通知浮层 -->
 <div th:if="${showNewShareCouponDialog}" th:remove="tag">
-    <div th:replace="/coupon/coupon_window::couponWindow('10','',${showNewShareCouponDialog})"></div>
+    <div th:replace="/coupon/coupon_window::couponWindow('5','',${showNewShareCouponDialog})"></div>
 </div>
 <!-- 通知用户激活五折卡浮层 -->
 <div th:if="${session.showFiveCardAlert}" th:remove="tag">

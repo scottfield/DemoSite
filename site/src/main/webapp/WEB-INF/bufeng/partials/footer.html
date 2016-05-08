@@ -3,16 +3,20 @@
     <footer th:attr="data-item-count=${cart.itemCount},data-unlock=${isUnlocked}">
         <div class="container">
             <a th:if="${showHomeIcon?:true}" th:href="@{/}" title="首页" class="tab1"></a>
-            <div th:remove="tag" th:if="${(showHomeIcon==null or showHomeIcon==true) and (showCartIcon==null or showCartIcon==true)}">
+
+            <div th:remove="tag"
+                 th:if="${(showHomeIcon==null or showHomeIcon==true) and (showCartIcon==null or showCartIcon==true)}">
                 <a th:if="${showCouponIcon?:true}" class="tab2" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>
                 <a th:if="${showQrScanIcon?:true}" class="tab3">
                     <span th:id="qrscan"></span>
                 </a>
             </div>
-            <div th:remove="tag" th:if="${(showHomeIcon!=null and showHomeIcon==false) and (showCartIcon!=null and showCartIcon==false)}">
+            <div th:remove="tag"
+                 th:if="${(showHomeIcon!=null and showHomeIcon==false) and (showCartIcon!=null and showCartIcon==false)}">
                 <a th:if="${showQrScanIcon?:true}" class="scan" th:id="qrscan">
                 </a>
-                <a th:if="${showCouponIcon?:true}" class="coupon" th:href="@{/manage/couponAndFiveCard}" title="我的卡券"></a>
+                <a th:if="${showCouponIcon?:true}" class="coupon" th:href="@{/manage/couponAndFiveCard}"
+                   title="我的卡券"></a>
             </div>
             <a th:if="${showCartIcon?:true}" th:href="@{/cart}" th:id="myCart" title="我的购物车" class="tab4"><span
                     th:style="'display:'+${cart.itemCount==0?'none':'block'}" class="num"
@@ -46,7 +50,7 @@
         });
         function qrScanCallback(res) {
             //mock data
-//            res = {"resultStr": "CODE_128,1234567891245", "errMsg": "scanQRCode:ok"};
+//            res = {"resultStr": "CODE_128,7195007950571", "errMsg": "scanQRCode:ok"};
             //检测是否扫码成功
             if (res.errMsg != "scanQRCode:ok") {
                 alert(res.errMsg);
@@ -67,10 +71,6 @@
                             } else {
                                 alert(data.message);
                             }
-                        })
-                        .fail(function (data) {
-                            console.log(data);
-                            alert(data.responseText);
                         });
             }
 
@@ -81,7 +81,7 @@
                     if (res.code == 1000) {
                         dialogUtil.couponWindow.show();
                     } else {
-                        alert("优惠券已派完");
+                        alert("sorry~现金券已券光啦!");
                     }
                 });
             }

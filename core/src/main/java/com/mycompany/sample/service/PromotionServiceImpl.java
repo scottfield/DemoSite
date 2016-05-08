@@ -4,6 +4,7 @@ import com.mycompany.sample.core.catalog.domain.Promotion;
 import com.mycompany.sample.core.catalog.domain.PromotionImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -15,8 +16,14 @@ public class PromotionServiceImpl implements PromotionService {
     public Promotion getPromotionById(Long id) {
         //todo 完成从数据库获取活动时间
         Promotion promotion = new PromotionImpl();
-        Date startDate = new Date(System.currentTimeMillis() - 60*60*1000);
-        Date endDate = new Date(System.currentTimeMillis() + 10*60 * 60 * 1000);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR,2016);
+        calendar.set(Calendar.MONTH,Calendar.MAY);
+        calendar.set(Calendar.DAY_OF_MONTH, 9);
+        Date startDate = calendar.getTime();
+        calendar.set(Calendar.DAY_OF_MONTH, 19);
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        Date endDate = calendar.getTime();
         promotion.setStartDate(startDate);
         promotion.setEndDate(endDate);
         return promotion;

@@ -5,6 +5,7 @@ import com.mycompany.sample.core.catalog.domain.CustomAddress;
 import com.mycompany.sample.core.catalog.domain.CustomOrder;
 import com.mycompany.sample.core.catalog.domain.Shop;
 import com.mycompany.sample.service.ShopService;
+import com.mycompany.sample.util.CommonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.persistence.EntityConfiguration;
@@ -23,9 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by jackie on 4/20/2016.
@@ -40,6 +39,19 @@ public class PickupController {
     private EntityConfiguration entityConfiguration;
     @Resource
     private ShopService shopService;
+    private static final Date pickupStartDate;
+    private static final Date pickupEndDate;
+
+    static {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2016);
+        calendar.set(Calendar.MONTH, Calendar.MAY);
+        calendar.set(Calendar.DAY_OF_MONTH, 20);
+        pickupStartDate = calendar.getTime();
+        calendar.set(Calendar.DAY_OF_MONTH, 23);
+        pickupEndDate = calendar.getTime();
+
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String pickupPage(HttpServletRequest request, @RequestParam Long orderId, Model model) {
@@ -53,6 +65,17 @@ public class PickupController {
     @ResponseBody
     public Map<String, Object> pickup(PickupInfoForm infoForm) {
         Map<String, Object> result = new HashMap<>();
+        Date now = CommonUtils.currentDate();
+        if (now.before(pickupStartDate)) {
+            result.put("code", -1000);
+            result.put("message", "还未到提货时间,最早提货时间" + CommonUtils.formatDate(pickupStartDate));
+            return result;
+        }
+        if (now.after(pickupEndDate)) {
+            result.put("code", -1000);
+            result.put("message", "提货时间已结束,最晚提货时间" + CommonUtils.formatDate(pickupEndDate));
+            return result;
+        }
         Order order = orderService.findOrderById(infoForm.getOrderId());
         //检测货物是否已经被提取
         if (order.getStatus().getType().equals("CONSUMED")) {

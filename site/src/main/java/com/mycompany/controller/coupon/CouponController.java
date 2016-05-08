@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by jackie on 4/27/2016.
@@ -42,6 +39,25 @@ public class CouponController {
     private CouponService couponService;
     @Resource
     private ShopService shopService;
+
+    private static final Date onlineExhangeStartDate;
+    private static final Date onlineExhangeEndDate;
+    private static final Date offlineExhangeStartDate;
+    private static final Date offlineExhangeEndDate;
+
+    static {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2016);
+        calendar.set(Calendar.MONTH, Calendar.MAY);
+        calendar.set(Calendar.DAY_OF_MONTH, 20);
+        onlineExhangeStartDate = calendar.getTime();
+        offlineExhangeStartDate = calendar.getTime();
+        calendar.set(Calendar.DAY_OF_MONTH, 23);
+        onlineExhangeEndDate = calendar.getTime();
+        calendar.set(Calendar.MONTH, Calendar.JUNE);
+        calendar.set(Calendar.DAY_OF_MONTH, 2);
+        offlineExhangeEndDate = calendar.getTime();
+    }
 
     /**
      * 发放线上优惠券
@@ -73,7 +89,7 @@ public class CouponController {
         }
 
         //修改优惠券数量
-        issueCoupon(coupon, customer);
+        result = issueCoupon(coupon, customer);
         LOG.info("优惠券剩余数量==>" + coupon.getAmount());
         Map<String, Object> others = new HashMap<>();
         others.put("couponValue", coupon.getValue());
@@ -91,7 +107,6 @@ public class CouponController {
     @ResponseBody
     public Object issueOfflineCoupon(@RequestParam String token, HttpSession session) {
         JsonResponse result = JsonResponse.response("发放优惠券成功.");
-        Map<String, Object> others = new HashMap<>();
         //校验token是否正确
         Object tokenInSession = session.getAttribute(QRCodeController.issueCouponTokenName);
         if (!token.equals(tokenInSession)) {
@@ -103,28 +118,19 @@ public class CouponController {
 
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
 
-
-        Coupon couponE = couponService.readByType(Coupon.OFFLINE_B);//B卡用户优惠券
-        Coupon couponF = couponService.readByType(Coupon.OFFLINE_A);//A卡用户优惠券
-        //发放B卡用户优惠券
-        JsonResponse responseA = issueCoupon(couponE, customer);
-        if (responseA.getCode() != JsonResponse.SUCCESS_CODE) {
-            result.setCode(JsonResponse.FAIL_CODE);
-            others.put("errorA", responseA.getMessage());
-        }
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
         if (Objects.isNull(fiveCardXref)) {
             result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("还没领取五折卡哦");
             return result;
         }
+
+        Coupon offlineTypeB = couponService.readByType(Coupon.OFFLINE_B);//B卡用户优惠券
+        Coupon offlineTypeA = couponService.readByType(Coupon.OFFLINE_A);//A卡用户优惠券
+        //发放B卡用户优惠券
+        result = issueCoupon(offlineTypeB, customer);
         //发放A卡用户优惠券
-        JsonResponse responseB = issueCoupon(couponF, fiveCardXref.getReferer());
-        if (responseB.getCode() != JsonResponse.SUCCESS_CODE) {
-            result.setCode(JsonResponse.FAIL_CODE);
-            others.put("errorB", responseB.getMessage());
-        }
-        result.setOthers(others);
+        issueCoupon(offlineTypeA, fiveCardXref.getReferer());
         return result;
     }
 
@@ -203,9 +209,10 @@ public class CouponController {
     @RequestMapping(value = "/exchange/confirm", method = RequestMethod.POST)
     @ResponseBody
     public Object exchangeCoupon(CouponExchangeForm form) {
+        JsonResponse result = JsonResponse.response("兑换优惠券成功.");
         //检测优惠券是否存在
         CustomerCouponXref couponXref = couponXrefService.readById(form.getCouponXrefId());
-        JsonResponse result = JsonResponse.response("兑换优惠券成功.");
+
         if (Objects.isNull(couponXref)) {
             result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("优惠券不存在");
@@ -215,6 +222,28 @@ public class CouponController {
         if (couponXref.getStatus()) {
             result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("优惠券已兑换");
+            return result;
+        }
+        //检测优惠券是否在兑换时间范围
+        Date now = CommonUtils.currentDate();
+        Date start;
+        Date end;
+        if (couponXref.getCoupon().getType() >= Coupon.OFFLINE_B) {
+            start = offlineExhangeStartDate;
+            end = offlineExhangeEndDate;
+        } else {
+            start = onlineExhangeStartDate;
+            end = onlineExhangeEndDate;
+        }
+
+        if (now.before(start)) {
+            result.setCode(-1000);
+            result.setMessage("还未到优惠券兑换时间,最早兑换时间" + CommonUtils.formatDate(offlineExhangeStartDate));
+            return result;
+        }
+        if (now.after(end)) {
+            result.setCode(-1000);
+            result.setMessage("优惠券兑换时间已结束,最晚兑换时间" + CommonUtils.formatDate(offlineExhangeEndDate));
             return result;
         }
         //校验提货码(789+门店编号)

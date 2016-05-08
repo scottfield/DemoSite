@@ -34,30 +34,14 @@
                 return;
             }
             alert("支付成功");
-            //第一步:更新订单状态
-            var url = $("body").data("confirmurl");
-            var orderId = $("body").data("orderid");
             var csrfToken = $("body").data("token");
-            $.post(url, {orderId: orderId, csrfToken: csrfToken}).done(function (res) {
-                console.log(res);
+            var issueCouponUrl = $("body").data("issue-coupon-url");
+            $.post(issueCouponUrl, {csrfToken: csrfToken}).done(function (res) {
                 if (res.code == 1000) {
-                    alert(res.message);
-                    //第二步:发放优惠券
-                    var issueCouponUrl = $("body").data("issue-coupon-url");
-                    $.post(issueCouponUrl, {csrfToken: csrfToken}).done(function (res) {
-                        console.log(res);
-                        if (res.code == 1000) {
-                            orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc;
-                        }
-                        location.href = orderUrl;
-                    })
-                } else {
-                    alert(res.message);
+                    orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc;
                 }
-            }).fail(function (res) {
-                console.log(res);
-                alert(res);
-            });
+                location.href = orderUrl;
+            })
         }
         /*]]>*/
 

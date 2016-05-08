@@ -45,7 +45,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -62,15 +65,15 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
     /**
      * 未付款
      */
-    private static OrderStatus UNPAID = new OrderStatus("UNPAID", "UNPAID");
+    public static OrderStatus UNPAID = new OrderStatus("UNPAID", "UNPAID");
     /**
      * 已付款
      */
-    private static OrderStatus PAID = new OrderStatus("PAID", "PAID");
+    public static OrderStatus PAID = new OrderStatus("PAID", "PAID");
     /**
      * 已提货
      */
-    private static OrderStatus CONSUMED = new OrderStatus("CONSUMED", "CONSUMED");
+    public static OrderStatus CONSUMED = new OrderStatus("CONSUMED", "CONSUMED");
 
     @Resource(name = "blOrderService")
     private CustomOrderService customOrderService;
@@ -111,7 +114,7 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
     @ResponseBody
     public Object confirmOrder(long orderId) {
         JsonResponse result = JsonResponse.response("更新订单成功.");
-        Order order = orderService.findOrderById(orderId);
+        /*Order order = orderService.findOrderById(orderId);
         if (Objects.isNull(order)) {
             LOG.info("订单号：" + orderId + "不存在.");
             result.setMessage("更新订单失败，订单号:" + orderId + " 不存在");
@@ -136,22 +139,6 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
                     LOG.warn(JsonHelper.toJsonStr(queryOrderResult));
                     return result;
                 } else {
-                    LOG.info("-----保存微信支付信息------");
-                    OrderAttribute wxTransactionId = new OrderAttributeImpl();
-                    wxTransactionId.setName("transaction_id");
-                    wxTransactionId.setValue(queryOrderResult.get("transaction_id").toString());
-                    wxTransactionId.setOrder(order);
-
-                    OrderAttribute wxTimeEnd = new OrderAttributeImpl();
-                    wxTimeEnd.setName("time_end");
-                    wxTimeEnd.setValue(queryOrderResult.get("time_end").toString());
-                    wxTimeEnd.setOrder(order);
-
-                    wxTransactionId.setOrder(order);
-                    Map<String, OrderAttribute> orderAttributes = order.getOrderAttributes();
-                    orderAttributes.put("transaction_id", wxTransactionId);
-                    orderAttributes.put("time_end", wxTimeEnd);
-                    order.setOrderAttributes(orderAttributes);
                 }
             }
 
@@ -162,7 +149,9 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
-        order.setStatus(PAID);
+        if (UNPAID.equals(order.getStatus())) {
+            order.setStatus(PAID);
+        }
         try {
             orderService.save(order, false);
             LOG.info("更新订单(单号:" + orderId + ")成功.");
@@ -170,7 +159,7 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
             LOG.error("更新订单(单号:" + orderId + ")失败", e);
             result.setMessage("更新订单成功.");
             result.setCode(JsonResponse.FAIL_CODE);
-        }
+        }*/
         return result;
     }
 
