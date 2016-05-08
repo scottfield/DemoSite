@@ -1,6 +1,6 @@
 <!--恭喜获得优惠券弹窗，不同的弹窗更新里面的图片和文字即可-->
 <div th:fragment="couponWindow(couponValue,couponDesc,visible,couponType)" th:remove="tag">
-    <div th:class="${!(visible!=null and visible==true)?'window':'window none'}">
+    <div th:class="${(visible!=null and visible==true)?'window':'window none'}">
         <div class="window-content">
             <div class="head">
                 <div class="container">恭喜获得</div>
