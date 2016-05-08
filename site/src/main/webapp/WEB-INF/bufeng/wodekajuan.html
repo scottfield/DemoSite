@@ -49,14 +49,15 @@
             <div class="desc" th:text="${card.status?'请于2016年5月20日-22日至各活动门店使用':'请于2016年5月19日前激活使用'}">请于2020年使用</div>
         </div>
         <div class="coupon" th:if="${card.type==1}"
-             th:attr="data-card-status=${card.status},data-type=${card.type},data-coupon-xref=${card.id}">
+             th:attr="data-card-status=${card.status},data-type=${card.type},data-coupon-xref=${card.id},coupontype=${card.couponType}">
             <div class="img-panel">
-                <img th:src="@{/images/new/coupon/coupon_1_bg.jpg}"/>
-                <a class="num" th:text="${card.value}">5</a>
+                <img th:src="@{${card.couponType==4||card.couponType==5?'/images/new/coupon/coupon_2_bg.png':'/images/new/coupon/coupon_1_bg.jpg'}}"/>
+                <a class="num-panel"><span class="num" th:text="${card.value}">5</span><span class="unit">元</span></a>
+                <span class="cdesc">全场通用现金券</span>
                 <span class="status" th:if="${card.status}">已兑换</span>
                 <span class="status" th:unless="${card.status}">未兑换</span>
             </div>
-            <div class="desc">请于2016年5月19日-22日至各活动服务台领取</div>
+            <div class="desc" th:text="${card.couponType==4||card.couponType==5?'请于2016年5月20日-6月1日至各活动服务台领取':'请于2016年5月20日-5月22日至各活动服务台领取'}"></div>
         </div>
         <div style="float:left;width:100%;height:1px;" th:if="${iterStat.index%2==1}"></div>
     </div>

@@ -79,7 +79,7 @@
     </div>
 </div>
 <!---->
-<div th:if="${showCoupon==true and couponValue== 5}" th:replace="/coupon/coupon_window::couponWindow(${couponValue},'',${showCoupon})"></div>
+<div th:if="${showCoupon==true and couponValue== 5}" th:replace="/coupon/coupon_window::couponWindow(${couponValue},'',${showCoupon},'')"></div>
 <div class="footer"></div>
 <div th:replace="partials/footer::footer"></div>
 </body>

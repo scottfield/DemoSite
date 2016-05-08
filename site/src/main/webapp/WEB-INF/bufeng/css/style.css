@@ -1373,7 +1373,10 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 .window-content .middle .text a{text-decoration:underline;color:#e46e79;}
 .window-content .bottom{text-align:center;margin-top:5%;}
 .window-content .bottom img{height:30px;}
-.window-content .middle .coupon-num{position:absolute;color:#e46d78;bottom:59%;right:40%;width:20%;font-size:45px;line-height:45px;font-size:14vw;line-height:14vw;}
+.window-content .coupon{width:70%;margin:0 auto;}
+.window-content .coupon .status{bottom:12%;font-size:14px;font-size:4vw;}
+.window-content .coupon .num{font-size:48px;line-height:48px;font-size:15vw;line-height:15vw;}
+.window-content .coupon .cdesc{font-size:16px;font-size:5vw;}
 .card-box .sold-out{
 	background-image:url(../images/new/sold-out.png);width:60%;height:80%;
 	position:absolute;
@@ -1386,9 +1389,12 @@ header .container a{display:inline-block;height:100%;color:#fff;}
 .color-empty-gray{color:#bcb1b1;}
 .coupon-list{overflow:hidden;}
 .coupon-list .coupon{width:46%;float:left;margin:5% 2% 0 2%;}
-.coupon-list .coupon .num{position:absolute;color:#e46d78;bottom:49%;right:40%;font-size:38px;line-height:38px;font-size:12vw;line-height:12vw;}
-.coupon-list .coupon .status{position:absolute;color:#fff;bottom:11%;right:36%;width:30%;text-align:center;font-size:12px;font-size:3.5vw;}
-.coupon-list .coupon .desc{color:#7d7d7d;text-align:center;font-size:12px;margin-top:12px;width:80%;margin:12px auto 0 auto;line-height:20px;}
+.coupon .num-panel{position:absolute;color:#e46d78;bottom:49%;right:20%;width:60%}
+.coupon .num{font-size:44px;line-height:44px;font-size:12vw;line-height:12vw;vertical-align:middle;}
+.coupon .cdesc{position:absolute;bottom:29%;left:0;width:100%;font-size:14px;font-size:4.5vw;color:#e46d78;}
+.coupon .status{position:absolute;color:#fff;bottom:11%;right:36%;width:30%;text-align:center;font-size:12px;font-size:3.5vw;}
+.coupon .desc{color:#7d7d7d;text-align:center;font-size:12px;margin-top:12px;width:80%;margin:12px auto 0 auto;line-height:18px;}
+.window-content .middle .unit,.coupon .unit{display:inline-block;width:20px;line-height:20px;font-size:14px;background-color:#e46d78;border-radius:50%;border:2px solid #fff;color:#fff;vertical-align:bottom;}
 .coupon-exchange{margin-top:20px;color:#7d7d7d;font-size:14px;line-height:20px;}
 .coupon-exchange .head .link{font-size:140px;line-height:140px;font-size:44vw;line-height:44vw;bottom:30%;right:35%;color:#a37bad;}
 .h-box{display:-webkit-box;-webkit-box-orient:horizontal;}

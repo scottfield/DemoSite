@@ -1,13 +1,26 @@
 <!--恭喜获得优惠券弹窗，不同的弹窗更新里面的图片和文字即可-->
-<div th:fragment="couponWindow(couponValue,couponDesc,visible)" th:remove="tag">
-    <div th:class="${(visible!=null and visible==true)?'window':'window none'}">
+<div th:fragment="couponWindow(couponValue,couponDesc,visible,couponType)" th:remove="tag">
+    <div th:class="${!(visible!=null and visible==true)?'window':'window none'}">
         <div class="window-content">
             <div class="head">
                 <div class="container">恭喜获得</div>
             </div>
             <div class="middle">
-                <img th:src="@{/images/new/coupon/coupon_1_bg.jpg}" width="60%"/>
-                <span class="coupon-num" th:text="${couponValue}" th:style="'right:'+${couponValue!=null and couponValue.length() gt 1?'43%':'40%'}"></span>
+                <!--<img th:src="@{/images/new/coupon/coupon_1_bg.jpg}" width="60%"/>-->
+                <!--<div class="coupon-num-panel">-->
+                    <!--<span class="num" th:text="${couponValue}"></span><span class="unit">元</span>-->
+                <!--</div>-->
+                <!--<div class="coupon-desc">全场通用现金券</div>-->
+                <!--<div class="text"  th:text="${couponDesc}"></div>-->
+                <!--<div class="text">已存入“卡券”中了哟，<a th:href="@{/manage/couponAndFiveCard}">立刻查看</a>！</div>-->
+                <div class="coupon">
+                    <div class="img-panel">
+                        <img th:src="@{${couponType=='4'||couponType=='5'?'/images/new/coupon/coupon_2_bg.png':'/images/new/coupon/coupon_1_bg.jpg'}}"/>
+                        <a class="num-panel"><span class="num" th:text="${couponValue}">5</span><span class="unit">元</span></a>
+                        <span class="cdesc">全场通用现金券</span>
+                        <span class="status">未兑换</span>
+                    </div>
+                </div>
                 <div class="text" th:if="${couponDesc!=''}" th:text="${couponDesc}"></div>
                 <div class="text">已存入“卡券”中了哟，<a th:href="@{/manage/couponAndFiveCard}">立刻查看</a>！</div>
             </div>
