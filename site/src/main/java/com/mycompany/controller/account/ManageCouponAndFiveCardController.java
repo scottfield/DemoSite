@@ -32,7 +32,7 @@ public class ManageCouponAndFiveCardController {
             card.setStatus(fiveCardXref.getStatus());
             card.setType(CardWrapper.FIVE_CARD_TYPE);
             FiveCard fiveCard = fiveCardXref.getFiveCard();
-            card.setCardNo(Objects.isNull(fiveCard)?null:fiveCard.getNo());
+            card.setCardNo(Objects.isNull(fiveCard) ? null : fiveCard.getNo());
             cards.add(card);
         }
         //转换优惠券
@@ -43,6 +43,7 @@ public class ManageCouponAndFiveCardController {
             card.setStatus(couponXref.getStatus());
             card.setValue(couponXref.getCoupon().getValue());
             card.setId(couponXref.getId());
+            card.setCouponType(couponXref.getCoupon().getType());
             cards.add(card);
         }
         request.setAttribute("cards", cards);

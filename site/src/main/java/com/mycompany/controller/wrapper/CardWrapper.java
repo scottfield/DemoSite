@@ -13,6 +13,7 @@ public class CardWrapper {
     private String cardNo;
     private Long id;
     private String description;
+    private Integer couponType;
 
     private CardWrapper() {
     }
@@ -69,5 +70,13 @@ public class CardWrapper {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(Integer couponType) {
+        this.couponType = couponType;
     }
 }
