@@ -452,12 +452,12 @@ header .text{
 	height:60px;
 }
 .offline .title{
-	font-size:.8rem;
+	font-size:.14px;
 	-webkit-box-flex:1;
 	padding-left:10px;
 	word-break:break-all;
 	word-wrap:break-word;
-	line-height:24px;
+	line-height:18px;
 	vertical-align:middle;
 }
 .offline .title.vertical-middle-box:before{height:60px;}
