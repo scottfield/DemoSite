@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -22,18 +23,22 @@ public class OrderScheduler {
     @Resource
     private CustomOrderService orderService;
 
-    @Scheduled(fixedDelay = 15 * 60 * 1000,initialDelay = 60*1000)
+    @Scheduled(fixedDelay = 1 * 60 * 1000, initialDelay = 60 * 1000)
     public void updateOrder() {
-        System.out.println("-----*****cancel order status*****------");
+//        LOG.debug("-----取消过期订单定时任务开始------");
         List<Order> expiredOrder = orderService.findExpiredOrder(15 * 60 * 1000L);
+        if (Objects.isNull(expiredOrder) || expiredOrder.size() == 0) {
+            return;
+        }
         expiredOrder.stream().forEach(order -> {
             try {
                 orderService.customCancelOrder(order.getId());
-                LOG.info("cancel order(" + order.getId() + ") at " + CommonUtils.currentDateStr());
+                LOG.info("取消订单,订单编号:" + order.getOrderNumber());
             } catch (WorkflowException e) {
-                LOG.error("cancel order(" + order.getId() + ") failed caused by:", e);
+                LOG.error("取消订单失败,订单编号:" + order.getOrderNumber(), e);
             }
         });
+//        LOG.info("-----取消过期订单定时任务结束------");
     }
 
 }

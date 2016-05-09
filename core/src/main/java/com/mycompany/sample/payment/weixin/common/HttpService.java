@@ -111,14 +111,14 @@ public class HttpService {
 
         String postDataXML = XMLParser.toXML(object2Xml);
 
-        logger.info("API POST DATA:");
-        logger.info(postDataXML);
+//        logger.info("API POST DATA:");
+//        logger.info(postDataXML);
 
         StringEntity postEntity = new StringEntity(postDataXML, "UTF-8");
         httpPost.addHeader("Content-Type", "text/xml");
         httpPost.setEntity(postEntity);
 
-        logger.info("executing request" + httpPost.getRequestLine());
+//        logger.info("executing request" + httpPost.getRequestLine());
 
         try {
             HttpResponse response = httpClient.execute(httpPost);

@@ -8,12 +8,16 @@
     <script type="text/javascript" th:inline="text" th:attr="data-jsapi=${jsApiParam}">
         $(function () {
             var unifyOrderFailed = $("body").data("unify-order-failed");
-            var orderUrl = '[[@{/account/orders}]]';
             if (unifyOrderFailed == true) {
                 alert("支付订单生成失败！");
-                location.href = orderUrl;
+                unlockOrder();
             }
         });
+        function unlockOrder() {
+            var unlockOrderUrl = '[[@{/wechatpay/index/unlock}]]';
+            var orderId = $("body").data("orderid");
+            location.href = unlockOrderUrl + "?orderId=" + orderId;
+        }
         //调用微信JS api 支付
         function jsApiCall() {
             WeixinJSBridge.invoke(
@@ -38,18 +42,21 @@
             var orderUrl = '[[@{/account/orders}]]';
             if (errorMsg != "get_brand_wcpay_request:ok") {
                 alert("支付失败");
-                location.href = orderUrl;
+                unlockOrder();
                 return;
             }
             alert("支付成功");
-            var csrfToken = $("body").data("token");
-            var issueCouponUrl = $("body").data("issue-coupon-url");
-            $.post(issueCouponUrl, {csrfToken: csrfToken}).done(function (res) {
-                if (res.code == 1000) {
-                    orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc + "&couponType=" + res.others.couponType;
-                }
-                location.href = orderUrl;
-            })
+            showOrderHistory();
+            function showOrderHistory() {
+                var csrfToken = $("body").data("token");
+                var issueCouponUrl = $("body").data("issue-coupon-url");
+                $.post(issueCouponUrl, {csrfToken: csrfToken}).done(function (res) {
+                    if (res.code == 1000) {
+                        orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc + "&couponType=" + res.others.couponType;
+                    }
+                    location.href = orderUrl;
+                })
+            }
         }
         /*]]>*/
 

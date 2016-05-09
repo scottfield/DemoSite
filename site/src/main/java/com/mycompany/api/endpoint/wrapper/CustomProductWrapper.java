@@ -18,7 +18,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "product")
 @XmlAccessorType(value = XmlAccessType.FIELD)
 public class CustomProductWrapper extends ProductWrapper {
-    private static final Log LOG = LogFactory.getLog(CustomProductWrapper.class);
     @XmlElement
     private Integer sales;
     @XmlElement
@@ -32,7 +31,6 @@ public class CustomProductWrapper extends ProductWrapper {
 
     @Override
     public void wrapSummary(Product model, HttpServletRequest request) {
-        LOG.info("start to wrap product:()" + model.getId());
         super.wrapSummary(model, request);
         if (model instanceof CustomProduct) {
             CustomProduct product = (CustomProduct) model;

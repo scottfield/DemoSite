@@ -85,18 +85,18 @@ public class LoginController extends BroadleafLoginController {
     @RequestMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
 
-        LOG.info("original url==>" + retUrl);
+//        LOG.info("original url==>" + retUrl);
         String encodedUrl = null;
         try {
             encodedUrl = URLEncoder.encode(retUrl, "UTF-8");
-            LOG.info("encoded url==>" + retUrl);
+//            LOG.info("encoded url==>" + retUrl);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         String queryStr = "app_key=" + WeiXinConstants.APP_KEY + "&ret_uri=" + encodedUrl;
-//        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
+        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
 //        return "redirect:/?openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo";//jackie
-        return "redirect:/?openid=o1Py0twT_6kpQRqIX4rJiQD_fjvQ";//布矮矮
+//        return "redirect:/?openid=o1Py0twT_6kpQRqIX4rJiQD_fjvQ";//布矮矮
     }
 
     /**

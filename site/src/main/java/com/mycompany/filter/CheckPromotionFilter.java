@@ -50,7 +50,7 @@ public class CheckPromotionFilter extends OncePerRequestFilter {
             return;
         }
         request.setAttribute("promotion", currentPromotion);
-        LOG.info("当前活动状态==>" + status);
+//        LOG.info("当前活动状态==>" + status);
 
         switch (status) {
             case Promotion.NOT_START:

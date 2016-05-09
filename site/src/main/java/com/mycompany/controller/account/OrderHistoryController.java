@@ -71,6 +71,10 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
      */
     public static OrderStatus PAID = new OrderStatus("PAID", "PAID");
     /**
+     * 付款中
+     */
+    public static OrderStatus PAYING = new OrderStatus("PAYING", "PAYING");
+    /**
      * 已提货
      */
     public static OrderStatus CONSUMED = new OrderStatus("CONSUMED", "CONSUMED");

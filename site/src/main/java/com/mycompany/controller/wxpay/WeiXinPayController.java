@@ -21,6 +21,7 @@ import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
 import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
+import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.dom4j.Document;
@@ -30,6 +31,7 @@ import org.dom4j.io.SAXReader;
 import org.springframework.expression.spel.ast.OpOr;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.SAXException;
 import sun.util.resources.cldr.ebu.CurrencyNames_ebu;
@@ -78,15 +80,19 @@ public class WeiXinPayController {
         if (Objects.isNull(shop)) {
             throw new RuntimeException("收货地址门店未填写");
         }
+        LOG.info("------------------开始处理支付订单--------------------");
         ShopAccount shopAccount = shop.getShopAccount();
         String appid = shopAccount.getAppid();
+        LOG.info("appid==>" + appid);
         String mch_id = shopAccount.getMchid();
+        LOG.info("商户号==>" + appid);
         String body = order.getOrderNumber();
         String out_trade_no = order.getOrderNumber();
+        LOG.info("订单号==>" + appid);
         String spbill_create_ip = request.getRemoteAddr();
         String requestUrl = requestURL.toString();
         String notify_url = requestUrl.replaceAll("/pay", "") + "/notify";
-        LOG.info("notify url==>" + notify_url);
+//        LOG.info("回调地址==>" + notify_url);
         String trade_type = "JSAPI";
         String openId = orderOwner.getUsername();
         BigDecimal value = order.getTotal().getAmount().multiply(new BigDecimal("100"));
@@ -96,12 +102,18 @@ public class WeiXinPayController {
         UnifiedOrderReqData reqData = new UnifiedOrderReqData.UnifiedOrderReqDataBuilder(appid, mch_id,
                 body, out_trade_no, total_fee, spbill_create_ip, notify_url, trade_type).setOpenid(openId).build();
         try {
+            LOG.info("----开始统一下单----");
             Map<String, Object> result = WxPayApi.UnifiedOrder(reqData);
-
+            LOG.info("统一下单结果==>" + result.get("return_code"));
             request.setAttribute("result", result);
             if (!result.get("return_code").equals("SUCCESS")) {
                 return retView;
             }
+            //更改订单的支付状态为正在支付中
+            order.setStatus(OrderStatus.getInstance("PAYING"));
+            orderService.save(order, false);
+            LOG.info("更改订单状态为支付中,订单当前状态:" + order.getStatus().getType());
+
             Map<String, Object> param = new HashMap<>();
             long timeStamp = CommonUtils.currentTimeStamp();
             String nonce = CommonUtils.getRandomStr();
@@ -115,9 +127,9 @@ public class WeiXinPayController {
             String paySign = CommonUtils.md5Sign(sortedStr, Configure.getKey(mch_id), "key").toUpperCase();
             param.put("paySign", paySign);
             String jsApiParam = JsonUtil.toJson(param);
-            LOG.info("-----------------------------------------------------------------------------------");
+            /*LOG.info("-----------------------------------------------------------------------------------");
             LOG.info(jsApiParam);
-            LOG.info("-----------------------------------------------------------------------------------");
+            LOG.info("-----------------------------------------------------------------------------------");*/
             request.setAttribute("paySign", param.get("paySign"));
             request.setAttribute("appId", param.get("appId"));
             request.setAttribute("timeStamp", param.get("timeStamp"));
@@ -126,18 +138,20 @@ public class WeiXinPayController {
             request.setAttribute("signType", param.get("signType"));
             request.setAttribute("orderId", orderId);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("io错误", e);
         } catch (SAXException e) {
-            e.printStackTrace();
+            LOG.error("解析xml错误", e);
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            LOG.error("解析配置错误", e);
+        } catch (PricingException e) {
+            LOG.error("保存订单错误", e);
         }
+        LOG.info("调用jsapi进行支付");
         return retView;
     }
 
     @RequestMapping("/notify")
     public ModelAndView notifyHandler(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        LOG.info("---------------start to handle wechatpay callback------------------");
         String inputLine;
 //        String notityXml = "<xml><appid><![CDATA[wx937fba8914a5d9a9]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[1326016401]]></mch_id><nonce_str><![CDATA[5qg7pmgbrai2v30g8n0t8xr6ggtw2ri8]]></nonce_str><openid><![CDATA[o1Py0tx91UJXWdtT_gD9xMdI5Rdo]]></openid><out_trade_no><![CDATA[20160508212400943851]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[8F3173CFE9E3495B55E2AACC40C0F26F]]></sign><time_end><![CDATA[20160508212409]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[JSAPI]]></trade_type><transaction_id><![CDATA[4006002001201605085647871490]]></transaction_id></xml>";
         String notityXml = "";
@@ -148,14 +162,17 @@ public class WeiXinPayController {
             while ((inputLine = reader.readLine()) != null) {
                 notityXml += inputLine;
             }
-            LOG.info(notityXml);
+//            LOG.info(notityXml);
             //判断支付结果
             WxCallBackData result = XMLParser.getObjectFromXML(notityXml, WxCallBackData.class);
+            LOG.info("----------微信支付回调更新订单状态开始------------");
+            LOG.info("支付结果:" + result.getResult_code());
             if (Objects.nonNull(result) && "SUCCESS".equals(result.getResult_code())) {
                 String orderNumber = result.getOut_trade_no();
 //                String orderNumber = "201605082158449793601";
                 Order order = orderService.findOrderByOrderNumber(orderNumber);
-                if (Objects.nonNull(order) && OrderHistoryController.UNPAID.equals(order.getStatus())) {
+                LOG.info("开始更新订单,当前订单状态：" + order.getStatus().getType() + ",订单编号:" + order.getOrderNumber());
+                if (Objects.nonNull(order) && OrderHistoryController.PAYING.equals(order.getStatus())) {
                     order.setStatus(OrderHistoryController.PAID);
                     LOG.info("-----保存微信支付信息------");
 
@@ -215,6 +232,7 @@ public class WeiXinPayController {
                     order.setOrderAttributes(orderAttributes);
 
                     orderService.save(order, false);
+                    LOG.info("更新订单状态完成,当前订单状态:" + order.getStatus().getType() + ",订单号：" + order.getOrderNumber());
                 }
                 retXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
                         + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
@@ -233,7 +251,29 @@ public class WeiXinPayController {
                 writer.close();
             }
         }
-        LOG.info("---------------end to handle wechatpay callback------------------");
+        LOG.info("----------微信支付回调更新订单状态结束------------");
         return null;
+    }
+
+    /**
+     * 恢复支付中状态的订单到未付款状态
+     *
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/unlock")
+    public String unlockOrder(@RequestParam Long orderId) {
+        Order order = orderService.findOrderById(orderId);
+        String retView = "redirect:/account/orders";
+        if (!OrderHistoryController.PAYING.equals(order.getStatus())) {
+            return retView;
+        }
+        order.setStatus(OrderHistoryController.UNPAID);
+        try {
+            orderService.save(order, false);
+        } catch (PricingException e) {
+            LOG.error("支付失败,还原订单状态出错", e);
+        }
+        return retView;
     }
 }
