@@ -99,7 +99,7 @@ public class CheckoutController extends BroadleafCheckoutController {
                            RedirectAttributes redirectAttributes) {
         CustomOrder cart = (CustomOrder) CartState.getCart();
         try {
-            CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+            CustomCustomer customer = (CustomCustomer) cart.getCustomer();
             CustomAddress pickupAddress = customer.getPickupAddress();
             model.addAttribute("pickupAddress", pickupAddress);
             if (Objects.isNull(pickupAddress) || Objects.isNull(pickupAddress.getPhonePrimary()) || StringUtils.isBlank(pickupAddress.getFirstName())) {

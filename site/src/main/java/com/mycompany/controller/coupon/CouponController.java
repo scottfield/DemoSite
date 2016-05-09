@@ -199,6 +199,7 @@ public class CouponController {
             if (Objects.nonNull(coupon)) {
                 card.setValue(coupon.getValue());
                 card.setDescription(coupon.getDesc());
+                card.setCouponType(coupon.getType());
             }
             card.setId(couponXref.getId());
             model.addAttribute("card", card);

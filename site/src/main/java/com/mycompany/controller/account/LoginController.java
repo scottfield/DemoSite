@@ -21,6 +21,7 @@ import com.mycompany.sample.core.catalog.domain.CustomCustomer;
 import com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref;
 import com.mycompany.sample.service.CustomerAttributeService;
 import com.mycompany.sample.service.WeixinService;
+import com.mycompany.sample.util.CommonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.exception.ServiceException;
@@ -94,8 +95,8 @@ public class LoginController extends BroadleafLoginController {
         }
         String queryStr = "app_key=" + WeiXinConstants.APP_KEY + "&ret_uri=" + encodedUrl;
 //        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
-        return "redirect:/?openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo";//jackie
-//        return "redirect:/?openid=o1Py0twT_6kpQRqIX4rJiQD_fjvQ";//布矮矮
+//        return "redirect:/?openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo";//jackie
+        return "redirect:/?openid=o1Py0twT_6kpQRqIX4rJiQD_fjvQ";//布矮矮
     }
 
     /**
@@ -157,7 +158,7 @@ public class LoginController extends BroadleafLoginController {
         Customer customer = (Customer) entityConfiguration.createEntityInstance("org.broadleafcommerce.profile.core.domain.Customer");
         customer.setUsername(openId);
         Object nickname = userInfo.get("nickname");
-        customer.setFirstName(nickname == null ? " " : nickname.toString());
+        customer.setFirstName(nickname == null ? " " : CommonUtils.filterEmoji(nickname.toString()));
         customer.setLastName(openId);
         customer.setPassword(openId);
         customer.setRegistered(true);
@@ -190,6 +191,9 @@ public class LoginController extends BroadleafLoginController {
             attribute.setName(key);
             Object value = userInfo.get(key);
             if (Objects.nonNull(value)) {
+                if ("nickname".equals(key)) {
+                    value = CommonUtils.filterEmoji(value.toString());
+                }
                 attribute.setValue(value.toString());
             }
             customerAttributes.put(key, attribute);

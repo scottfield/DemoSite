@@ -317,4 +317,10 @@
     <bean id="offLineProductCategoryId" class="java.lang.Long">
         <constructor-arg value="10101"/>
     </bean>
+    <bean id="resourceFileLocation" class="java.lang.String">
+        <constructor-arg value="/root/disk2/wwwroot/site-1.0/WEB-INF/bufeng/images/fivecard/"/>
+    </bean>
+    <bean id="waterFileLocation" class="java.lang.String">
+        <constructor-arg value="/root/disk2/fivecard/"/>
+    </bean>
 </beans>

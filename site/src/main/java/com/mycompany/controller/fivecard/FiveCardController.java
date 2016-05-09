@@ -30,6 +30,7 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -59,6 +60,10 @@ public class FiveCardController {
     private CountryService countryService;
 
     private static final Log LOG = LogFactory.getLog(FiveCardController.class);
+    @Resource(name = "resourceFileLocation")
+    private String resourceFileLocation;
+    @Resource(name = "waterFileLocation")
+    private String waterFileLocation;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String getFiveCardPage(HttpServletRequest request, String shopOutOfRange) {
@@ -222,8 +227,8 @@ public class FiveCardController {
     private void generateFiveCardImage(CustomCustomer customer, HttpServletRequest request) {
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
         String cardNo = fiveCardXref.getFiveCard().getNo();
-        org.springframework.core.io.Resource resourceFile = new FileSystemResource("D:\\fivecard/fivecard/fivecard_backgroud.png");
-        org.springframework.core.io.Resource waterFile = new FileSystemResource("D:\\fivecard/fivecard/" + cardNo + ".png");
+        org.springframework.core.io.Resource resourceFile = new FileSystemResource(resourceFileLocation + "fivecard_backgroud.png");
+        org.springframework.core.io.Resource waterFile = new FileSystemResource(waterFileLocation + cardNo + ".png");
         try {
             File resource = resourceFile.getFile();
             if (!resource.exists()) {
@@ -286,7 +291,7 @@ public class FiveCardController {
             session.setAttribute("referrer", referrer);
         }
         //跳转到首页，如果用户没有授权则会先进行授权
-        return "redirect:/fiveCard/issue";
+        return "redirect:/login";
     }
 
     /**
@@ -310,10 +315,13 @@ public class FiveCardController {
      * @return
      */
     private List<CustomerWrapper> getFollowers(CustomCustomer customer) {
-
-        List<CustomerFiveCardXref> sharedCardXrefs = customer.getFiveCardXref().getSharedCardXrefs();
-        return sharedCardXrefs.stream().map(sharedCardXref -> (CustomCustomer) sharedCardXref.getCustomer()).
-                map(this::getCustomerWrapper).collect(Collectors.toList());
+        CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
+        List<CustomerFiveCardXref> sharedCardXrefs = fiveCardXref.getSharedCardXrefs();
+        if (Objects.nonNull(fiveCardXref)) {
+            return sharedCardXrefs.stream().map(sharedCardXref -> (CustomCustomer) sharedCardXref.getCustomer()).
+                    map(this::getCustomerWrapper).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     private CustomerWrapper getCustomerWrapper(CustomCustomer customCustomer) {

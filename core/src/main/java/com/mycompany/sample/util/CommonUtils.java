@@ -6,6 +6,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by jackie on 4/22/2016.
@@ -119,6 +121,20 @@ public class CommonUtils {
         response.put("code", 1000);
         response.put("message", message);
         return response;
+    }
+    public static String filterEmoji(String source) {
+        if(source != null)
+        {
+            Pattern emoji = Pattern.compile ("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",Pattern.UNICODE_CASE | Pattern. CASE_INSENSITIVE ) ;
+            Matcher emojiMatcher = emoji.matcher(source);
+            if ( emojiMatcher.find())
+            {
+                source = emojiMatcher.replaceAll("*");
+                return source ;
+            }
+            return source;
+        }
+        return source;
     }
 
     public static void main(String[] args) {

@@ -70,15 +70,15 @@ public class WxPayApi {
         String s = DigestUtils.md5Hex(querystr);
         System.out.println(s.toUpperCase());*/
 //        查询账单
-        /*String appid = "wx937fba8914a5d9a9";
-        String mch_id = "10010514";
-        String out_trade_no = "4ds2254455";
+        String appid = "wx937fba8914a5d9a9";
+        String mch_id = "1282294601";
+        String out_trade_no = "201605091345195624622";
         QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(appid).setMch_id(mch_id).setOut_trade_no(out_trade_no).build();
         Map<String, Object> stringObjectMap = queryOrder(reqData);
-        System.out.println(stringObjectMap);*/
-        String result = "<xml><appid><![CDATA[wx937fba8914a5d9a9]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[1326016401]]></mch_id><nonce_str><![CDATA[5qg7pmgbrai2v30g8n0t8xr6ggtw2ri8]]></nonce_str><openid><![CDATA[o1Py0tx91UJXWdtT_gD9xMdI5Rdo]]></openid><out_trade_no><![CDATA[20160508212400943851]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[8F3173CFE9E3495B55E2AACC40C0F26F]]></sign><time_end><![CDATA[20160508212409]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[JSAPI]]></trade_type><transaction_id><![CDATA[4006002001201605085647871490]]></transaction_id></xml>";
+        System.out.println(JsonHelper.toJsonStr(stringObjectMap));
+       /* String result = "<xml><appid><![CDATA[wx937fba8914a5d9a9]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[1326016401]]></mch_id><nonce_str><![CDATA[5qg7pmgbrai2v30g8n0t8xr6ggtw2ri8]]></nonce_str><openid><![CDATA[o1Py0tx91UJXWdtT_gD9xMdI5Rdo]]></openid><out_trade_no><![CDATA[20160508212400943851]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[8F3173CFE9E3495B55E2AACC40C0F26F]]></sign><time_end><![CDATA[20160508212409]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[JSAPI]]></trade_type><transaction_id><![CDATA[4006002001201605085647871490]]></transaction_id></xml>";
 
-        WxCallBackData mapFromXML = XMLParser.getObjectFromXML(result, WxCallBackData.class);
-        System.out.println(mapFromXML);
+        Map<String, Object> mapFromXML = XMLParser.getMapFromXML(result);
+        System.out.println(JsonHelper.toJsonStr(mapFromXML));*/
     }
 }

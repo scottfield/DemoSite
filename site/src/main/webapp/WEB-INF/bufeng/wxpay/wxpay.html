@@ -6,6 +6,14 @@
     <title th:replace="/partials/title::title"></title>
     <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
     <script type="text/javascript" th:inline="text" th:attr="data-jsapi=${jsApiParam}">
+        $(function () {
+            var unifyOrderFailed = $("body").data("unify-order-failed");
+            var orderUrl = '[[@{/account/orders}]]';
+            if (unifyOrderFailed == true) {
+                alert("支付订单生成失败！");
+                location.href = orderUrl;
+            }
+        });
         //调用微信JS api 支付
         function jsApiCall() {
             WeixinJSBridge.invoke(
@@ -38,7 +46,7 @@
             var issueCouponUrl = $("body").data("issue-coupon-url");
             $.post(issueCouponUrl, {csrfToken: csrfToken}).done(function (res) {
                 if (res.code == 1000) {
-                    orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc+"&couponType="+res.others.couponType;
+                    orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc + "&couponType=" + res.others.couponType;
                 }
                 location.href = orderUrl;
             })
@@ -91,7 +99,7 @@
 
     </script>
 </head>
-<body th:attr="data-orderid=${orderId},data-confirmurl=@{/account/orders/confirm},data-token=${session.csrfToken},data-issue-coupon-url=@{/coupon/issue/online}">
+<body th:attr="data-orderid=${orderId},data-confirmurl=@{/account/orders/confirm},data-token=${session.csrfToken},data-issue-coupon-url=@{/coupon/issue/online},data-unify-order-failed=${unifyOrderFailed}">
 <!--<br/>
 <font color="#9ACD32"><b>该笔订单支付金额为<span style="color:#f00;font-size:50px">1分</span>钱</b></font><br/><br/>
 <div align="center">

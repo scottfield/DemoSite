@@ -21,15 +21,18 @@ import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
 import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
+import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.springframework.expression.spel.ast.OpOr;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.SAXException;
+import sun.util.resources.cldr.ebu.CurrencyNames_ebu;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +42,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,10 +62,17 @@ public class WeiXinPayController {
     public String unifyOrder(HttpServletRequest request, Long orderId) {
         String retView = "wxpay/wxpay";
         CustomOrder order = (CustomOrder) orderService.findOrderById(orderId);
-        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        Customer orderOwner = order.getCustomer();
+        Customer currentLoginCustomer = CustomerState.getCustomer();
+        //检测下单用户与当前的登录用户是否是统一个人
+        if (!currentLoginCustomer.getId().equals(orderOwner.getId())) {
+            LOG.warn("下单账号与当前登录账号不一致,下单账号信息:(ID：" + orderOwner.getId() + ",openId:" + orderOwner.getUsername() + "),当前登录用户信息:(ID：" + currentLoginCustomer.getId() + ",openId:" + currentLoginCustomer.getUsername() + ")");
+            request.setAttribute("unifyOrderFailed", true);
+            return retView;
+        }
+
         Shop shop = order.getAddress().getShop();
 
-        String requestURI = request.getRequestURI();
         StringBuffer requestURL = request.getRequestURL();
         //如果没有收货地址就填写收货地址
         if (Objects.isNull(shop)) {
@@ -77,9 +88,11 @@ public class WeiXinPayController {
         String notify_url = requestUrl.replaceAll("/pay", "") + "/notify";
         LOG.info("notify url==>" + notify_url);
         String trade_type = "JSAPI";
-        String openId = customer.getUsername();
-//        Integer total_fee = order.getTotal().getAmount().intValue() * 100;
-        Integer total_fee = 1;
+        String openId = orderOwner.getUsername();
+        BigDecimal value = order.getTotal().getAmount().multiply(new BigDecimal("100"));
+        Integer total_fee = value.intValue();
+        LOG.info("订单总额==>" + total_fee);
+//        Integer total_fee = 1;
         UnifiedOrderReqData reqData = new UnifiedOrderReqData.UnifiedOrderReqDataBuilder(appid, mch_id,
                 body, out_trade_no, total_fee, spbill_create_ip, notify_url, trade_type).setOpenid(openId).build();
         try {
@@ -151,16 +164,56 @@ public class WeiXinPayController {
                     wxTransactionId.setValue(result.getTransaction_id());
                     wxTransactionId.setOrder(order);
 
+                    OrderAttribute openid = new OrderAttributeImpl();
+                    openid.setName("openid");
+                    openid.setValue(result.getOpenid());
+
+                    OrderAttribute mch_id = new OrderAttributeImpl();
+                    mch_id.setName("mch_id");
+                    mch_id.setValue(result.getMch_id());
+
+                    OrderAttribute out_trade_no = new OrderAttributeImpl();
+                    out_trade_no.setName("out_trade_no");
+                    out_trade_no.setValue(result.getOut_trade_no());
+
+                    OrderAttribute total_fee = new OrderAttributeImpl();
+                    total_fee.setName("total_fee");
+                    total_fee.setValue(result.getTotal_fee());
+
+                    OrderAttribute result_code = new OrderAttributeImpl();
+                    result_code.setName("result_code");
+                    result_code.setValue(result.getResult_code());
+
+                    OrderAttribute return_code = new OrderAttributeImpl();
+                    return_code.setName("return_code");
+                    return_code.setValue(result.getReturn_code());
+
                     OrderAttribute wxTimeEnd = new OrderAttributeImpl();
                     wxTimeEnd.setName("time_end");
                     wxTimeEnd.setValue(result.getTime_end());
-                    wxTimeEnd.setOrder(order);
+
 
                     wxTransactionId.setOrder(order);
+                    openid.setOrder(order);
+                    mch_id.setOrder(order);
+                    out_trade_no.setOrder(order);
+                    total_fee.setOrder(order);
+                    result_code.setOrder(order);
+                    return_code.setOrder(order);
+                    wxTimeEnd.setOrder(order);
+
                     Map<String, OrderAttribute> orderAttributes = order.getOrderAttributes();
                     orderAttributes.put("transaction_id", wxTransactionId);
+                    orderAttributes.put("openid", openid);
+                    orderAttributes.put("mch_id", mch_id);
+                    orderAttributes.put("out_trade_no", out_trade_no);
+
+                    orderAttributes.put("total_fee", total_fee);
+                    orderAttributes.put("result_code", result_code);
+                    orderAttributes.put("return_code", return_code);
                     orderAttributes.put("time_end", wxTimeEnd);
                     order.setOrderAttributes(orderAttributes);
+
                     orderService.save(order, false);
                 }
                 retXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"

@@ -53,14 +53,14 @@ public class CustomerWrapper implements Serializable {
      */
 
     public String getTitle() {
-        String title = "穷屌丝";
+        String title = "帅到没朋友";
         int size = followers.size();
-        if (size >= 10) {
-            title = "人气王";
-        } else if (size >= 5) {
-            title = "人气有点旺";
+        if (size >= 5) {
+            title = "老司机的小船妥妥的";
         } else if (size >= 3) {
-            title = "人气一般";
+            title = "五湖四海皆兄弟";
+        } else if (size >= 1) {
+            title = "都是真朋友";
         }
         return title;
     }

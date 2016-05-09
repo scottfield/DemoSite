@@ -1,0 +1,21 @@
+{
+  "transaction_id": "4002962001201605095667031094",
+  "nonce_str": "lNJy3a1aTPzCiEIo",
+  "trade_state": "SUCCESS",
+  "bank_type": "CFT",
+  "openid": "o1Py0t-aZpwjvJ3kRniiH7ujvvf0",
+  "sign": "BA488581D055C720616F8C6B115E0214",
+  "return_msg": "OK",
+  "fee_type": "CNY",
+  "mch_id": "1282294601",
+  "cash_fee": "390",
+  "out_trade_no": "201605091354266994659",
+  "appid": "wx937fba8914a5d9a9",
+  "total_fee": "390",
+  "trade_type": "JSAPI",
+  "result_code": "SUCCESS",
+  "attach": "",
+  "time_end": "20160509135433",
+  "is_subscribe": "Y",
+  "return_code": "SUCCESS"
+}

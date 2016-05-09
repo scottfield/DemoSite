@@ -20,7 +20,7 @@ public class Configure {
     public static Map<String, ShopAccount> accountMap = new HashMap<>();
     //mock data
     static {
-       /* //三元里
+        /*//三元里
         ShopAccount sanyuanli = new ShopAccountImpl();
         sanyuanli.setMchid("10010514");
         sanyuanli.setKey("xVVm9pGXwwJpAQWkhJDszfi46wtBX1EQ");
@@ -33,7 +33,15 @@ public class Configure {
         chaozhou.setKey("A534585E7E4B969A516B0F29B8281410");
         chaozhou.setAppsecret("1974155fda854243a2a4b08c2928bf92");
         chaozhou.setAppid("wx937fba8914a5d9a9");
-        accountMap.put("1281842701", chaozhou);*/
+        accountMap.put("1281842701", chaozhou);
+        //天山
+        ShopAccount tianshan = new ShopAccountImpl();
+        tianshan.setMchid("1282294601");
+        tianshan.setKey("BF544FA7E4F635FB27FB0770E838104F");
+        tianshan.setAppsecret("1974155fda854243a2a4b08c2928bf92");
+        tianshan.setAppid("wx937fba8914a5d9a9");
+        accountMap.put("1282294601", tianshan);*/
+
 
     }
 
@@ -140,8 +148,7 @@ public class Configure {
         return appSecret;
     }
 
-    public static String getMchid() {
-        return mchID;
+    public static String getMchid() {        return mchID;
     }
 
     public static String getSubMchid() {
