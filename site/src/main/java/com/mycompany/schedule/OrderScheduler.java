@@ -23,7 +23,7 @@ public class OrderScheduler {
     @Resource
     private CustomOrderService orderService;
 
-    @Scheduled(fixedDelay = 1 * 60 * 1000, initialDelay = 60 * 1000)
+    @Scheduled(fixedDelay = 30 * 60 * 1000, initialDelay = 60 * 1000)
     public void updateOrder() {
 //        LOG.debug("-----取消过期订单定时任务开始------");
         List<Order> expiredOrder = orderService.findExpiredOrder(15 * 60 * 1000L);
