@@ -2,6 +2,7 @@ package com.mycompany.service;
 
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.service.OrderService;
+import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.workflow.WorkflowException;
 
 import java.util.Date;
@@ -23,4 +24,11 @@ public interface CustomOrderService extends OrderService {
      * @return
      */
     List<Order> findExpiredOrder(Long interval);
+
+    /**
+     * 根据根据订单状态查询订单
+     * @param status
+     * @return
+     */
+    List<Order> findOrderByStatus(OrderStatus status);
 }

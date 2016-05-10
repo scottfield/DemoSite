@@ -94,8 +94,8 @@ public class LoginController extends BroadleafLoginController {
             e.printStackTrace();
         }
         String queryStr = "app_key=" + WeiXinConstants.APP_KEY + "&ret_uri=" + encodedUrl;
-        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
-//        return "redirect:/?openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo";//jackie
+//        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
+        return "redirect:/?openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo";//jackie
 //        return "redirect:/?openid=o1Py0twT_6kpQRqIX4rJiQD_fjvQ";//布矮矮
     }
 

@@ -4,7 +4,8 @@ package com.mycompany.sample.payment.weixin.service;
  * Created by jackie on 5/8/2016.
  */
 public class WxCallBackData {
-
+    public static final String SUCCESS="SUCCESS";
+    public static final String NOTPAY="NOTPAY";
     private String transaction_id;
     private String nonce_str;
     private String bank_type;
@@ -21,6 +22,7 @@ public class WxCallBackData {
     private String time_end;
     private String is_subscribe;
     private String return_code;
+    private String trade_state;
 
     public String getTransaction_id() {
         return transaction_id;
@@ -150,6 +152,14 @@ public class WxCallBackData {
         this.return_code = return_code;
     }
 
+    public String getTrade_state() {
+        return trade_state;
+    }
+
+    public void setTrade_state(String trade_state) {
+        this.trade_state = trade_state;
+    }
+
     @Override
     public String toString() {
         return "WxCallBackData{" +
@@ -169,6 +179,7 @@ public class WxCallBackData {
                 ", time_end='" + time_end + '\'' +
                 ", is_subscribe='" + is_subscribe + '\'' +
                 ", return_code='" + return_code + '\'' +
+                ", trade_state='" + trade_state + '\'' +
                 '}';
     }
 }

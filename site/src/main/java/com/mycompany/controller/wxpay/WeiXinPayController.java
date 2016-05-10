@@ -8,11 +8,14 @@ import com.mycompany.sample.core.catalog.domain.ShopAccount;
 import com.mycompany.sample.payment.weixin.common.Configure;
 import com.mycompany.sample.payment.weixin.common.JsonUtil;
 import com.mycompany.sample.payment.weixin.common.XMLParser;
+import com.mycompany.sample.payment.weixin.protocol.QueryOrderReqData;
 import com.mycompany.sample.payment.weixin.protocol.UnifiedOrderReqData;
 import com.mycompany.sample.payment.weixin.service.WxCallBackData;
 import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.sample.util.CommonUtils;
 import com.mycompany.sample.util.JsonHelper;
+import com.mycompany.sample.util.JsonResponse;
+import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -32,6 +35,7 @@ import org.springframework.expression.spel.ast.OpOr;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.SAXException;
 import sun.util.resources.cldr.ebu.CurrencyNames_ebu;
@@ -49,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by jackie on 4/26/2016.
@@ -275,5 +280,65 @@ public class WeiXinPayController {
             LOG.error("支付失败,还原订单状态出错", e);
         }
         return retView;
+    }
+
+    @RequestMapping("/bill")
+    @ResponseBody
+    public Object getWxPayBack(@RequestParam String orderNumber) {
+        Order order = orderService.findOrderByOrderNumber(orderNumber);
+        if (Objects.isNull(order) && !(order instanceof CustomOrder)) {
+            return JsonResponse.response("订单(" + orderNumber + ")异常");
+        }
+        CustomOrder customOrder = (CustomOrder) order;
+        Shop shop = customOrder.getAddress().getShop();
+        String appid = shop.getAppId();
+        String mch_id = shop.getMchid();
+        QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(appid).setMch_id(mch_id).setOut_trade_no(orderNumber).build();
+        Map<String, Object> result = null;
+        try {
+            result = WxPayApi.queryOrder(reqData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping("/errorOrders")
+    @ResponseBody
+    public Object findErrorOrders() {
+        CustomOrderService customOrderService = (CustomOrderService) orderService;
+        List<Order> cancelledOrders = customOrderService.findOrderByStatus(OrderStatus.CANCELLED);
+        if (Objects.isNull(cancelledOrders) || cancelledOrders.isEmpty()) {
+            return JsonResponse.response("没有取消的订单");
+        }
+        List<Order> errorOrderList = cancelledOrders.parallelStream().filter(order -> {
+            Map<String, OrderAttribute> orderAttributes = order.getOrderAttributes();
+            if (Objects.nonNull(orderAttributes) && orderAttributes.containsKey("transaction_id")) {
+                return true;
+            }
+            String orderNumber = order.getOrderNumber();
+            CustomOrder customOrder = (CustomOrder) order;
+            Shop shop = customOrder.getAddress().getShop();
+            QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(orderNumber).build();
+            try {
+                Map<String, Object> result = WxPayApi.queryOrder(reqData);
+                WxCallBackData callBackData = JsonUtil.fromJson(JsonHelper.toJsonStr(result), WxCallBackData.class);
+                if ("SUCCESS".equals(callBackData.getTrade_state())) {
+                    return true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }).collect(Collectors.toList());
+        return errorOrderList;
     }
 }

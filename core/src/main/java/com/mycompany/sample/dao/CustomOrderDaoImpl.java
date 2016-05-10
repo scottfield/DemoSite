@@ -24,4 +24,11 @@ public class CustomOrderDaoImpl extends OrderDaoImpl implements CustomOrderDao {
         List orders = query.getResultList();
         return orders;
     }
+
+    @Override
+    public List<Order> findOrderByStatus(OrderStatus status) {
+        Query query = em.createQuery("select order from org.broadleafcommerce.core.order.domain.Order order where order.status=:status");
+        query.setParameter("status", OrderStatus.CANCELLED.getType());
+        return query.getResultList();
+    }
 }

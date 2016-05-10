@@ -49,13 +49,21 @@ public class CouponController {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2016);
         calendar.set(Calendar.MONTH, Calendar.MAY);
-        calendar.set(Calendar.DAY_OF_MONTH, 20);
+        calendar.set(Calendar.DAY_OF_MONTH, 9);
+        //线上开始时间
         onlineExhangeStartDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, 20);
+        //线下开始时间
         offlineExhangeStartDate = calendar.getTime();
+
         calendar.set(Calendar.DAY_OF_MONTH, 23);
+        //线上结束时间
         onlineExhangeEndDate = calendar.getTime();
+
         calendar.set(Calendar.MONTH, Calendar.JUNE);
         calendar.set(Calendar.DAY_OF_MONTH, 2);
+        //线下结束时间
         offlineExhangeEndDate = calendar.getTime();
     }
 

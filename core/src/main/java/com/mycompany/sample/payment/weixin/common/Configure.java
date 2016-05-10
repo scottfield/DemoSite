@@ -20,7 +20,7 @@ public class Configure {
     public static Map<String, ShopAccount> accountMap = new HashMap<>();
     //mock data
     static {
-        /*//三元里
+        //三元里
         ShopAccount sanyuanli = new ShopAccountImpl();
         sanyuanli.setMchid("10010514");
         sanyuanli.setKey("xVVm9pGXwwJpAQWkhJDszfi46wtBX1EQ");
@@ -40,7 +40,36 @@ public class Configure {
         tianshan.setKey("BF544FA7E4F635FB27FB0770E838104F");
         tianshan.setAppsecret("1974155fda854243a2a4b08c2928bf92");
         tianshan.setAppid("wx937fba8914a5d9a9");
-        accountMap.put("1282294601", tianshan);*/
+        accountMap.put("1282294601", tianshan);
+        //揭阳
+        ShopAccount jieyang = new ShopAccountImpl();
+        jieyang.setMchid("1281813501");
+        jieyang.setKey("B5B742BCBE7FD36B4A49F2C2C779D283");
+        jieyang.setAppsecret("1974155fda854243a2a4b08c2928bf92");
+        jieyang.setAppid("wx937fba8914a5d9a9");
+        accountMap.put("1281813501", jieyang);
+        //中信店
+        ShopAccount zhongxin = new ShopAccountImpl();
+        zhongxin.setMchid("1282217901");
+        zhongxin.setKey("864CF9E6E0EF325F3C7FC52A7F27A73A");
+        zhongxin.setAppsecret("1974155fda854243a2a4b08c2928bf92");
+        zhongxin.setAppid("wx937fba8914a5d9a9");
+        accountMap.put("1282217901", zhongxin);
+        //怡丰城店
+        ShopAccount yifeng = new ShopAccountImpl();
+        yifeng.setMchid("1282278301");
+        yifeng.setKey("8145A32DA48DB24FFDE9BAB17164E8DD");
+        yifeng.setAppsecret("1974155fda854243a2a4b08c2928bf92");
+        yifeng.setAppid("wx937fba8914a5d9a9");
+        accountMap.put("1282278301", yifeng);
+        //金平
+        ShopAccount jinping = new ShopAccountImpl();
+        jinping.setMchid("1281874701");
+        jinping.setKey("F85D211FB0FE8CA8464EDC046C995D57");
+        jinping.setAppsecret("1974155fda854243a2a4b08c2928bf92");
+        jinping.setAppid("wx937fba8914a5d9a9");
+        accountMap.put("1281874701", jinping);
+
 
 
     }

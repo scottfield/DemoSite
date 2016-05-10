@@ -1,6 +1,5 @@
 package com.mycompany.schedule;
 
-import com.mycompany.sample.util.CommonUtils;
 import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 /**
  * Created by jackie on 5/2/2016.
@@ -24,7 +22,7 @@ public class OrderScheduler {
     private CustomOrderService orderService;
 
     @Scheduled(fixedDelay = 30 * 60 * 1000, initialDelay = 60 * 1000)
-    public void updateOrder() {
+    public void cancelOrder() {
 //        LOG.debug("-----取消过期订单定时任务开始------");
         List<Order> expiredOrder = orderService.findExpiredOrder(15 * 60 * 1000L);
         if (Objects.isNull(expiredOrder) || expiredOrder.size() == 0) {

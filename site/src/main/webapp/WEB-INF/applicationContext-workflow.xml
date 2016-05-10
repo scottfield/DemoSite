@@ -37,10 +37,12 @@
     <bean id="decrementProductSalesActivity" class="com.mycompany.worklow.checkout.DecrementProductSalesActivity"/>
     <bean id="incrementInventoryActivity" class="com.mycompany.worklow.checkout.IncrementInventoryActivity"/>
     <bean id="cancelOrderProcessContext" class="com.mycompany.worklow.cancelOrder.CancelOrderProcessContextFactory"/>
+    <bean id="checkWxOrderStatusActivity" class="com.mycompany.worklow.cancelOrder.CheckWxOrderStatusActivity"/>
     <bean id="cancelOrderWorkflow" class="org.broadleafcommerce.core.workflow.SequenceProcessor">
         <property name="processContextFactory" ref="cancelOrderProcessContext"/>
         <property name="activities">
             <list>
+                <ref bean="checkWxOrderStatusActivity"/>
                 <ref bean="decrementProductSalesActivity"/>
                 <ref bean="incrementInventoryActivity"/>
             </list>

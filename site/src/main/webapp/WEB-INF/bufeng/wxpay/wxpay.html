@@ -45,8 +45,17 @@
                 unlockOrder();
                 return;
             }
+
             alert("支付成功");
-            showOrderHistory();
+            checkOrderStatus().done(function () {
+                showOrderHistory();
+            });
+            function checkOrderStatus() {
+                var url = $("body").data("confirmurl");
+                var orderId = $("body").data("orderid");
+                return $.get(url + "?orderId=" + orderId);
+            }
+
             function showOrderHistory() {
                 var csrfToken = $("body").data("token");
                 var issueCouponUrl = $("body").data("issue-coupon-url");

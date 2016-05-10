@@ -18,7 +18,9 @@ package com.mycompany.controller.account;
 
 import com.mycompany.sample.core.catalog.domain.CustomOrder;
 import com.mycompany.sample.core.catalog.domain.Shop;
+import com.mycompany.sample.payment.weixin.common.JsonUtil;
 import com.mycompany.sample.payment.weixin.protocol.QueryOrderReqData;
+import com.mycompany.sample.payment.weixin.service.WxCallBackData;
 import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.sample.util.JsonHelper;
 import com.mycompany.sample.util.JsonResponse;
@@ -35,10 +37,7 @@ import org.broadleafcommerce.core.workflow.WorkflowException;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Resource;
@@ -86,26 +85,63 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
     public String viewOrderHistory(HttpServletRequest request, Model model) {
         List<Order> orders = customOrderService.findOrdersForCustomer(CustomerState.getCustomer());
         orders = orders.stream().filter(order -> order.getStatus() != OrderStatus.IN_PROCESS).collect(Collectors.toList());
-        orders.stream().forEach(order -> {
-            /**
-             * 取消过期订单
-             */
-            Date submitDate = new Date(order.getSubmitDate().getTime() + MAX_ORDER_INTERVAL);
-            Date now = new Date();
-            if (order.getStatus().equals(UNPAID) && submitDate.before(now)) {
-                try {
-                    customOrderService.customCancelOrder(order.getId());
-                } catch (WorkflowException e) {
-                    LOG.warn("自动取消订单失败,订单号：" + order.getId());
-                }
-            }
-        });
+        orders.stream().forEach(order -> cancelExpiredOrder(order));
         orders.sort((o1, o2) -> o2.getSubmitDate().compareTo(o1.getSubmitDate()));
         model.addAttribute("orders", orders);
         model.addAttribute("now", new Date());
         model.addAttribute("couponValue", request.getParameter("couponValue"));
         model.addAttribute("showCoupon", "true".equals(request.getParameter("showCoupon")));
         return getOrderHistoryView();
+    }
+
+    private void cancelExpiredOrder(Order order) {
+        Date submitDate = new Date(order.getSubmitDate().getTime() + MAX_ORDER_INTERVAL);
+        Date now = new Date();
+        //检测订单是否为未付款并且超时的订单
+        if ((!order.getStatus().equals(UNPAID)) || (!submitDate.before(now))) {
+            return;
+        }
+
+        CustomOrder customOrder = (CustomOrder) order;
+        //检测订单是否已通过微信回调函数写入返回结果
+        Map<String, OrderAttribute> orderAttributes = customOrder.getOrderAttributes();
+        if (Objects.nonNull(orderAttributes) && orderAttributes.containsKey("result_code") && WxCallBackData.SUCCESS.equals(orderAttributes.get("result_code").getValue())) {
+            order.setStatus(PAID);
+            try {
+                orderService.save(order, false);
+            } catch (PricingException e) {
+                LOG.error("更新订单失败", e);
+            }
+            return;
+        }
+        //调用微信查询订单接口查询订单状态
+        Shop shop = customOrder.getAddress().getShop();
+        QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(customOrder.getOrderNumber()).build();
+        try {
+            Map<String, Object> result = WxPayApi.queryOrder(reqData);
+            WxCallBackData callBackData = JsonUtil.fromJson(JsonHelper.toJsonStr(result), WxCallBackData.class);
+            if (WxCallBackData.SUCCESS.equals(callBackData.getTrade_state())) {
+                order.setStatus(PAID);
+                try {
+                    orderService.save(order, false);
+                } catch (PricingException e) {
+                    LOG.error("更新订单失败", e);
+                }
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+//        取消过期订单
+        try {
+            customOrderService.customCancelOrder(order.getId());
+        } catch (WorkflowException e) {
+            LOG.warn("自动取消订单失败,订单号：" + order.getId());
+        }
     }
 
     /**
@@ -116,54 +152,36 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
      */
     @RequestMapping("/confirm")
     @ResponseBody
-    public Object confirmOrder(long orderId) {
+    public Object confirmOrder(@RequestParam Long orderId) {
         JsonResponse result = JsonResponse.response("更新订单成功.");
-        /*Order order = orderService.findOrderById(orderId);
+        Order order = orderService.findOrderById(orderId);
         if (Objects.isNull(order)) {
             LOG.info("订单号：" + orderId + "不存在.");
             result.setMessage("更新订单失败，订单号:" + orderId + " 不存在");
             result.setCode(JsonResponse.FAIL_CODE);
             return result;
         }
-
-
         try {
             //调用微信支付订单查询接口确认订单状态
-            if (order instanceof CustomOrder) {
-                CustomOrder customOrder = (CustomOrder) order;
-                Shop shop = customOrder.getAddress().getShop();
-                String appid = shop.getAppId();
-                String mch_id = shop.getMchid();
-                String out_trade_no = order.getOrderNumber();
-                QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(appid).setMch_id(mch_id).setOut_trade_no(out_trade_no).build();
-                Map<String, Object> queryOrderResult = WxPayApi.queryOrder(reqData);
-                if (!"SUCCESS".equals(queryOrderResult.get("trade_state"))) {
-                    result.setCode(JsonResponse.FAIL_CODE);
-                    result.setMessage("微信订单支付失败！");
-                    LOG.warn(JsonHelper.toJsonStr(queryOrderResult));
-                    return result;
-                } else {
-                }
+            CustomOrder customOrder = (CustomOrder) order;
+            Shop shop = customOrder.getAddress().getShop();
+            QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(order.getOrderNumber()).build();
+            Map<String, Object> queryOrderResult = WxPayApi.queryOrder(reqData);
+//            queryOrderResult.put("trade_state", "SUCCESS");
+            if (WxCallBackData.SUCCESS.equals(queryOrderResult.get("trade_state"))) {
+                order.setStatus(PAID);
+                orderService.save(order, false);
+                return result;
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
-        }
-        if (UNPAID.equals(order.getStatus())) {
-            order.setStatus(PAID);
-        }
-        try {
-            orderService.save(order, false);
-            LOG.info("更新订单(单号:" + orderId + ")成功.");
         } catch (PricingException e) {
-            LOG.error("更新订单(单号:" + orderId + ")失败", e);
-            result.setMessage("更新订单成功.");
-            result.setCode(JsonResponse.FAIL_CODE);
-        }*/
+            e.printStackTrace();
+        }
         return result;
     }
 
