@@ -129,4 +129,16 @@ SELECT * FROM blc_order bo WHERE bo.ORDER_STATUS='PAID'AND bo.DATE_UPDATED BETWE
 SELECT * FROM blc_order bo LEFT JOIN blc_order_attribute boa on bo.ORDER_ID=boa.ORDER_ID WHERE boa.NAME='result_code' AND boa.VALUE='SUCCESS'and bo.ORDER_STATUS<>'PAID' ORDER BY bo.DATE_UPDATED DESC ;
 SELECT * FROM blc_order WHERE ORDER_NUMBER='201605100623026225204';
 SELECT fivecard_id from customer_fivecard_xref cfx GROUP BY fivecard_id HAVING count(fivecard_id)>1;
-SELECT * FROM customer_fivecard_xref WHERE fivecard_id IN (SELECT fivecard_id from customer_fivecard_xref cfx GROUP BY fivecard_id HAVING count(fivecard_id)>1) ORDER BY fivecard_id ASC ;
+SELECT * FROM customer_fivecard_xref WHERE fivecard_id IN (SELECT fivecard_id from customer_fivecard_xref cfx GROUP BY fivecard_id HAVING count(fivecard_id)>1) ORDER BY fivecard_id ASC;
+/*查询五折卡数量是否一致*/
+SELECT count(*) from customer_fivecard_xref WHERE status=1;
+SELECT count(*) FROM fivecard WHERE card_status=1;
+/**/
+/*查询优惠券发放数量*/
+SELECT count(*) from customer_coupon_xref;
+SELECT 8000- coupon.coupon_amount FROM coupon WHERE coupon_id=1;
+/**/
+SELECT * FROM customer_fivecard_xref WHERE status=1 AND fivecard_id is NULL ;
+/*查看系统中匿名用户*/
+SELECT FIRST_NAME,USER_NAME from blc_customer WHERE USER_NAME IS NOT NULL AND FIRST_NAME IS NULL AND IS_REGISTERED=1;
+/**/

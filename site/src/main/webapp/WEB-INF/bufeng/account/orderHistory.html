@@ -69,7 +69,7 @@
         <span>[[${order.address.shop.name}]]</span>
         <spam th:text="'提货地址：'+${order.address.shop.address}"></spam>
     </div>
-    <div class="order-list-tips" th:if="${order.status.type eq 'UNPAID'}">只剩下[[${15-(now.time - order.submitDate.time)/60000}]]分钟,这个订单就要被取消了,快快付款带我回家吧</div>
+    <div class="order-list-tips" th:if="${order.status.type eq 'UNPAID'}">只剩下[[${(15-(now.time - order.submitDate.time)/60000)>0?(15-(now.time - order.submitDate.time)/60000):0}]]分钟,这个订单就要被取消了,快快付款带我回家吧</div>
     <div th:class="'affirm-sum-money'+${order.status.type eq 'CANCELLED'?' bg-gray':(order.status.type eq 'PAID'?' bg-order-success':'')}">
         <div class="sum-money">共[[${order.itemCount}]]件商品 合计:￥[[${order.total}]]</div>
         <!--<a th:href="@{'/account/orders/cancel/'+${order.id}}" th:if="${order.status.type eq 'UNPAID'}">取消订单</a>-->

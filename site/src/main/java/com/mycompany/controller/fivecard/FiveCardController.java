@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.support.ServletContextResource;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +29,6 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -92,11 +90,10 @@ public class FiveCardController {
     /**
      * 派发五折卡资格
      *
-     * @param request
      * @return
      */
     @RequestMapping(value = "/issue", method = RequestMethod.GET)
-    public String issueFiveCard(HttpServletRequest request, HttpSession session) {
+    public String issueFiveCard(HttpSession session) {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         String retView = "redirect:/fiveCard";
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
@@ -131,7 +128,7 @@ public class FiveCardController {
         cardXref.setCreateDate(CommonUtils.currentDate());
         //设置分享人
         if (Objects.nonNull(referrer)) {
-            Customer referrerCustomer = customerService.readCustomerById((Long) referrer);
+            Customer referrerCustomer = customerService.readCustomerById(referrer);
             cardXref.setReferer(referrerCustomer);
             retView = retView + "?referrerPage=true";
         }
@@ -159,7 +156,7 @@ public class FiveCardController {
         //判断是否已经领取五折卡
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
-        //还未领取五折卡,跳转到首页进行领取
+        //还未领取五折卡资格,跳转到首页进行领取
         if (Objects.isNull(cardXref)) {
             return "redirect:/index";
         }
@@ -197,8 +194,12 @@ public class FiveCardController {
             }
         }
         //符合激活条件,激活相应类型的五折卡
-        bindFiveCard(customer);
-        generateFiveCardImage(customer, request);
+        boolean bindSuccess = bindFiveCard(customer);
+        //卡已经发完了
+        if (!bindSuccess) {
+            return "redirect:/fiveCard?cardUnavailable?=true";
+        }
+        generateFiveCardImage(customer);
         //B卡激活后添加提示参数，方便前端显示对话框
         if (FiveCard.CARD_TYPE_B.equals(cardXref.getType())) {
             return "redirect:/fiveCard?showFiveCardActivatedWindow=true";
@@ -224,7 +225,7 @@ public class FiveCardController {
         return customerAddress;
     }
 
-    private void generateFiveCardImage(CustomCustomer customer, HttpServletRequest request) {
+    private void generateFiveCardImage(CustomCustomer customer) {
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
         String cardNo = fiveCardXref.getFiveCard().getNo();
         org.springframework.core.io.Resource resourceFile = new FileSystemResource(resourceFileLocation + "fivecard_backgroud.png");
@@ -264,15 +265,20 @@ public class FiveCardController {
      *
      * @param customer
      */
-    private void bindFiveCard(CustomCustomer customer) {
+    private synchronized boolean bindFiveCard(CustomCustomer customer) {
         CustomerFiveCardXref cardXref = customer.getFiveCardXref();
         FiveCard fiveCard = fiveCardService.readByStatusAndType(false, cardXref.getType());
+        //卡发完了
+        if (Objects.isNull(fiveCard)) {
+            return false;
+        }
         //关联用户与五折卡
         fiveCard.setStatus(FiveCard.CARD_STATUS_ACTIVE);
         cardXref.setFiveCard(fiveCard);
         cardXref.setStatus(FiveCard.CARD_STATUS_ACTIVE);
         cardXref.setActiveDate(CommonUtils.currentDate());
         customerService.saveCustomer(customer);
+        return true;
     }
 
     /**
@@ -317,11 +323,8 @@ public class FiveCardController {
     private List<CustomerWrapper> getFollowers(CustomCustomer customer) {
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
         List<CustomerFiveCardXref> sharedCardXrefs = fiveCardXref.getSharedCardXrefs();
-        if (Objects.nonNull(fiveCardXref)) {
-            return sharedCardXrefs.stream().map(sharedCardXref -> (CustomCustomer) sharedCardXref.getCustomer()).
-                    map(this::getCustomerWrapper).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        return sharedCardXrefs.stream().map(sharedCardXref -> (CustomCustomer) sharedCardXref.getCustomer()).
+                map(this::getCustomerWrapper).collect(Collectors.toList());
     }
 
     private CustomerWrapper getCustomerWrapper(CustomCustomer customCustomer) {
