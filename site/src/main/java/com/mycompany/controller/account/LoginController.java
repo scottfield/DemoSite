@@ -94,8 +94,8 @@ public class LoginController extends BroadleafLoginController {
             e.printStackTrace();
         }
         String queryStr = "app_key=" + WeiXinConstants.APP_KEY + "&ret_uri=" + encodedUrl;
-//        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
-        return "redirect:/?openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo";//jackie
+        return "redirect:http://weixin.cplotus.com/weixin/trans_auth.ashx?" + queryStr;
+//        return "redirect:/?openid=o1Py0t3vkkFR6LCNxLTDcb5CTkA4";//jackie
 //        return "redirect:/?openid=o1Py0twT_6kpQRqIX4rJiQD_fjvQ";//布矮矮
     }
 
@@ -134,6 +134,11 @@ public class LoginController extends BroadleafLoginController {
     private void updateCustomer(Customer customer, Map<String, Object> userInfo) {
         Map<String, CustomerAttribute> newCustomerAttributes = extractCustomerAttributes(userInfo);
         Map<String, CustomerAttribute> oldCustomerAttributes = customer.getCustomerAttributes();
+        if (Objects.nonNull(newCustomerAttributes) && newCustomerAttributes.containsKey("nickname")) {
+            CustomerAttribute nickname = newCustomerAttributes.get("nickname");
+            String nicknameValue = nickname.getValue();
+            customer.setFirstName(nicknameValue);
+        }
         for (String key : oldCustomerAttributes.keySet()) {
             CustomerAttribute newAttribute = newCustomerAttributes.get(key);
             CustomerAttribute oldAttribute = oldCustomerAttributes.get(key);
