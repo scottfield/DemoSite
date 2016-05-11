@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
-import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafOrderHistoryController;
@@ -97,8 +96,8 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
     private void cancelExpiredOrder(Order order) {
         Date submitDate = new Date(order.getSubmitDate().getTime() + MAX_ORDER_INTERVAL);
         Date now = new Date();
-        //检测订单是否为未付款并且超时的订单
-        if ((!order.getStatus().equals(UNPAID)) || (!submitDate.before(now))) {
+        //检测订单是否为未付款,或支付中,或超时的订单
+        if ((!order.getStatus().equals(UNPAID)) || (!order.getStatus().equals(PAYING)) || (!submitDate.before(now))) {
             return;
         }
 
