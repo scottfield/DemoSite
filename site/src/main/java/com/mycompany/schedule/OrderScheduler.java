@@ -66,7 +66,7 @@ public class OrderScheduler {
                 if (WxCallBackData.SUCCESS.equals(result.get("trade_state"))) {
                     order.setStatus(OrderStatus.getInstance("PAID"));
                 } else if (order.getSubmitDate().before(now)) {
-                    order.setStatus(OrderStatus.CANCELLED);
+//                    order.setStatus(OrderStatus.CANCELLED);
                 } else {
                     order.setStatus(OrderStatus.getInstance("UNPAID"));
                 }
