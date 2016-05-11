@@ -18,7 +18,7 @@
     <div class="container">
 		<div class="left">
 		</div>
-		
+
 		<div class="center">我的订单</div>
 		<div class="right"></div>
 	</div>
@@ -43,6 +43,7 @@
     <div th:class="'myorder-tt'+${order.status.type eq 'CANCELLED'?' bg-gray':(order.status.type eq 'PAID'?' bg-order-success':'')}">
         <span class="fl"><em></em>[[${order.orderNumber}]]</span>
         <span class="fr" th:if="${order.status.type eq 'UNPAID'}" th:text="待支付"></span>
+        <span class="fr" th:if="${order.status.type eq 'PAYING'}" th:text="订单处理中..."></span>
         <span class="fr" th:if="${order.status.type eq 'PAID'}"></span>
         <span class="fr" th:if="${order.status.type eq 'CONSUMED'}"></span>
         <span class="fr" th:if="${order.status.type eq 'CANCELLED'}"></span>
