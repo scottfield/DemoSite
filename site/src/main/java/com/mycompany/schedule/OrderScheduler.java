@@ -2,6 +2,7 @@ package com.mycompany.schedule;
 
 import com.mycompany.sample.core.catalog.domain.Shop;
 import com.mycompany.sample.payment.weixin.protocol.QueryOrderReqData;
+import com.mycompany.sample.payment.weixin.service.WxCallBackData;
 import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
@@ -17,9 +18,7 @@ import org.xml.sax.SAXException;
 import javax.annotation.Resource;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by jackie on 5/2/2016.
@@ -49,24 +48,30 @@ public class OrderScheduler {
 //        LOG.info("-----取消过期订单定时任务结束------");
     }
 
-    @Scheduled(fixedDelay = 60*60 * 1000, initialDelay = 60 * 1000)
+    @Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 60 * 1000)
     public void updateOrderStatus() {
         List cancelledOrders = orderService.findOrderByStatus(OrderStatus.getInstance("PAYING"));
         for (Object cancelledOrder : cancelledOrders) {
             Object[] arr = (Object[]) cancelledOrder;
             String orderNumber = arr[1].toString();
             Shop shop = (Shop) arr[2];
-            String status = (String) arr[3];
             QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(orderNumber).build();
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MINUTE, -15);
+            Date now = calendar.getTime();
             try {
                 Map<String, Object> result = WxPayApi.queryOrder(reqData);
-                if ("SUCCESS".equals(result.get("trade_state")) && !status.equals("PAID")) {
-                    Order order = orderService.findOrderByOrderNumber(orderNumber);
+                Order order = orderService.findOrderByOrderNumber(orderNumber);
+                LOG.warn("自动更新订单状态为已支付开始,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
+                if (WxCallBackData.SUCCESS.equals(result.get("trade_state"))) {
                     order.setStatus(OrderStatus.getInstance("PAID"));
-                    LOG.warn("自动更新订单状态为已支付开始,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
-                    orderService.save(order, false);
-                    LOG.warn("自动更新订单状态为已支付结束,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
+                } else if (order.getSubmitDate().before(now)) {
+                    order.setStatus(OrderStatus.CANCELLED);
+                } else {
+                    order.setStatus(OrderStatus.getInstance("UNPAID"));
                 }
+                orderService.save(order, false);
+                LOG.warn("自动更新订单状态为已支付结束,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (SAXException e) {
