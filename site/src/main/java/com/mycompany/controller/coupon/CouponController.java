@@ -72,7 +72,7 @@ public class CouponController {
      *
      * @return
      */
-    @RequestMapping(value = "/issue/online", method = RequestMethod.POST)
+    @RequestMapping(value = "/issue/online", method = RequestMethod.GET)
     @ResponseBody
     public Object issueOnlineCoupon() {
         JsonResponse result = JsonResponse.response("发放优惠券成功.");
