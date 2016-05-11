@@ -12,8 +12,6 @@ import org.broadleafcommerce.core.workflow.Processor;
 import org.broadleafcommerce.core.workflow.WorkflowException;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -30,7 +28,6 @@ public class CustomOrderServiceImpl extends OrderServiceImpl implements CustomOr
     @Override
     @Transactional(value = TransactionUtils.DEFAULT_TRANSACTION_MANAGER)
     public void customCancelOrder(Long orderId) throws WorkflowException {
-        LOG.info("取消订单[订单ID:" + orderId + "]");
         TransactionStatus status = TransactionUtils.createTransaction("customCancelOrder",
                 TransactionDefinition.PROPAGATION_REQUIRED, transactionManager);
         try {

@@ -98,6 +98,7 @@ public class CheckoutController extends BroadleafCheckoutController {
                            @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
                            RedirectAttributes redirectAttributes) {
         CustomOrder cart = (CustomOrder) CartState.getCart();
+        LOG.warn("开始提交订单,订单ID:" + cart.getId() + ",订单状态:" + cart.getStatus().getType());
         try {
             CustomCustomer customer = (CustomCustomer) cart.getCustomer();
             CustomAddress pickupAddress = customer.getPickupAddress();
@@ -106,6 +107,7 @@ public class CheckoutController extends BroadleafCheckoutController {
                 model.addAttribute("errorMsg", "请完善收货地址");
                 return checkoutView;
             }
+            LOG.warn("开保存收货地址信息");
             //创建订单收货地址
             CustomAddress orderAddress = new CustomAddressImpl();
             orderAddress.setAddressLine1("default");
@@ -125,9 +127,10 @@ public class CheckoutController extends BroadleafCheckoutController {
             phone.setPhoneNumber(phonePrimary.getPhoneNumber());
             orderAddress.setPhonePrimary(phone);
             orderAddress = (CustomAddress) addressService.saveAddress(orderAddress);
-
+            LOG.warn("收货地址信息保存完毕");
             cart.setAddress(orderAddress);
             checkoutService.performCheckout(cart);
+            LOG.warn("提交订单成功,订单号:" + cart.getOrderNumber() + ",订单状态:" + cart.getStatus().getType());
         } catch (CheckoutException e) {
             LOG.error("下单失败", e);
             model.addAttribute("errorMsg", "下单失败!");

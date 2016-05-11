@@ -1,6 +1,5 @@
 package com.mycompany.sample.dao;
 
-import com.mycompany.sample.core.catalog.domain.CustomOrder;
 import org.broadleafcommerce.core.order.dao.OrderDaoImpl;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
@@ -27,8 +26,8 @@ public class CustomOrderDaoImpl extends OrderDaoImpl implements CustomOrderDao {
 
     @Override
     public List<Order> findOrderByStatus(OrderStatus status) {
-        Query query = em.createQuery("select order from org.broadleafcommerce.core.order.domain.Order order where order.status=:status");
-        query.setParameter("status", OrderStatus.CANCELLED.getType());
+        Query query = em.createQuery("select order.id,order.orderNumber,order.address.shop,order.status from org.broadleafcommerce.core.order.domain.Order order where order.status=:status");
+        query.setParameter("status", status.getType());
         return query.getResultList();
     }
 }

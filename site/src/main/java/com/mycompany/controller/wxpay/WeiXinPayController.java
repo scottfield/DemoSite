@@ -1,24 +1,19 @@
 package com.mycompany.controller.wxpay;
 
 import com.mycompany.controller.account.OrderHistoryController;
-import com.mycompany.sample.core.catalog.domain.CustomCustomer;
 import com.mycompany.sample.core.catalog.domain.CustomOrder;
 import com.mycompany.sample.core.catalog.domain.Shop;
 import com.mycompany.sample.core.catalog.domain.ShopAccount;
 import com.mycompany.sample.payment.weixin.common.Configure;
-import com.mycompany.sample.payment.weixin.common.JsonUtil;
 import com.mycompany.sample.payment.weixin.common.XMLParser;
 import com.mycompany.sample.payment.weixin.protocol.QueryOrderReqData;
 import com.mycompany.sample.payment.weixin.protocol.UnifiedOrderReqData;
 import com.mycompany.sample.payment.weixin.service.WxCallBackData;
 import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.sample.util.CommonUtils;
-import com.mycompany.sample.util.JsonHelper;
 import com.mycompany.sample.util.JsonResponse;
-import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
@@ -27,18 +22,12 @@ import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import org.springframework.expression.spel.ast.OpOr;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.SAXException;
-import sun.util.resources.cldr.ebu.CurrencyNames_ebu;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -46,14 +35,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Created by jackie on 4/26/2016.
@@ -85,15 +71,12 @@ public class WeiXinPayController {
         if (Objects.isNull(shop)) {
             throw new RuntimeException("收货地址门店未填写");
         }
-        LOG.info("------------------开始处理支付订单--------------------");
+        LOG.warn("开始处理支付订单,单号:" + order.getOrderNumber() + ",当前订单状态:" + order.getStatus().getType() + "");
         ShopAccount shopAccount = shop.getShopAccount();
         String appid = shopAccount.getAppid();
-        LOG.info("appid==>" + appid);
         String mch_id = shopAccount.getMchid();
-        LOG.info("商户号==>" + appid);
         String body = order.getOrderNumber();
         String out_trade_no = order.getOrderNumber();
-        LOG.info("订单号==>" + appid);
         String spbill_create_ip = request.getRemoteAddr();
         String requestUrl = requestURL.toString();
         String notify_url = requestUrl.replaceAll("/pay", "") + "/notify";
@@ -102,14 +85,14 @@ public class WeiXinPayController {
         String openId = orderOwner.getUsername();
         BigDecimal value = order.getTotal().getAmount().multiply(new BigDecimal("100"));
         Integer total_fee = value.intValue();
-        LOG.info("订单总额==>" + total_fee);
+        LOG.warn("订单号:" + order.getOrderNumber() + ",订单总额:" + total_fee);
 //        Integer total_fee = 1;
         UnifiedOrderReqData reqData = new UnifiedOrderReqData.UnifiedOrderReqDataBuilder(appid, mch_id,
                 body, out_trade_no, total_fee, spbill_create_ip, notify_url, trade_type).setOpenid(openId).build();
         try {
-            LOG.info("----开始统一下单----");
+            LOG.warn("开始统一下单");
             Map<String, Object> result = WxPayApi.UnifiedOrder(reqData);
-            LOG.info("统一下单结果==>" + result.get("return_code"));
+            LOG.warn("统一下单结果:" + result.get("return_code"));
             request.setAttribute("result", result);
             if (!result.get("return_code").equals("SUCCESS")) {
                 return retView;
@@ -117,7 +100,7 @@ public class WeiXinPayController {
             //更改订单的支付状态为正在支付中
             order.setStatus(OrderStatus.getInstance("PAYING"));
             orderService.save(order, false);
-            LOG.info("更改订单状态为支付中,订单当前状态:" + order.getStatus().getType());
+            LOG.warn("更改订单状态为支付中,订单编号:" + order.getOrderNumber() + ",订单当前状态:" + order.getStatus().getType());
 
             Map<String, Object> param = new HashMap<>();
             long timeStamp = CommonUtils.currentTimeStamp();
@@ -131,7 +114,7 @@ public class WeiXinPayController {
             String sortedStr = CommonUtils.getSortedStr(param);
             String paySign = CommonUtils.md5Sign(sortedStr, Configure.getKey(mch_id), "key").toUpperCase();
             param.put("paySign", paySign);
-            String jsApiParam = JsonUtil.toJson(param);
+//            String jsApiParam = JsonUtil.toJson(param);
             /*LOG.info("-----------------------------------------------------------------------------------");
             LOG.info(jsApiParam);
             LOG.info("-----------------------------------------------------------------------------------");*/
@@ -151,7 +134,7 @@ public class WeiXinPayController {
         } catch (PricingException e) {
             LOG.error("保存订单错误", e);
         }
-        LOG.info("调用jsapi进行支付");
+        LOG.warn("调用jsapi进行支付");
         return retView;
     }
 
@@ -170,16 +153,15 @@ public class WeiXinPayController {
 //            LOG.info(notityXml);
             //判断支付结果
             WxCallBackData result = XMLParser.getObjectFromXML(notityXml, WxCallBackData.class);
-            LOG.info("----------微信支付回调更新订单状态开始------------");
-            LOG.info("支付结果:" + result.getResult_code());
+            LOG.warn("微信支付回调更新订单状态开始");
+            LOG.warn("订单号:" + result.getOut_trade_no() + ",支付结果:" + result.getResult_code());
             if (Objects.nonNull(result) && "SUCCESS".equals(result.getResult_code())) {
                 String orderNumber = result.getOut_trade_no();
-//                String orderNumber = "201605082158449793601";
                 Order order = orderService.findOrderByOrderNumber(orderNumber);
-                LOG.info("开始更新订单,当前订单状态：" + order.getStatus().getType() + ",订单编号:" + order.getOrderNumber());
+                LOG.warn("开始更新订单,当前订单状态:" + order.getStatus().getType() + ",订单编号:" + order.getOrderNumber());
                 if (Objects.nonNull(order) && OrderHistoryController.PAYING.equals(order.getStatus())) {
                     order.setStatus(OrderHistoryController.PAID);
-                    LOG.info("-----保存微信支付信息------");
+                    LOG.warn("开始保存微信支付信息");
 
                     OrderAttribute wxTransactionId = new OrderAttributeImpl();
                     wxTransactionId.setName("transaction_id");
@@ -235,9 +217,8 @@ public class WeiXinPayController {
                     orderAttributes.put("return_code", return_code);
                     orderAttributes.put("time_end", wxTimeEnd);
                     order.setOrderAttributes(orderAttributes);
-
                     orderService.save(order, false);
-                    LOG.info("更新订单状态完成,当前订单状态:" + order.getStatus().getType() + ",订单号：" + order.getOrderNumber());
+                    LOG.warn("更新订单状态完成" + ",订单号:" + order.getOrderNumber() + ",当前订单状态:" + order.getStatus().getType());
                 }
                 retXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
                         + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
@@ -256,7 +237,7 @@ public class WeiXinPayController {
                 writer.close();
             }
         }
-        LOG.info("----------微信支付回调更新订单状态结束------------");
+        LOG.warn("----------微信支付回调更新订单状态结束------------");
         return null;
     }
 
@@ -270,12 +251,14 @@ public class WeiXinPayController {
     public String unlockOrder(@RequestParam Long orderId) {
         Order order = orderService.findOrderById(orderId);
         String retView = "redirect:/account/orders";
+        LOG.warn("订单支付失败,订单号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
         if (!OrderHistoryController.PAYING.equals(order.getStatus())) {
             return retView;
         }
-        order.setStatus(OrderHistoryController.UNPAID);
+//        order.setStatus(OrderHistoryController.UNPAID);
         try {
             orderService.save(order, false);
+            LOG.warn("恢复订单状态为未支付,订单号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
         } catch (PricingException e) {
             LOG.error("支付失败,还原订单状态出错", e);
         }
@@ -310,25 +293,19 @@ public class WeiXinPayController {
     @RequestMapping("/errorOrders")
     @ResponseBody
     public Object findErrorOrders() {
-        CustomOrderService customOrderService = (CustomOrderService) orderService;
-        List<Order> cancelledOrders = customOrderService.findOrderByStatus(OrderStatus.CANCELLED);
-        if (Objects.isNull(cancelledOrders) || cancelledOrders.isEmpty()) {
-            return JsonResponse.response("没有取消的订单");
-        }
-        List<Order> errorOrderList = cancelledOrders.parallelStream().filter(order -> {
-            Map<String, OrderAttribute> orderAttributes = order.getOrderAttributes();
-            if (Objects.nonNull(orderAttributes) && orderAttributes.containsKey("transaction_id")) {
-                return true;
-            }
-            String orderNumber = order.getOrderNumber();
-            CustomOrder customOrder = (CustomOrder) order;
-            Shop shop = customOrder.getAddress().getShop();
+    /*    CustomOrderService customOrderService = (CustomOrderService) orderService;
+        List cancelledOrders = customOrderService.findOrderByStatus(OrderStatus.CANCELLED);
+        List errorOrderList = new ArrayList<>();
+        for (Object cancelledOrder : cancelledOrders) {
+            Object[] arr = (Object[]) cancelledOrder;
+            String orderNumber = arr[1].toString();
+            Shop shop = (Shop) arr[2];
+            String status = (String) arr[3];
             QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(orderNumber).build();
             try {
                 Map<String, Object> result = WxPayApi.queryOrder(reqData);
-                WxCallBackData callBackData = JsonUtil.fromJson(JsonHelper.toJsonStr(result), WxCallBackData.class);
-                if ("SUCCESS".equals(callBackData.getTrade_state())) {
-                    return true;
+                if ("SUCCESS".equals(result.get("trade_state")) && !status.equals("PAID")) {
+                    errorOrderList.add(result);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -337,8 +314,8 @@ public class WeiXinPayController {
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
             }
-            return false;
-        }).collect(Collectors.toList());
-        return errorOrderList;
+        }
+        return errorOrderList;*/
+        return null;
     }
 }

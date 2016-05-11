@@ -1,15 +1,24 @@
 package com.mycompany.schedule;
 
+import com.mycompany.sample.core.catalog.domain.Shop;
+import com.mycompany.sample.payment.weixin.protocol.QueryOrderReqData;
+import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.order.service.type.OrderStatus;
+import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.workflow.WorkflowException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
 
 import javax.annotation.Resource;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -30,13 +39,44 @@ public class OrderScheduler {
         }
         expiredOrder.stream().forEach(order -> {
             try {
+                LOG.warn("自动取消订单开始,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
                 orderService.customCancelOrder(order.getId());
-                LOG.info("取消订单,订单编号:" + order.getOrderNumber());
+                LOG.warn("自动取消订单完成,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
             } catch (WorkflowException e) {
-                LOG.error("取消订单失败,订单编号:" + order.getOrderNumber(), e);
+                LOG.error("自动取消订单失败,订单号:" + order.getOrderNumber(), e);
             }
         });
 //        LOG.info("-----取消过期订单定时任务结束------");
+    }
+
+    @Scheduled(fixedDelay = 60*60 * 1000, initialDelay = 60 * 1000)
+    public void updateOrderStatus() {
+        List cancelledOrders = orderService.findOrderByStatus(OrderStatus.getInstance("PAYING"));
+        for (Object cancelledOrder : cancelledOrders) {
+            Object[] arr = (Object[]) cancelledOrder;
+            String orderNumber = arr[1].toString();
+            Shop shop = (Shop) arr[2];
+            String status = (String) arr[3];
+            QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(orderNumber).build();
+            try {
+                Map<String, Object> result = WxPayApi.queryOrder(reqData);
+                if ("SUCCESS".equals(result.get("trade_state")) && !status.equals("PAID")) {
+                    Order order = orderService.findOrderByOrderNumber(orderNumber);
+                    order.setStatus(OrderStatus.getInstance("PAID"));
+                    LOG.warn("自动更新订单状态为已支付开始,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
+                    orderService.save(order, false);
+                    LOG.warn("自动更新订单状态为已支付结束,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (PricingException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

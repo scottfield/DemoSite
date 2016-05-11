@@ -84,7 +84,7 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
     public String viewOrderHistory(HttpServletRequest request, Model model) {
         List<Order> orders = customOrderService.findOrdersForCustomer(CustomerState.getCustomer());
         orders = orders.stream().filter(order -> order.getStatus() != OrderStatus.IN_PROCESS).collect(Collectors.toList());
-        orders.stream().forEach(order -> cancelExpiredOrder(order));
+        orders.stream().forEach(this::cancelExpiredOrder);
         orders.sort((o1, o2) -> o2.getSubmitDate().compareTo(o1.getSubmitDate()));
         model.addAttribute("orders", orders);
         model.addAttribute("now", new Date());
@@ -105,12 +105,7 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         //检测订单是否已通过微信回调函数写入返回结果
         Map<String, OrderAttribute> orderAttributes = customOrder.getOrderAttributes();
         if (Objects.nonNull(orderAttributes) && orderAttributes.containsKey("result_code") && WxCallBackData.SUCCESS.equals(orderAttributes.get("result_code").getValue())) {
-            order.setStatus(PAID);
-            try {
-                orderService.save(order, false);
-            } catch (PricingException e) {
-                LOG.error("更新订单失败", e);
-            }
+            saveOrder(order);
             return;
         }
         //调用微信查询订单接口查询订单状态
@@ -120,12 +115,7 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
             Map<String, Object> result = WxPayApi.queryOrder(reqData);
             WxCallBackData callBackData = JsonUtil.fromJson(JsonHelper.toJsonStr(result), WxCallBackData.class);
             if (WxCallBackData.SUCCESS.equals(callBackData.getTrade_state())) {
-                order.setStatus(PAID);
-                try {
-                    orderService.save(order, false);
-                } catch (PricingException e) {
-                    LOG.error("更新订单失败", e);
-                }
+                saveOrder(order);
                 return;
             }
         } catch (IOException e) {
@@ -137,9 +127,21 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         }
 //        取消过期订单
         try {
+            LOG.warn("自动取消订单开始,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
             customOrderService.customCancelOrder(order.getId());
+            LOG.warn("自动取消订单完成,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
         } catch (WorkflowException e) {
             LOG.warn("自动取消订单失败,订单号：" + order.getId());
+        }
+    }
+
+    private void saveOrder(Order order) {
+        try {
+            order.setStatus(PAID);
+            orderService.save(order, false);
+            LOG.warn("更新订单状态为已支付,订单号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+        } catch (PricingException e) {
+            LOG.error("更新订单失败", e);
         }
     }
 
@@ -154,8 +156,9 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
     public Object confirmOrder(@RequestParam Long orderId) {
         JsonResponse result = JsonResponse.response("更新订单成功.");
         Order order = orderService.findOrderById(orderId);
+        LOG.warn("检测订单状态开始,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
         if (Objects.isNull(order)) {
-            LOG.info("订单号：" + orderId + "不存在.");
+            LOG.warn("订单号：" + orderId + "不存在.");
             result.setMessage("更新订单失败，订单号:" + orderId + " 不存在");
             result.setCode(JsonResponse.FAIL_CODE);
             return result;
@@ -166,10 +169,11 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
             Shop shop = customOrder.getAddress().getShop();
             QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(order.getOrderNumber()).build();
             Map<String, Object> queryOrderResult = WxPayApi.queryOrder(reqData);
-//            queryOrderResult.put("trade_state", "SUCCESS");
             if (WxCallBackData.SUCCESS.equals(queryOrderResult.get("trade_state"))) {
+                LOG.warn("更新订单状态,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
                 order.setStatus(PAID);
                 orderService.save(order, false);
+                LOG.warn("更新订单状态完成,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
                 return result;
             }
         } catch (IOException e) {
@@ -181,6 +185,7 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         } catch (PricingException e) {
             e.printStackTrace();
         }
+        LOG.warn("检测订单状态结束,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
         return result;
     }
 
