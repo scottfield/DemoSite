@@ -37,7 +37,7 @@
             <span style="width:40px;">（1）</span><span class="flex" th:text="${(card.couponType>=4)?'请在2016年5月20日-6月1日至广东活动门店领取':'请在2016年5月9日-5月22日至广东活动门店领取'}">请在2016年5月9日-5月22日至广东活动门店领取</span>
         </div>
         <div class="h-box">
-            <span style="width:40px;">（2）</span><span class="flex" th:text="${(card.couponType>=4)?'2016年5月20日-6月1日在活动门店购物，结账时可凭纸质现金券立享优惠':'2016年5月9日-5月22日在活动门店购物，结账时可凭纸质现金券立享优惠'}">2016年5月9日-5月22日在活动门店购物，结账时可凭纸质现金券立享优惠</span>
+            <span style="width:40px;">（2）</span><span class="flex" th:text="${(card.couponType>=4)?'2016年5月20日-6月1日在活动门店购物，结账时可凭纸质现金券立享优惠':'2016年5月20日-5月22日在活动门店购物，结账时可凭纸质现金券立享优惠'}">2016年5月9日-5月22日在活动门店购物，结账时可凭纸质现金券立享优惠</span>
         </div>
         <a th:if="${card.status==false}" th:href="@{'/coupon/exchange?couponXrefId='+${card.id}}" title="兑换" class="button"><img th:src="@{/images/new/coupon/exchange-button.jpg}" width="100%"/></a>
         <a th:if="${card.status==true}" th:href="@{${#httpServletRequest.getHeader('Referer')}}" title="返回" class="button"><img th:src="@{/images/new/coupon/return.jpg}" width="100%"/></a>
