@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>order history test</title>
+</head>
+<body>
+<div th:each="order:${orders}" th:remove="tag">
+    <div>
+        <span th:text="${order.orderNumber}"></span>
+        <span th:text="${order.status.type}"></span>
+    </div>
+</div>
+</body>
+</html>

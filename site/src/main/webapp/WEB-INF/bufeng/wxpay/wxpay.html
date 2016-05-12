@@ -10,14 +10,9 @@
             var unifyOrderFailed = $("body").data("unify-order-failed");
             if (unifyOrderFailed == true) {
                 alert("支付订单生成失败！");
-                unlockOrder();
+                checkOrderStatus();
             }
         });
-        function unlockOrder() {
-            var unlockOrderUrl = '[[@{/wechatpay/index/unlock}]]';
-            var orderId = $("body").data("orderid");
-            location.href = unlockOrderUrl + "?orderId=" + orderId;
-        }
         //调用微信JS api 支付
         function jsApiCall() {
             WeixinJSBridge.invoke(
@@ -38,17 +33,15 @@
             ;
         }
         /*<![CDATA[*/
-        function paymentCallback(errorMsg) {
+        function paymentCallback() {
             var orderUrl = '[[@{/account/orders}]]';
-            if (errorMsg != "get_brand_wcpay_request:ok") {
-                alert("支付失败");
-                unlockOrder();
-                return;
-            }
-
-            alert("支付成功");
-            checkOrderStatus().done(function () {
-                showOrderHistory();
+            checkOrderStatus().done(function (result) {
+                alert(result.message);
+                if (result.code === 1000) {
+                    showOrderHistory();
+                } else {
+                    location.href = orderUrl;
+                }
             });
             function checkOrderStatus() {
                 var url = $("body").data("confirmurl");
@@ -114,7 +107,7 @@
 
     </script>
 </head>
-<body th:attr="data-orderid=${orderId},data-confirmurl=@{/account/orders/confirm},data-token=${session.csrfToken},data-issue-coupon-url=@{/coupon/issue/online},data-unify-order-failed=${unifyOrderFailed}">
+<body th:attr="data-orderid=${orderId},data-confirmurl=@{/wechatpay/index/confirm},data-token=${session.csrfToken},data-issue-coupon-url=@{/coupon/issue/online},data-unify-order-failed=${unifyOrderFailed}">
 <!--<br/>
 <font color="#9ACD32"><b>该笔订单支付金额为<span style="color:#f00;font-size:50px">1分</span>钱</b></font><br/><br/>
 <div align="center">

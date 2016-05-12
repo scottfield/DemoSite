@@ -12,12 +12,12 @@ import com.mycompany.sample.payment.weixin.service.WxCallBackData;
 import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.sample.util.CommonUtils;
 import com.mycompany.sample.util.JsonResponse;
+import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
-import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.profile.core.domain.Customer;
@@ -49,7 +49,7 @@ import java.util.Objects;
 public class WeiXinPayController {
     private static final Log LOG = LogFactory.getLog(WeiXinPayController.class);
     @Resource
-    private OrderService orderService;
+    private CustomOrderService orderService;
 
     @RequestMapping("/pay")
     public String unifyOrder(HttpServletRequest request, Long orderId) {
@@ -139,14 +139,16 @@ public class WeiXinPayController {
     }
 
     @RequestMapping("/notify")
-    public ModelAndView notifyHandler(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ModelAndView notifyHandler(HttpServletRequest request, HttpServletResponse response) {
         String inputLine;
 //        String notityXml = "<xml><appid><![CDATA[wx937fba8914a5d9a9]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[1326016401]]></mch_id><nonce_str><![CDATA[5qg7pmgbrai2v30g8n0t8xr6ggtw2ri8]]></nonce_str><openid><![CDATA[o1Py0tx91UJXWdtT_gD9xMdI5Rdo]]></openid><out_trade_no><![CDATA[20160508212400943851]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[8F3173CFE9E3495B55E2AACC40C0F26F]]></sign><time_end><![CDATA[20160508212409]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[JSAPI]]></trade_type><transaction_id><![CDATA[4006002001201605085647871490]]></transaction_id></xml>";
         String notityXml = "";
         String retXml = "";
-        PrintWriter writer = response.getWriter();
-        BufferedReader reader = request.getReader();
+        PrintWriter writer = null;
+        BufferedReader reader = null;
         try {
+            writer = response.getWriter();
+            reader = request.getReader();
             while ((inputLine = reader.readLine()) != null) {
                 notityXml += inputLine;
             }
@@ -231,7 +233,11 @@ public class WeiXinPayController {
             LOG.error("处理微信支付回调失败", e);
         } finally {
             if (Objects.nonNull(reader)) {
-                reader.close();
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    LOG.error("关闭数据流失败", e);
+                }
             }
             if (Objects.nonNull(writer)) {
                 writer.close();
@@ -242,27 +248,52 @@ public class WeiXinPayController {
     }
 
     /**
-     * 恢复支付中状态的订单到未付款状态
+     * 支付成功后确认订单
      *
      * @param orderId
      * @return
      */
-    @RequestMapping("/unlock")
-    public String unlockOrder(@RequestParam Long orderId) {
+    @RequestMapping("/confirm")
+    @ResponseBody
+    public Object confirmOrder(@RequestParam Long orderId) {
+        JsonResponse result = JsonResponse.response();
+        result.setCode(JsonResponse.FAIL_CODE);
         Order order = orderService.findOrderById(orderId);
-        String retView = "redirect:/account/orders";
-        LOG.warn("订单支付失败,订单号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
-        if (!OrderHistoryController.PAYING.equals(order.getStatus())) {
-            return retView;
+        LOG.warn("调用微信账单接口检测订单状态开始,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+        if (Objects.isNull(order)) {
+            LOG.warn("订单号：" + orderId + "不存在.");
+            result.setMessage("更新订单失败，订单号:" + orderId + " 不存在");
+            return result;
         }
-//        order.setStatus(OrderHistoryController.UNPAID);
         try {
+            //调用微信支付订单查询接口确认订单状态
+            CustomOrder customOrder = (CustomOrder) order;
+            Shop shop = customOrder.getAddress().getShop();
+            QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(order.getOrderNumber()).build();
+            Map<String, Object> queryOrderResult = WxPayApi.queryOrder(reqData);
+            LOG.warn("订单号," + order.getOrderNumber() + ",查询结果:out_trade_no=" + queryOrderResult.get("out_trade_no") + ",trade_state=" + queryOrderResult.get("trade_state"));
+            if (WxCallBackData.SUCCESS.equals(queryOrderResult.get("trade_state"))) {
+                LOG.warn("更新订单状态,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+                order.setStatus(OrderHistoryController.PAID);
+                result.setMessage("订单支付成功.");
+                result.setCode(JsonResponse.SUCCESS_CODE);
+            } else {
+                order.setStatus(OrderHistoryController.UNPAID);
+                result.setMessage("订单支付失败");
+            }
             orderService.save(order, false);
-            LOG.warn("恢复订单状态为未支付,订单号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+            LOG.warn("更新订单状态完成,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
         } catch (PricingException e) {
-            LOG.error("支付失败,还原订单状态出错", e);
+            e.printStackTrace();
         }
-        return retView;
+        LOG.warn("检测订单状态结束,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+        return result;
     }
 
     @RequestMapping("/bill")
