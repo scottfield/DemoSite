@@ -95,48 +95,51 @@ public class FiveCardController {
     @RequestMapping(value = "/issue", method = RequestMethod.GET)
     public String issueFiveCard(HttpSession session) {
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
-        String retView = "redirect:/fiveCard";
-        CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
-        Long referrer = (Long) session.getAttribute("referrer");
-        //检测是否是通过分享链接进入
-        if (Objects.nonNull(referrer)) {
-            session.removeAttribute("referrer");
-        }
-        //判断用户是否已经拥有五张卡
-        if (Objects.nonNull(fiveCardXref)) {
-            //B卡并且是通过分享链接进入
-            if (fiveCardXref.getType() == FiveCard.CARD_TYPE_B && Objects.nonNull(referrer)) {
+        synchronized (customer) {
+            String retView = "redirect:/fiveCard";
+            CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
+            Long referrer = (Long) session.getAttribute("referrer");
+            //检测是否是通过分享链接进入
+            if (Objects.nonNull(referrer)) {
+                session.removeAttribute("referrer");
+            }
+            //判断用户是否已经拥有五张卡
+            if (Objects.nonNull(fiveCardXref)) {
+                //B卡并且是通过分享链接进入
+                if (fiveCardXref.getType() == FiveCard.CARD_TYPE_B && Objects.nonNull(referrer)) {
+                    retView = retView + "?referrerPage=true";
+                }
+                return retView;
+            }
+            //判断五折卡类型
+            int type = 1;//默认五折卡类型为分享获取的
+            if (Objects.isNull(referrer)) {
+                type = 0;
+            }
+            FiveCard fiveCard = fiveCardService.readByStatusAndType(false, type);
+            //没有可用的五折卡
+            if (Objects.isNull(fiveCard)) {
+                return "redirect:/index";
+            }
+            //发放五折卡
+            CustomerFiveCardXref cardXref = new CustomerFiveCardXrefImpl();
+
+            cardXref.setCustomer(customer);
+            cardXref.setStatus(FiveCard.CARD_STATUS_INACTIVE);
+            cardXref.setType(type);
+            cardXref.setCreateDate(CommonUtils.currentDate());
+            //设置分享人
+            if (Objects.nonNull(referrer)) {
+                Customer referrerCustomer = customerService.readCustomerById(referrer);
+                cardXref.setReferer(referrerCustomer);
                 retView = retView + "?referrerPage=true";
             }
-            return retView;
-        }
-        //判断五折卡类型
-        int type = 1;//默认五折卡类型为分享获取的
-        if (Objects.isNull(referrer)) {
-            type = 0;
-        }
-        FiveCard fiveCard = fiveCardService.readByStatusAndType(false, type);
-        //没有可用的五折卡
-        if (Objects.isNull(fiveCard)) {
-            return "redirect:/index";
-        }
-        //发放五折卡
-        CustomerFiveCardXref cardXref = new CustomerFiveCardXrefImpl();
-        cardXref.setCustomer(customer);
-        cardXref.setStatus(FiveCard.CARD_STATUS_INACTIVE);
-        cardXref.setType(type);
-        cardXref.setCreateDate(CommonUtils.currentDate());
-        //设置分享人
-        if (Objects.nonNull(referrer)) {
-            Customer referrerCustomer = customerService.readCustomerById(referrer);
-            cardXref.setReferer(referrerCustomer);
-            retView = retView + "?referrerPage=true";
-        }
-        customer.setFiveCardXref(cardXref);
-        customerService.saveCustomer(customer);
-        //如果为A卡资格则自动去激活
-        if (cardXref.getType() == FiveCard.CARD_TYPE_A) {
-            return "redirect:/fiveCard/activate?autoActive=true";
+            customer.setFiveCardXref(cardXref);
+            customerService.saveCustomer(customer);
+            //如果为A卡资格则自动去激活
+            if (cardXref.getType() == FiveCard.CARD_TYPE_A) {
+                return "redirect:/fiveCard/activate?autoActive=true";
+            }
         }
         return retView;
     }
