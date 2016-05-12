@@ -48,21 +48,24 @@ public class CouponController {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2016);
         calendar.set(Calendar.MONTH, Calendar.MAY);
-        calendar.set(Calendar.DAY_OF_MONTH, 9);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         //线上开始时间
+        calendar.set(Calendar.DAY_OF_MONTH, 9);
         onlineExchangeStartDate = calendar.getTime();
-
-        calendar.set(Calendar.DAY_OF_MONTH, 20);
-        //线下开始时间
-        offlineExchangeStartDate = calendar.getTime();
-
-        calendar.set(Calendar.DAY_OF_MONTH, 23);
         //线上结束时间
+        calendar.set(Calendar.DAY_OF_MONTH, 23);
         onlineExchangeEndDate = calendar.getTime();
 
-        calendar.set(Calendar.MONTH, Calendar.JUNE);
-        calendar.set(Calendar.DAY_OF_MONTH, 2);
+
+        //线下开始时间
+        calendar.set(Calendar.DAY_OF_MONTH, 13);
+        offlineExchangeStartDate = calendar.getTime();
         //线下结束时间
+        calendar.set(Calendar.DAY_OF_MONTH, 15);
         offlineExchangeEndDate = calendar.getTime();
     }
 
