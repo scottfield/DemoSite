@@ -10,7 +10,7 @@
             var unifyOrderFailed = $("body").data("unify-order-failed");
             if (unifyOrderFailed == true) {
                 alert("支付订单生成失败！");
-                checkOrderStatus();
+                backToOrderHistory();
             }
         });
         //调用微信JS api 支付
@@ -33,14 +33,27 @@
             ;
         }
         /*<![CDATA[*/
-        function paymentCallback() {
+        function backToOrderHistory(param) {
             var orderUrl = '[[@{/account/orders}]]';
+            if (param != undefined) {
+                orderUrl = orderUrl + "?" + param;
+            }
+            location.href = orderUrl;
+        }
+        function paymentCallback() {
             checkOrderStatus().done(function (result) {
                 alert(result.message);
                 if (result.code === 1000) {
-                    showOrderHistory();
+                    issueOnlineCoupon().done(function (data) {
+                        if (data.code == 1000) {
+                            var param = "showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc + "&couponType=" + res.others.couponType;
+                            backToOrderHistory(param);
+                        } else {
+                            backToOrderHistory();
+                        }
+                    });
                 } else {
-                    location.href = orderUrl;
+                    backToOrderHistory();
                 }
             });
             function checkOrderStatus() {
@@ -49,14 +62,9 @@
                 return $.get(url + "?orderId=" + orderId);
             }
 
-            function showOrderHistory() {
+            function issueOnlineCoupon() {
                 var issueCouponUrl = $("body").data("issue-coupon-url");
-                $.get(issueCouponUrl).done(function (res) {
-                    if (res.code == 1000) {
-                        orderUrl = orderUrl + "?showCoupon=true&couponValue=" + res.others.couponValue + "&couponDesc=" + res.others.couponDesc + "&couponType=" + res.others.couponType;
-                    }
-                    location.href = orderUrl;
-                });
+                return $.get(issueCouponUrl);
             }
         }
         /*]]>*/
