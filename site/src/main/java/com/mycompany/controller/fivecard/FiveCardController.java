@@ -178,17 +178,16 @@ public class FiveCardController {
             //获取用户关注门店
             Map<String, Object> vipInfo = weixinService.getVipInfo(customer.getUsername());
             Shop shop = null;
-            CustomerAddress customerAddress = null;
             //检查门店是否在活动范围内
             if (Objects.nonNull(vipInfo)) {
                 shop = shopService.readShopByCode((String) vipInfo.get("unit_code"));
             }
             //保存关注门店的地址
             if (Objects.nonNull(shop)) {
-                customerAddress = addAddress(shop, ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME);
+                addAddress(shop, ManageCustomerAddressesController.FOLLOWED_ADDRESS_NAME);
             }
             //未关注门店跳转到关注门店
-            if (Objects.isNull(customerAddress)) {
+            if (Objects.isNull(customer.getFollowedShopAddress())) {
                 //如果是开卡自动激活则跳转到五折卡页面
                 if (Boolean.TRUE.equals(autoActive)) {
                     return "redirect:/fiveCard";
@@ -210,22 +209,30 @@ public class FiveCardController {
         return "redirect:/fiveCard";
     }
 
-    private CustomerAddress addAddress(Shop shop, String addressName) {
-        CustomAddressImpl address = new CustomAddressImpl();
-        address.setAddressLine1("default");
-        address.setPostalCode("default");
-        address.setLastName("default");
-        address.setCity("default");
-        address.setShop(shop);
-        Country country = countryService.findCountryByAbbreviation("CA");
-        address.setCountry(country);
-        Address savedAddress = addressService.saveAddress(address);
-        CustomerAddress customerAddress = customerAddressService.create();
-        customerAddress.setAddress(savedAddress);
-        customerAddress.setAddressName(addressName);
-        customerAddress.setCustomer(CustomerState.getCustomer());
-        customerAddressService.saveCustomerAddress(customerAddress);
-        return customerAddress;
+    private void addAddress(Shop shop, String addressName) {
+        CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
+        CustomAddress followedShopAddress = customer.getFollowedShopAddress();
+
+        if (Objects.nonNull(followedShopAddress)) {
+            followedShopAddress.setShop(shop);
+            customerService.saveCustomer(customer);
+        } else {
+            CustomAddressImpl address = new CustomAddressImpl();
+            address.setAddressLine1("default");
+            address.setPostalCode("default");
+            address.setLastName("default");
+            address.setCity("default");
+            address.setShop(shop);
+            Country country = countryService.findCountryByAbbreviation("CA");
+            address.setCountry(country);
+            Address savedAddress = addressService.saveAddress(address);
+            CustomerAddress customerAddress = customerAddressService.create();
+            customerAddress.setAddress(savedAddress);
+            customerAddress.setAddressName(addressName);
+            customerAddress.setCustomer(customer);
+            customerAddressService.saveCustomerAddress(customerAddress);
+        }
+
     }
 
     private void generateFiveCardImage(CustomCustomer customer) {
