@@ -5,7 +5,6 @@ import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.workflow.WorkflowException;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,12 +13,14 @@ import java.util.List;
 public interface CustomOrderService extends OrderService {
     /**
      * cancel the order and update inventory
+     *
      * @param orderId
      */
     void customCancelOrder(Long orderId) throws WorkflowException;
 
     /**
      * 查找过期的订单
+     *
      * @param interval 订单最大的有效时间单位(毫秒)
      * @return
      */
@@ -27,8 +28,11 @@ public interface CustomOrderService extends OrderService {
 
     /**
      * 根据根据订单状态查询订单
+     *
      * @param status
      * @return
      */
     List<Order> findOrderByStatus(OrderStatus status);
+
+    void updateWxOrderInfo();
 }

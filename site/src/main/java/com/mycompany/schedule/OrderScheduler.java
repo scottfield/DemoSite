@@ -84,4 +84,10 @@ public class OrderScheduler {
         }
     }
 
+//    @Scheduled(fixedDelay = 240 * 60 * 1000)
+    public void test() {
+        orderService.updateWxOrderInfo();
+    }
+
+
 }
