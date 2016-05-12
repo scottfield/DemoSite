@@ -57,7 +57,7 @@
                 <span class="status" th:if="${card.status}">已兑换</span>
                 <span class="status" th:unless="${card.status}">未兑换</span>
             </div>
-            <div class="desc" th:text="${card.couponType==4||card.couponType==5?'请于2016年5月20日-6月1日至各活动服务台领取':'请于2016年5月20日-5月22日至各活动服务台领取'}"></div>
+            <div class="desc" th:text="${card.couponType==4||card.couponType==5?'请于2016年5月20日-6月1日至各活动服务台领取':'请于2016年5月9日-5月22日至各活动服务台领取'}"></div>
         </div>
         <div style="float:left;width:100%;height:1px;" th:if="${iterStat.index%2==1}"></div>
     </div>
