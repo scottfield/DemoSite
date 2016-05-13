@@ -29,7 +29,7 @@ public class OrderScheduler {
     @Resource
     private CustomOrderService orderService;
 
-    @Scheduled(fixedDelay = 30 * 60 * 1000, initialDelay = 60 * 1000)
+    @Scheduled(fixedDelay = 15 * 60 * 1000, initialDelay = 60 * 1000)
     public void cancelOrder() {
 //        LOG.debug("-----取消过期订单定时任务开始------");
         List<Order> expiredOrder = orderService.findExpiredOrder(15 * 60 * 1000L);
@@ -66,25 +66,23 @@ public class OrderScheduler {
                 if (WxCallBackData.SUCCESS.equals(result.get("trade_state"))) {
                     order.setStatus(OrderStatus.getInstance("PAID"));
                 } else if (order.getSubmitDate().before(now)) {
-//                    order.setStatus(OrderStatus.CANCELLED);
-                } else {
                     order.setStatus(OrderStatus.getInstance("UNPAID"));
                 }
                 orderService.save(order, false);
                 LOG.warn("自动更新订单状态为已支付结束,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("io错误", e);
             } catch (SAXException e) {
-                e.printStackTrace();
+                LOG.error("xml解析错误", e);
             } catch (ParserConfigurationException e) {
-                e.printStackTrace();
+                LOG.error("xml解析配置错误", e);
             } catch (PricingException e) {
-                e.printStackTrace();
+                LOG.error("修改订单状态错误", e);
             }
         }
     }
 
-//    @Scheduled(fixedDelay = 240 * 60 * 1000)
+    //    @Scheduled(fixedDelay = 240 * 60 * 1000)
     public void test() {
         orderService.updateWxOrderInfo();
     }
