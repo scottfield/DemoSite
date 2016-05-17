@@ -1,10 +1,11 @@
-package com.cdfamedy.core.dao.payment.weixin.common;
+package com.cdfamedy.core.util;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -82,6 +83,8 @@ public final class JsonUtil {
 
         // 所有日期格式都统一为以下样式
         customMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+        customMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
         return customMapper;
     }

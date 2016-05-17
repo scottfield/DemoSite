@@ -2,10 +2,10 @@ package com.cdfamedy.core.dao.payment.weixin.service;
 
 import com.cdfamedy.core.dao.payment.weixin.common.Configure;
 import com.cdfamedy.core.dao.payment.weixin.common.HttpService;
-import com.cdfamedy.core.dao.payment.weixin.common.JsonUtil;
 import com.cdfamedy.core.dao.payment.weixin.common.XMLParser;
 import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.protocol.UnifiedOrderReqData;
+import com.cdfamedy.core.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;

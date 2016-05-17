@@ -16,14 +16,13 @@
 
 package com.cdfamedy.controller.account;
 
-import com.cdfamedy.core.dao.payment.weixin.common.JsonUtil;
 import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.service.WxCallBackData;
 import com.cdfamedy.core.dao.payment.weixin.service.WxPayApi;
 import com.cdfamedy.core.domain.CustomOrder;
 import com.cdfamedy.core.domain.Shop;
 import com.cdfamedy.core.service.CustomOrderService;
-import com.cdfamedy.core.util.JsonHelper;
+import com.cdfamedy.core.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
@@ -114,7 +113,7 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(customOrder.getOrderNumber()).build();
         try {
             Map<String, Object> result = WxPayApi.queryOrder(reqData);
-            WxCallBackData callBackData = JsonUtil.fromJson(JsonHelper.toJsonStr(result), WxCallBackData.class);
+            WxCallBackData callBackData = JsonUtil.fromJson(JsonUtil.toJson(result), WxCallBackData.class);
             if (WxCallBackData.SUCCESS.equals(callBackData.getTrade_state())) {
                 saveOrder(order);
                 return;

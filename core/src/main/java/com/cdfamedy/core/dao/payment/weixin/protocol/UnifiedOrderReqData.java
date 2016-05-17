@@ -2,8 +2,8 @@ package com.cdfamedy.core.dao.payment.weixin.protocol;
 
 
 import com.cdfamedy.core.dao.payment.weixin.common.Configure;
-import com.cdfamedy.core.dao.payment.weixin.common.RandomStringGenerator;
 import com.cdfamedy.core.dao.payment.weixin.common.Signature;
+import com.cdfamedy.core.util.CommonUtils;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.lang.reflect.Field;
@@ -38,7 +38,7 @@ public class UnifiedOrderReqData {
         this.appid = builder.appid;
         this.mch_id = builder.mch_id;
         this.device_info = builder.device_info;
-        this.nonce_str = RandomStringGenerator.getRandomStringByLength(32);
+        this.nonce_str = CommonUtils.getRandomStr();
         this.body = builder.body;
         this.detail = builder.detail;
         this.attach = builder.attach;

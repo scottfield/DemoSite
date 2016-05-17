@@ -1,13 +1,12 @@
 package com.cdfamedy.worklow.order;
 
-import com.cdfamedy.core.dao.payment.weixin.common.JsonUtil;
 import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.service.WxCallBackData;
 import com.cdfamedy.core.dao.payment.weixin.service.WxPayApi;
 import com.cdfamedy.core.domain.CustomAddress;
 import com.cdfamedy.core.domain.CustomOrder;
 import com.cdfamedy.core.domain.Shop;
-import com.cdfamedy.core.util.JsonHelper;
+import com.cdfamedy.core.util.JsonUtil;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.workflow.BaseActivity;
 import org.broadleafcommerce.core.workflow.ProcessContext;

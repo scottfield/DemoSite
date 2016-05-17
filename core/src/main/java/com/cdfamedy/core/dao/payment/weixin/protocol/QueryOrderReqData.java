@@ -1,8 +1,8 @@
 package com.cdfamedy.core.dao.payment.weixin.protocol;
 
 
-import com.cdfamedy.core.dao.payment.weixin.common.RandomStringGenerator;
 import com.cdfamedy.core.dao.payment.weixin.common.Signature;
+import com.cdfamedy.core.util.CommonUtils;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.lang.reflect.Field;
@@ -21,7 +21,7 @@ public class QueryOrderReqData {
     private QueryOrderReqData(QueryOrderReqDataBuilder builder) {
         this.appid = builder.appid;
         this.mch_id = builder.mch_id;
-        this.nonce_str = RandomStringGenerator.getRandomStringByLength(32);
+        this.nonce_str = CommonUtils.getRandomStr();
         this.out_trade_no = builder.out_trade_no;
         this.sign = Signature.getSign(toMap(), mch_id);
     }

@@ -4,7 +4,7 @@ import com.cdfamedy.core.WeiXinConstants;
 import com.cdfamedy.core.service.WeixinService;
 import com.cdfamedy.core.util.CommonUtils;
 import com.cdfamedy.core.util.HttpUtil;
-import com.cdfamedy.core.util.JsonHelper;
+import com.cdfamedy.core.util.JsonUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class WeixinServiceImpl implements WeixinService {
     private Map<String, Object> sendRequest(Map<String, Object> extraParam, String url) {
         Map<String, Object> queryStr = getQueryStr(extraParam);
         String responseStr = HttpUtil.sendGet(url, (String) queryStr.get("queryStr"));
-        HashMap response = JsonHelper.toObject(responseStr, HashMap.class);
+        HashMap response = JsonUtil.fromJson(responseStr, HashMap.class);
         if (Objects.nonNull(response)) {
             response.putAll(queryStr);
         }
