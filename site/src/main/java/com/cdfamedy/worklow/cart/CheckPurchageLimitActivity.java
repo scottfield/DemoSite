@@ -1,6 +1,6 @@
 package com.cdfamedy.worklow.cart;
 
-import com.cdfamedy.core.catalog.domain.CustomProduct;
+import com.cdfamedy.core.domain.CustomProduct;
 import org.broadleafcommerce.core.catalog.service.CatalogService;
 import org.broadleafcommerce.core.order.service.call.OrderItemRequestDTO;
 import org.broadleafcommerce.core.order.service.workflow.CartOperationRequest;

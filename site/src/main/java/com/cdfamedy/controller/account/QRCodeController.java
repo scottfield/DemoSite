@@ -1,9 +1,9 @@
 package com.cdfamedy.controller.account;
 
-import com.cdfamedy.core.catalog.domain.*;
-import com.cdfamedy.service.QRCodeService;
-import com.cdfamedy.util.CommonUtils;
-import com.cdfamedy.util.JsonResponse;
+import com.cdfamedy.core.domain.*;
+import com.cdfamedy.core.service.QRCodeService;
+import com.cdfamedy.core.util.CommonUtils;
+import com.cdfamedy.core.util.JsonResponse;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

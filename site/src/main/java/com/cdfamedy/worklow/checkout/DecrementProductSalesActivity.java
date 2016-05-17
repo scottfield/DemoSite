@@ -16,7 +16,7 @@
 
 package com.cdfamedy.worklow.checkout;
 
-import com.cdfamedy.core.catalog.domain.CustomProduct;
+import com.cdfamedy.core.domain.CustomProduct;
 import com.cdfamedy.worklow.order.CancelOrderSeed;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

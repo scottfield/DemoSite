@@ -1,11 +1,11 @@
 package com.cdfamedy.controller.pickup;
 
 import com.cdfamedy.controller.form.PickupInfoForm;
-import com.cdfamedy.core.catalog.domain.CustomAddress;
-import com.cdfamedy.core.catalog.domain.CustomOrder;
-import com.cdfamedy.core.catalog.domain.Shop;
-import com.cdfamedy.service.ShopService;
-import com.cdfamedy.util.CommonUtils;
+import com.cdfamedy.core.domain.CustomAddress;
+import com.cdfamedy.core.domain.CustomOrder;
+import com.cdfamedy.core.domain.Shop;
+import com.cdfamedy.core.service.ShopService;
+import com.cdfamedy.core.util.CommonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.persistence.EntityConfiguration;

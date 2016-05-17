@@ -17,7 +17,7 @@
 package com.cdfamedy.controller.checkout;
 
 import com.cdfamedy.controller.form.CustomShippingInfoForm;
-import com.cdfamedy.service.ShopService;
+import com.cdfamedy.core.service.ShopService;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.checkout.model.*;

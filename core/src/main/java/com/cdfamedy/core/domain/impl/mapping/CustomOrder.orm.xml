@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+                 version="2.0">
+
+    <named-query name="READ_ORDER_BY_STATUS_AND_SUBMIT_DATE">
+        <query>
+            <![CDATA[ SELECT order FROM org.broadleafcommerce.core.order.domain.Order order WHERE order.submitDate < :expireddDate AND order.status=:status]]></query>
+    </named-query>
+
+    <named-query name="READ_ORDER_BY_STATUS">
+        <query>SELECT order.id,order.orderNumber,order.address.shop,order.status FROM
+            org.broadleafcommerce.core.order.domain.Order order WHERE order.status=:status
+        </query>
+    </named-query>
+</entity-mappings>

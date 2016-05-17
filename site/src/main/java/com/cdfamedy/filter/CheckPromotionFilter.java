@@ -1,7 +1,7 @@
 package com.cdfamedy.filter;
 
-import com.cdfamedy.core.catalog.domain.Promotion;
-import com.cdfamedy.service.PromotionService;
+import com.cdfamedy.core.domain.Promotion;
+import com.cdfamedy.core.service.PromotionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;

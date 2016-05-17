@@ -276,7 +276,7 @@
         <property name="handlers" ref="blCssHandlers"/>
     </bean>
     <!--override address dao-->
-    <bean id="blAddressDao" class="com.cdfamedy.dao.CustomAddressDaoImpl"/>
+    <bean id="blAddressDao" class="com.cdfamedy.core.dao.CustomAddressDaoImpl"/>
     <bean p:order="5010" id="blDecrementInventoryActivity"
           class="org.broadleafcommerce.core.checkout.service.workflow.DecrementInventoryActivity">
         <property name="rollbackHandler" ref="blDecrementInventoryRollbackHandler"/>
@@ -309,8 +309,8 @@
     </bean>
 
     <!--bean override-->
-    <bean id="blOrderService" class="com.cdfamedy.service.CustomOrderServiceImpl"/>
-    <bean id="blOrderDao" class="com.cdfamedy.dao.CustomOrderDaoImpl"/>
+    <bean id="blOrderService" class="com.cdfamedy.core.service.CustomOrderServiceImpl"/>
+    <bean id="blOrderDao" class="com.cdfamedy.core.dao.impl.CustomOrderDaoImpl"/>
     <bean id="featuredProductCategoryId" class="java.lang.Long">
         <constructor-arg value="10050"/>
     </bean>

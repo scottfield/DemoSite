@@ -1,6 +1,6 @@
 package com.cdfamedy.filter;
 
-import com.cdfamedy.service.WeixinService;
+import com.cdfamedy.core.service.WeixinService;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Component;

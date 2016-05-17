@@ -1,7 +1,7 @@
 package com.cdfamedy.filter;
 
-import com.cdfamedy.core.catalog.domain.CustomCustomer;
-import com.cdfamedy.core.catalog.domain.CustomerFiveCardXref;
+import com.cdfamedy.core.domain.CustomCustomer;
+import com.cdfamedy.core.domain.CustomerFiveCardXref;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.web.filter.OncePerRequestFilter;
 

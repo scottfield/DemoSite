@@ -1,6 +1,6 @@
 package com.cdfamedy.openadmin.web.controller.entity;
 
-import com.cdfamedy.core.catalog.domain.CustomProductImpl;
+import com.cdfamedy.core.domain.impl.CustomProductImpl;
 import org.broadleafcommerce.openadmin.web.controller.entity.AdminBasicEntityController;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;

@@ -16,7 +16,11 @@
 
 package com.cdfamedy.controller.checkout;
 
-import com.cdfamedy.core.catalog.domain.*;
+import com.cdfamedy.core.domain.CustomAddress;
+import com.cdfamedy.core.domain.CustomCustomer;
+import com.cdfamedy.core.domain.CustomOrder;
+import com.cdfamedy.core.domain.Shop;
+import com.cdfamedy.core.domain.impl.CustomAddressImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

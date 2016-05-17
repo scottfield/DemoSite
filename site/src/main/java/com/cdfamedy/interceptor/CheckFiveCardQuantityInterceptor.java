@@ -1,8 +1,8 @@
 package com.cdfamedy.interceptor;
 
-import com.cdfamedy.core.catalog.domain.CustomCustomer;
-import com.cdfamedy.core.catalog.domain.CustomerFiveCardXref;
-import com.cdfamedy.service.FiveCardService;
+import com.cdfamedy.core.domain.CustomCustomer;
+import com.cdfamedy.core.domain.CustomerFiveCardXref;
+import com.cdfamedy.core.service.FiveCardService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.profile.web.core.CustomerState;

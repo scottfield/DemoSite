@@ -44,6 +44,17 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <!--指定将dao.impl包下的xml文件拷贝到对应的输出目录-->
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java/com/cdfamedy/core/domain/impl/mapping</directory>
+                <targetPath>com/cdfamedy/core/domain/impl/mapping</targetPath>
+                <includes>
+                    <include>*.xml</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
     <dependencies>
         <dependency>

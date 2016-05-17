@@ -1,6 +1,6 @@
 package com.cdfamedy.controller.form;
 
-import com.cdfamedy.core.catalog.domain.CustomAddressImpl;
+import com.cdfamedy.core.domain.impl.CustomAddressImpl;
 import org.broadleafcommerce.core.web.controller.account.CustomerAddressForm;
 import org.broadleafcommerce.profile.core.domain.Phone;
 import org.broadleafcommerce.profile.core.domain.PhoneImpl;

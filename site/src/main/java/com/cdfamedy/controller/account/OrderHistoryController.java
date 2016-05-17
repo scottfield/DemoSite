@@ -16,14 +16,14 @@
 
 package com.cdfamedy.controller.account;
 
-import com.cdfamedy.core.catalog.domain.CustomOrder;
-import com.cdfamedy.core.catalog.domain.Shop;
-import com.cdfamedy.payment.weixin.common.JsonUtil;
-import com.cdfamedy.payment.weixin.protocol.QueryOrderReqData;
-import com.cdfamedy.payment.weixin.service.WxCallBackData;
-import com.cdfamedy.payment.weixin.service.WxPayApi;
-import com.cdfamedy.service.CustomOrderService;
-import com.cdfamedy.util.JsonHelper;
+import com.cdfamedy.core.dao.payment.weixin.common.JsonUtil;
+import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
+import com.cdfamedy.core.dao.payment.weixin.service.WxCallBackData;
+import com.cdfamedy.core.dao.payment.weixin.service.WxPayApi;
+import com.cdfamedy.core.domain.CustomOrder;
+import com.cdfamedy.core.domain.Shop;
+import com.cdfamedy.core.service.CustomOrderService;
+import com.cdfamedy.core.util.JsonHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;

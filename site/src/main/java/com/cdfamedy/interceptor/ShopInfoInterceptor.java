@@ -1,8 +1,8 @@
 package com.cdfamedy.interceptor;
 
-import com.cdfamedy.core.catalog.domain.CustomAddress;
-import com.cdfamedy.core.catalog.domain.Shop;
-import com.cdfamedy.service.ShopService;
+import com.cdfamedy.core.domain.CustomAddress;
+import com.cdfamedy.core.domain.Shop;
+import com.cdfamedy.core.service.ShopService;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.core.domain.CustomerAddress;
 import org.broadleafcommerce.profile.web.core.CustomerState;

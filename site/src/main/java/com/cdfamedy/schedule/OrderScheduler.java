@@ -1,10 +1,10 @@
 package com.cdfamedy.schedule;
 
-import com.cdfamedy.core.catalog.domain.Shop;
-import com.cdfamedy.payment.weixin.protocol.QueryOrderReqData;
-import com.cdfamedy.payment.weixin.service.WxCallBackData;
-import com.cdfamedy.payment.weixin.service.WxPayApi;
-import com.cdfamedy.service.CustomOrderService;
+import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
+import com.cdfamedy.core.dao.payment.weixin.service.WxCallBackData;
+import com.cdfamedy.core.dao.payment.weixin.service.WxPayApi;
+import com.cdfamedy.core.domain.Shop;
+import com.cdfamedy.core.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
@@ -31,7 +31,6 @@ public class OrderScheduler {
 
     @Scheduled(fixedDelay = 15 * 60 * 1000, initialDelay = 60 * 1000)
     public void cancelOrder() {
-//        LOG.debug("-----取消过期订单定时任务开始------");
         List<Order> expiredOrder = orderService.findExpiredOrder(15 * 60 * 1000L);
         if (Objects.isNull(expiredOrder) || expiredOrder.size() == 0) {
             return;
@@ -45,7 +44,6 @@ public class OrderScheduler {
                 LOG.error("自动取消订单失败,订单号:" + order.getOrderNumber(), e);
             }
         });
-//        LOG.info("-----取消过期订单定时任务结束------");
     }
 
     @Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 60 * 1000)

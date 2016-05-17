@@ -1,8 +1,8 @@
 package com.cdfamedy.interceptor;
 
-import com.cdfamedy.core.catalog.domain.Coupon;
-import com.cdfamedy.core.catalog.domain.CustomCustomer;
-import com.cdfamedy.core.catalog.domain.CustomerCouponXref;
+import com.cdfamedy.core.domain.Coupon;
+import com.cdfamedy.core.domain.CustomCustomer;
+import com.cdfamedy.core.domain.CustomerCouponXref;
 import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.web.servlet.HandlerInterceptor;

@@ -17,11 +17,11 @@
 package com.cdfamedy.controller.account;
 
 import com.cdfamedy.core.WeiXinConstants;
-import com.cdfamedy.core.catalog.domain.CustomCustomer;
-import com.cdfamedy.core.catalog.domain.CustomerFiveCardXref;
-import com.cdfamedy.service.CustomerAttributeService;
-import com.cdfamedy.service.WeixinService;
-import com.cdfamedy.util.CommonUtils;
+import com.cdfamedy.core.domain.CustomCustomer;
+import com.cdfamedy.core.domain.CustomerFiveCardXref;
+import com.cdfamedy.core.service.CustomerAttributeService;
+import com.cdfamedy.core.service.WeixinService;
+import com.cdfamedy.core.util.CommonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.exception.ServiceException;

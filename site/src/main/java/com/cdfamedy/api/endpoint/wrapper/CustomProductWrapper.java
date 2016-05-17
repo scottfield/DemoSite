@@ -1,6 +1,6 @@
 package com.cdfamedy.api.endpoint.wrapper;
 
-import com.cdfamedy.core.catalog.domain.CustomProduct;
+import com.cdfamedy.core.domain.CustomProduct;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.web.api.wrapper.ProductWrapper;
 

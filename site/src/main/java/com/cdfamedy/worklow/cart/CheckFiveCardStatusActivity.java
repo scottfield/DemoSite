@@ -1,7 +1,7 @@
 package com.cdfamedy.worklow.cart;
 
-import com.cdfamedy.core.catalog.domain.CustomProduct;
-import com.cdfamedy.util.HttpUtil;
+import com.cdfamedy.core.domain.CustomProduct;
+import com.cdfamedy.core.util.HttpUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.catalog.service.CatalogService;

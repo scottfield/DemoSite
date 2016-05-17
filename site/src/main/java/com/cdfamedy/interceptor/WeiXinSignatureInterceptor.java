@@ -1,8 +1,8 @@
 package com.cdfamedy.interceptor;
 
 import com.cdfamedy.core.WeiXinConstants;
-import com.cdfamedy.service.WeixinService;
-import com.cdfamedy.util.CommonUtils;
+import com.cdfamedy.core.service.WeixinService;
+import com.cdfamedy.core.util.CommonUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 

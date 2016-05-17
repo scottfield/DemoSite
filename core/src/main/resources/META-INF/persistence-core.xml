@@ -6,17 +6,23 @@
              
     <persistence-unit name="blPU" transaction-type="RESOURCE_LOCAL">
         <non-jta-data-source>jdbc/web</non-jta-data-source>
-        <class>com.cdfamedy.core.catalog.domain.CustomProductImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.ShopImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.CustomAddressImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.QRCodeImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.ShopAccountImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.FiveCardImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.CustomCustomerImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.CustomerFiveCardXrefImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.CouponImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.CustomerCouponXrefImpl</class>
-        <class>com.cdfamedy.core.catalog.domain.CustomOrderImpl</class>
+        <mapping-file>com/cdfamedy/core/domain/impl/mapping/Shop.orm.xml</mapping-file>
+        <mapping-file>com/cdfamedy/core/domain/impl/mapping/Coupon.orm.xml</mapping-file>
+        <mapping-file>com/cdfamedy/core/domain/impl/mapping/CustomerAttribute.orm.xml</mapping-file>
+        <mapping-file>com/cdfamedy/core/domain/impl/mapping/CustomOrder.orm.xml</mapping-file>
+        <mapping-file>com/cdfamedy/core/domain/impl/mapping/FiveCard.orm.xml</mapping-file>
+        <mapping-file>com/cdfamedy/core/domain/impl/mapping/QRCode.orm.xml</mapping-file>
+        <class>com.cdfamedy.core.domain.impl.CustomProductImpl</class>
+        <class>com.cdfamedy.core.domain.impl.ShopImpl</class>
+        <class>com.cdfamedy.core.domain.impl.CustomAddressImpl</class>
+        <class>com.cdfamedy.core.domain.impl.QRCodeImpl</class>
+        <class>com.cdfamedy.core.domain.impl.ShopAccountImpl</class>
+        <class>com.cdfamedy.core.domain.impl.FiveCardImpl</class>
+        <class>com.cdfamedy.core.domain.impl.CustomCustomerImpl</class>
+        <class>com.cdfamedy.core.domain.impl.CustomerFiveCardXrefImpl</class>
+        <class>com.cdfamedy.core.domain.impl.CouponImpl</class>
+        <class>com.cdfamedy.core.domain.impl.CustomerCouponXrefImpl</class>
+        <class>com.cdfamedy.core.domain.impl.CustomOrderImpl</class>
         <exclude-unlisted-classes/>
     </persistence-unit>
     

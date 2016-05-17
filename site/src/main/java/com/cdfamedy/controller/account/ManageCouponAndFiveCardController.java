@@ -1,10 +1,10 @@
 package com.cdfamedy.controller.account;
 
 import com.cdfamedy.controller.wrapper.CardWrapper;
-import com.cdfamedy.core.catalog.domain.CustomCustomer;
-import com.cdfamedy.core.catalog.domain.CustomerCouponXref;
-import com.cdfamedy.core.catalog.domain.CustomerFiveCardXref;
-import com.cdfamedy.core.catalog.domain.FiveCard;
+import com.cdfamedy.core.domain.CustomCustomer;
+import com.cdfamedy.core.domain.CustomerCouponXref;
+import com.cdfamedy.core.domain.CustomerFiveCardXref;
+import com.cdfamedy.core.domain.FiveCard;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

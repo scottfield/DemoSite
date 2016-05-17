@@ -2,16 +2,11 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mo="http://schema.broadleafcommerce.org/mo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.2.xsd">
-        
-    <context:component-scan base-package="com.cdfamedy.admin.service" />
-        
-    <bean id="blConfiguration" class="org.broadleafcommerce.common.config.RuntimeEnvironmentPropertiesConfigurer" />
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="blConfiguration" class="org.broadleafcommerce.common.config.RuntimeEnvironmentPropertiesConfigurer"/>
 
     <!-- Set up custom entity overrides. These are defined in core/src/main/resources -->
     <bean id="blMergedEntityContexts" class="org.springframework.beans.factory.config.ListFactoryBean">
@@ -29,7 +24,7 @@
             </list>
         </property>
     </bean>
-    
+
     <!-- A dummy mail sender has been set to send emails for testing purposes only
              To view the emails sent use "DevNull SMTP" (download separately) with the following setting:
                 Port: 30000 -->
@@ -92,19 +87,19 @@
             </map>
         </constructor-arg>
     </bean>-->
-    
+
     <bean id="blMessageCreator" class="org.broadleafcommerce.common.email.service.message.NullMessageCreator">
         <constructor-arg ref="blMailSender"/>
     </bean>
-    
+
     <bean id="blPrecompressedArtifactFilter" class="org.broadleafcommerce.common.web.util.PrecompressedArtifactFilter"/>
 
     <bean id="messageSource" class="org.broadleafcommerce.common.util.BroadleafMergeResourceBundleMessageSource">
         <!-- Fallback to use the default message in the admin. This will ensure that client-specific friendly
             names are not required to appear in an internationalized properties file -->
-        <property name="useCodeAsDefaultMessage" value="${messages.useCodeAsDefaultMessage}" />
+        <property name="useCodeAsDefaultMessage" value="${messages.useCodeAsDefaultMessage}"/>
         <!--<property name="cacheSeconds" value="${messages.cacheSeconds}" />-->
-        <property name="cacheSeconds" value="3" />
+        <property name="cacheSeconds" value="3"/>
         <property name="basenames">
             <list>
                 <value>classpath:/entityMessages/GeneratedMessagesEntityCommon</value>
@@ -124,38 +119,40 @@
         </property>
         <property name="defaultEncoding" value="utf-8"/>
     </bean>
-	<bean id="blJsResources" class="org.broadleafcommerce.common.web.resource.BroadleafResourceHttpRequestHandler">
+    <bean id="blJsResources" class="org.broadleafcommerce.common.web.resource.BroadleafResourceHttpRequestHandler">
         <property name="handlers">
             <list>
-                <ref bean="blRuleBuilderEnumOptionsResourceHandler" />
-                <ref bean="blBLCJSResourceHandler" />
+                <ref bean="blRuleBuilderEnumOptionsResourceHandler"/>
+                <ref bean="blBLCJSResourceHandler"/>
             </list>
         </property>
-        <property name="locations" ref="blJsLocations" />
+        <property name="locations" ref="blJsLocations"/>
     </bean>
-    
+
     <bean id="blCssResources" class="org.broadleafcommerce.common.web.resource.BroadleafResourceHttpRequestHandler">
         <property name="locations" ref="blCssLocations"/>
     </bean>
-    
+
     <bean id="blJsFileMap" class="org.springframework.beans.factory.config.MapFactoryBean">
         <property name="sourceMap">
             <map>
                 <entry key="admin.js" value-ref="blJsFileList"/>
                 <entry key="admin/admin.css" value-ref="blCssFileList"/>
             </map>
-        </property>  
+        </property>
     </bean>
-    
-    <bean id="blResourceBundlingService" class="org.broadleafcommerce.common.resource.service.ResourceBundlingServiceImpl">
+
+    <bean id="blResourceBundlingService"
+          class="org.broadleafcommerce.common.resource.service.ResourceBundlingServiceImpl">
         <property name="additionalBundleFiles" ref="blJsFileMap"/>
     </bean>
-    <bean id="blJsLocations" class="org.springframework.beans.factory.config.ListFactoryBean" >
+    <bean id="blJsLocations" class="org.springframework.beans.factory.config.ListFactoryBean">
         <property name="sourceList">
             <list>
                 <value>/js/</value><!--override js resource location-->
                 <value>classpath:/common_style/js/</value>
-                <value>classpath:/extensions/js/</value><!-- To allow a common place for modules or extensions to put js files. -->
+                <value>classpath:/extensions/js/
+                </value><!-- To allow a common place for modules or extensions to put js files. -->
             </list>
         </property>
     </bean>
@@ -163,25 +160,25 @@
     <mo:override id="blMetadataOverrides">
         <mo:overrideItem ceilingEntity="org.broadleafcommerce.core.catalog.domain.Product">
             <mo:field name="defaultSku.description">
-                <mo:property name="excluded" value="false" />
+                <mo:property name="excluded" value="false"/>
             </mo:field>
             <mo:field name="defaultSku.taxCode">
-                <mo:property name="excluded" value="true" />
+                <mo:property name="excluded" value="true"/>
             </mo:field>
             <mo:field name="defaultSku.taxable">
-                <mo:property name="excluded" value="true" />
+                <mo:property name="excluded" value="true"/>
             </mo:field>
             <mo:field name="allowedValues">
-                <mo:property name="excluded" value="false" />
+                <mo:property name="excluded" value="false"/>
             </mo:field>
             <mo:field name="defaultSku.dimension">
-                <mo:property name="excluded" value="true" />
+                <mo:property name="excluded" value="true"/>
             </mo:field>
             <mo:field name="defaultSku.weight">
-                <mo:property name="excluded" value="true" />
+                <mo:property name="excluded" value="true"/>
             </mo:field>
             <mo:field name="defaultSku.isMachineSortable">
-                <mo:property name="excluded" value="true" />
+                <mo:property name="excluded" value="true"/>
             </mo:field>
         </mo:overrideItem>
     </mo:override>
