@@ -7,6 +7,12 @@
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %L %-5p %c.%M  - %m%n" />
         </layout>
     </appender>
+    <appender name="file" class="org.apache.log4j.FileAppender">
+        <param name="File" value="${catalina.home}/logs/broadleaf.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %L %-5p %c.%M  - %m%n" />
+        </layout>
+    </appender>
 
     <logger name="org.broadleafcommerce"> <level value="error" /> </logger>
     <logger name="org.hibernate"> <level value="error" /> </logger>
@@ -18,6 +24,6 @@
     <logger name="org.hibernate.type"> <level value="TRACE" /> </logger>-->
     <root>
         <priority value="error" />
-        <appender-ref ref="console" />
+        <appender-ref ref="file" />
     </root>
 </log4j:configuration>

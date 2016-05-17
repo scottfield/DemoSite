@@ -59,7 +59,7 @@ FROM
     ON sa.`id` = s.`shop_account_id`
   LEFT JOIN blc_customer bc
     ON bc.`CUSTOMER_ID` = o.`CUSTOMER_ID`
-WHERE bc.`USER_NAME` IN ('o1Py0tz-2sHNNvCCobGHpjDZMXXA');
+WHERE bc.`USER_NAME` IN ('o1Py0twJm-GPYmiHyEW4F8fMNua8');
 
 #end
 #根据ID查询用户五折卡信息
@@ -261,3 +261,11 @@ FROM BLC_CUSTOMER customerim0_ LEFT OUTER JOIN customer_extend customerim0_1_
   LEFT OUTER JOIN BLC_CUSTOMER customcust6_1_ ON customcust6_.CUSTOMER_ID = customcust6_1_.CUSTOMER_ID
 WHERE customerim0_.CUSTOMER_ID = 25797;
 
+SELECT count(*) FROM fivecard;
+SELECT * from fivecard WHERE card_no='7400055869578';
+SELECT * FROM blc_customer WHERE FIRST_NAME LIKE '%阿敏%';
+SELECT * FROM blc_customer WHERE CUSTOMER_ID=47919;
+SELECT * FROM customer_fivecard_xref WHERE customer_id=47919;
+SELECT count(*) from fivecard WHERE card_status=1;
+SELECT * FROM customer_fivecard_xref cx LEFT JOIN fivecard fd ON cx.fivecard_id=fd.card_id WHERE cx.fivecard_id=73336;
+SELECT count(*) FROM  blc_customer;

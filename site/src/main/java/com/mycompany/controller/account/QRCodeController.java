@@ -80,7 +80,7 @@ public class QRCodeController {
         //只有B卡用户才能兑换二维码
         Integer type = fiveCardXref.getType();
         if (FiveCard.CARD_TYPE_B != type) {
-            jsonResponse.setMessage("二维码无效");
+            jsonResponse.setMessage("五折卡\"被分享者\"才能参与线下购物返利活动哟，详见活动规则！");
             return jsonResponse;
         }
         //检测用户是否已经通过扫码领取过线下优惠券

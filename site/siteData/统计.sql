@@ -28,12 +28,12 @@ FROM
   LEFT JOIN blc_order_attribute boa
     ON boa.`ORDER_ID` = o.`ORDER_ID`
 WHERE boa.`NAME` = 'transaction_id'
-      AND o.`ORDER_STATUS` IN ('PAID', 'CANCELLED')
+      AND o.`ORDER_STATUS` IN ('PAID')
       AND (
-        o.`SUBMIT_DATE` BETWEEN '2016-05-09 00:00:00'
-        AND '2016-05-09 23:59:59'
+        o.`SUBMIT_DATE` BETWEEN '2016-05-11 00:00:00'
+        AND '2016-05-11 23:59:59'
       )
-ORDER BY o.`ORDER_STATUS`;
+ORDER BY o.`SUBMIT_DATE`;
 
 #订单详情
 SELECT
