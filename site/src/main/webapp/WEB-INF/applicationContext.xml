@@ -10,7 +10,7 @@
 
         http://www.springframework.org/schema/task
         http://www.springframework.org/schema/task/spring-task-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-    <context:component-scan base-package="com.mycompany.schedule"/>
+    <context:component-scan base-package="com.cdfamedy.schedule"/>
     <task:annotation-driven/>
 
     <bean id="blConfiguration" class="org.broadleafcommerce.common.config.RuntimeEnvironmentPropertiesConfigurer"/>
@@ -193,10 +193,10 @@
     <!-- The second bean registers the dialct to the blWebTemplateEngine -->
     <!-- Note that the same thing could be done for the blEmailTemplateEngine -->
     <!-- 
-    <bean id="myDialect" class="com.mycompany.common.web.dialect.MyDialect">
+    <bean id="myDialect" class="com.cdfamedycommon.web.dialect.MyDialect">
         <property name="processors">
           <set>
-            <bean class="com.mycompany.common.web.processor.MyProcessor" />
+            <bean class="com.cdfamedycommon.web.processor.MyProcessor" />
           </set>
         </property>     
     </bean> 
@@ -276,7 +276,7 @@
         <property name="handlers" ref="blCssHandlers"/>
     </bean>
     <!--override address dao-->
-    <bean id="blAddressDao" class="com.mycompany.dao.CustomAddressDaoImpl"/>
+    <bean id="blAddressDao" class="com.cdfamedy.dao.CustomAddressDaoImpl"/>
     <bean p:order="5010" id="blDecrementInventoryActivity"
           class="org.broadleafcommerce.core.checkout.service.workflow.DecrementInventoryActivity">
         <property name="rollbackHandler" ref="blDecrementInventoryRollbackHandler"/>
@@ -309,8 +309,8 @@
     </bean>
 
     <!--bean override-->
-    <bean id="blOrderService" class="com.mycompany.service.CustomOrderServiceImpl"/>
-    <bean id="blOrderDao" class="com.mycompany.sample.dao.CustomOrderDaoImpl"/>
+    <bean id="blOrderService" class="com.cdfamedy.service.CustomOrderServiceImpl"/>
+    <bean id="blOrderDao" class="com.cdfamedy.dao.CustomOrderDaoImpl"/>
     <bean id="featuredProductCategoryId" class="java.lang.Long">
         <constructor-arg value="10050"/>
     </bean>

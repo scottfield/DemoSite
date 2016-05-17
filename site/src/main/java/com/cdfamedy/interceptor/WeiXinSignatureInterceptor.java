@@ -1,0 +1,88 @@
+package com.cdfamedy.interceptor;
+
+import com.cdfamedy.core.WeiXinConstants;
+import com.cdfamedy.service.WeixinService;
+import com.cdfamedy.util.CommonUtils;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Created by jackie on 4/21/2016.
+ * 生成微信js sdk签名
+ */
+public class WeiXinSignatureInterceptor implements HandlerInterceptor {
+    @Resource
+    private WeixinService weixinService;
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        ServletContext servletContext = request.getSession().getServletContext();
+        //检测application域中是否存在ticket
+        Object ticket = servletContext.getAttribute("ticketMap");
+        if (Objects.nonNull(ticket)) {
+            HashMap<String, Object> ticketMap = (HashMap) ticket;
+            Integer expiresIn = (Integer) ticketMap.get("expires_in");
+            long time = Long.valueOf(ticketMap.get("timestamp").toString());
+            long beforeDate = time + expiresIn * 1000;
+            long now = new Date().getTime();
+            //检测ticket是否过期
+            if (beforeDate >= now) {
+                return true;
+            }
+        }
+        //生成新的ticket并存入application中
+        ticket = generateTicket();
+        servletContext.setAttribute("ticketMap", ticket);
+        return true;
+    }
+
+    private synchronized Map generateTicket() {
+
+        Map<String, Object> ticket = weixinService.getTicket();
+        if (Objects.nonNull(ticket) && ticket.get("errcode").equals(0)) {
+            ticket.put("timestamp", ticket.get("timestamp"));
+            ticket.put("nonce", ticket.get("nonce"));
+            ticket.put("appId", WeiXinConstants.APP_ID);
+        } else {
+            throw new RuntimeException("生成ticket失败,详细信息：" + ticket.toString());
+        }
+        return ticket;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        ServletContext servletContext = request.getSession().getServletContext();
+        Map<String, Object> ticketMap = (Map<String, Object>) servletContext.getAttribute("ticketMap");
+        String nonce = (String) ticketMap.get("nonce");
+        String timestamp = (String) ticketMap.get("timestamp");
+        String ticket = (String) ticketMap.get("ticket");
+        String url = request.getRequestURL().toString();
+        //填写签名参数
+        Map<String, Object> param = new HashMap<>();
+        param.put("jsapi_ticket", ticket);
+        param.put("noncestr", nonce);
+        param.put("timestamp", timestamp);
+        param.put("url", url);
+        String tempStr = CommonUtils.getSortedStr(param);
+        //生成签名
+        String signature = CommonUtils.sha1Sign(tempStr);
+
+        ticketMap.put("signature", signature);
+        request.setAttribute("ticketMap", ticketMap);
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+    }
+}

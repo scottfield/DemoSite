@@ -19,7 +19,7 @@
     <logger name="org.springframework"> <level value="error" /> </logger>
     <logger name="org.springframework.web"> <level value="error" /> </logger>
     <logger name="org.springframework.web.servlet"> <level value="error" /> </logger>
-    <logger name="com.mycompany"> <level value="warn" /> </logger>
+    <logger name="com.cdfamedy"> <level value="warn" /> </logger>
     <!--<logger name="org.hibernate.sql"> <level value="DEBUG" /> </logger>
     <logger name="org.hibernate.type"> <level value="TRACE" /> </logger>-->
     <root>

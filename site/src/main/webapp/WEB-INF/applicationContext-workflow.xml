@@ -10,13 +10,13 @@
         <property name="activities">
             <list>
                 <bean p:order="800" id="checkPromotionStatusActivity"
-                      class="com.mycompany.worklow.cart.CheckPromotionStatusActivity"/>
+                      class="com.cdfamedy.worklow.cart.CheckPromotionStatusActivity"/>
                 <bean p:order="900" id="checkPurchageLimitActivity"
-                      class="com.mycompany.worklow.cart.CheckFiveCardStatusActivity"/>
+                      class="com.cdfamedy.worklow.cart.CheckFiveCardStatusActivity"/>
                 <bean p:order="2010" id="blCheckAddAvailabilityActivity"
                       class="org.broadleafcommerce.core.order.service.workflow.CheckAvailabilityActivity"/>
                 <bean p:order="2020" id="checkPurchageLimitActivity"
-                      class="com.mycompany.worklow.cart.CheckPurchageLimitActivity"/>
+                      class="com.cdfamedy.worklow.cart.CheckPurchageLimitActivity"/>
             </list>
         </property>
     </bean>
@@ -29,15 +29,15 @@
                 <bean p:order="2010" id="blCheckUpdateAvailabilityActivity"
                       class="org.broadleafcommerce.core.order.service.workflow.CheckAvailabilityActivity"/>
                 <bean p:order="2020" id="checkPurchageLimitActivity"
-                      class="com.mycompany.worklow.cart.CheckPurchageLimitActivity"/>
+                      class="com.cdfamedy.worklow.cart.CheckPurchageLimitActivity"/>
             </list>
         </property>
     </bean>
-    <bean id="incrementProductSalesActivity" class="com.mycompany.worklow.checkout.IncrementProductSalesActivity"/>
-    <bean id="decrementProductSalesActivity" class="com.mycompany.worklow.checkout.DecrementProductSalesActivity"/>
-    <bean id="incrementInventoryActivity" class="com.mycompany.worklow.checkout.IncrementInventoryActivity"/>
-    <bean id="cancelOrderProcessContext" class="com.mycompany.worklow.cancelOrder.CancelOrderProcessContextFactory"/>
-    <bean id="checkWxOrderStatusActivity" class="com.mycompany.worklow.cancelOrder.CheckWxOrderStatusActivity"/>
+    <bean id="incrementProductSalesActivity" class="com.cdfamedy.worklow.checkout.IncrementProductSalesActivity"/>
+    <bean id="decrementProductSalesActivity" class="com.cdfamedy.worklow.checkout.DecrementProductSalesActivity"/>
+    <bean id="incrementInventoryActivity" class="com.cdfamedy.worklow.checkout.IncrementInventoryActivity"/>
+    <bean id="cancelOrderProcessContext" class="com.cdfamedy.worklow.order.CancelOrderProcessContextFactory"/>
+    <bean id="checkWxOrderStatusActivity" class="com.cdfamedy.worklow.order.CheckWxOrderStatusActivity"/>
     <bean id="cancelOrderWorkflow" class="org.broadleafcommerce.core.workflow.SequenceProcessor">
         <property name="processContextFactory" ref="cancelOrderProcessContext"/>
         <property name="activities">
@@ -51,7 +51,7 @@
             <bean class="org.broadleafcommerce.core.workflow.DefaultErrorHandler"/>
         </property>
     </bean>
-    <bean id="changeOrderStatusToUnpaidActivity" class="com.mycompany.worklow.checkout.ChangeOrderStatusActivity">
+    <bean id="changeOrderStatusToUnpaidActivity" class="com.cdfamedy.worklow.checkout.ChangeOrderStatusActivity">
         <property name="orderStatus" ref="unpaidOrderStatus"/>
     </bean>
     <!--customized order status-->
@@ -77,7 +77,7 @@
                     </bean>
 
                     &lt;!&ndash; This activity should occur at the very end of the checkout workflow, after everything has been executed &ndash;&gt;
-                    <bean p:order="9999999" class="com.mycompany.worklow.checkout.SendOrderConfirmationEmailActivity" />
+                    <bean p:order="9999999" class="com.cdfamedyworklow.checkout.SendOrderConfirmationEmailActivity" />
                 </list>
             </property>
         </bean>-->

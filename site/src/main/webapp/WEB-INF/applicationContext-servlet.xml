@@ -21,7 +21,7 @@
     <context:component-scan base-package="org.broadleafcommerce.profile.web.core.service.login"/>
 
     <!-- Scan DemoSite Sample Payment Gateway Implementation -->
-    <context:component-scan base-package="com.mycompany.sample"/>
+    <context:component-scan base-package="com.cdfamedy.sample"/>
 
     <!-- Turn on AOP annotations (required by Broadleaf) -->
     <aop:config/>
@@ -42,7 +42,7 @@
     </bean>
 
     <!-- Scan for custom controllers -->
-    <context:component-scan base-package="com.mycompany.controller"/>
+    <context:component-scan base-package="com.cdfamedy.controller"/>
 
     <!-- Allow annotation driven controllers -->
     <mvc:annotation-driven/>
@@ -69,7 +69,7 @@
             <mvc:exclude-mapping path="/images/**"/>
             <mvc:exclude-mapping path="/cmsstatic/**"/>
             <!--interceptor for weixin signature-->
-            <bean class="com.mycompany.interceptor.WeiXinSignatureInterceptor"/>
+            <bean class="com.cdfamedy.interceptor.WeiXinSignatureInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
@@ -78,28 +78,28 @@
             <mvc:exclude-mapping path="/images/**"/>
             <mvc:exclude-mapping path="/cmsstatic/**"/>
             <!--interceptor for weixin share-->
-            <bean class="com.mycompany.interceptor.WeiXinShareInterceptor"/>
+            <bean class="com.cdfamedy.interceptor.WeiXinShareInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/account/addresses"/>
             <mvc:mapping path="/coupon/exchange"/>
             <!--interceptor for address form-->
-            <bean class="com.mycompany.interceptor.ShopInfoInterceptor"/>
+            <bean class="com.cdfamedy.interceptor.ShopInfoInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/"/>
             <!--interceptor for weixin subscribe-->
-            <bean class="com.mycompany.interceptor.CheckWeiXinSubscribeInterceptor"/>
+            <bean class="com.cdfamedy.interceptor.CheckWeiXinSubscribeInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/index"/>
             <!--interceptor for new coupon -->
-            <bean class="com.mycompany.interceptor.CheckNewCouponInterceptor"/>
+            <bean class="com.cdfamedy.interceptor.CheckNewCouponInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/index"/>
             <!--interceptor for checking five card quantity available -->
-            <bean class="com.mycompany.interceptor.CheckFiveCardQuantityInterceptor"/>
+            <bean class="com.cdfamedy.interceptor.CheckFiveCardQuantityInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

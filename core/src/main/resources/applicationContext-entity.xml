@@ -8,32 +8,32 @@
     <!-- This file will contain bean overrides for extensions of Broadleaf entities -->
     <!-- For example, if you have a custom class that extends CustomerImpl, you would note that here -->
     <bean id="org.broadleafcommerce.core.catalog.domain.Product"
-          class="com.mycompany.sample.core.catalog.domain.CustomProductImpl"
+          class="com.cdfamedy.core.catalog.domain.CustomProductImpl"
           scope="prototype"/>
     <bean id="com.mycompany.sample.core.catalog.domain.Shop"
-          class="com.mycompany.sample.core.catalog.domain.ShopImpl"
+          class="com.cdfamedy.core.catalog.domain.ShopImpl"
           scope="prototype"/>
     <bean id="org.broadleafcommerce.profile.core.domain.Address"
-          class="com.mycompany.sample.core.catalog.domain.CustomAddressImpl" scope="prototype"/>
+          class="com.cdfamedy.core.catalog.domain.CustomAddressImpl" scope="prototype"/>
 
     <bean id="com.mycompany.sample.core.catalog.domain.QRCode"
-          class="com.mycompany.sample.core.catalog.domain.QRCodeImpl"
+          class="com.cdfamedy.core.catalog.domain.QRCodeImpl"
           scope="prototype"/>
     <bean id="org.broadleafcommerce.profile.core.domain.CustomerAttribute"
           class="org.broadleafcommerce.profile.core.domain.CustomerAttributeImpl"
           scope="prototype"/>
     <bean id="com.mycompany.sample.core.catalog.domain.ShopAccount"
-          class="com.mycompany.sample.core.catalog.domain.ShopAccountImpl" scope="prototype"/>
+          class="com.cdfamedy.core.catalog.domain.ShopAccountImpl" scope="prototype"/>
     <bean id="com.mycompany.sample.core.catalog.domain.FiveCard"
-          class="com.mycompany.sample.core.catalog.domain.FiveCardImpl" scope="prototype"/>
+          class="com.cdfamedy.core.catalog.domain.FiveCardImpl" scope="prototype"/>
     <bean id="org.broadleafcommerce.profile.core.domain.Customer"
-          class="com.mycompany.sample.core.catalog.domain.CustomCustomerImpl" scope="prototype"/>
+          class="com.cdfamedy.core.catalog.domain.CustomCustomerImpl" scope="prototype"/>
     <bean id="com.mycompany.sample.core.catalog.domain.CustomerFiveCardXref"
-          class="com.mycompany.sample.core.catalog.domain.CustomerFiveCardXrefImpl" scope="prototype"/>
+          class="com.cdfamedy.core.catalog.domain.CustomerFiveCardXrefImpl" scope="prototype"/>
     <bean id="com.mycompany.sample.core.catalog.domain.Coupon"
-          class="com.mycompany.sample.core.catalog.domain.CouponImpl" scope="prototype"/>
+          class="com.cdfamedy.core.catalog.domain.CouponImpl" scope="prototype"/>
     <bean id="com.mycompany.sample.core.catalog.domain.CustomerCouponXref"
-          class="com.mycompany.sample.core.catalog.domain.CustomerCouponXrefImpl" scope="prototype"/>
+          class="com.cdfamedy.core.catalog.domain.CustomerCouponXrefImpl" scope="prototype"/>
     <bean id="org.broadleafcommerce.core.order.domain.Order"
-          class="com.mycompany.sample.core.catalog.domain.CustomOrderImpl" scope="prototype"/>
+          class="com.cdfamedy.core.catalog.domain.CustomOrderImpl" scope="prototype"/>
 </beans>
