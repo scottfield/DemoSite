@@ -1,7 +1,7 @@
 package com.cdfamedy.worklow.cart;
 
 import com.cdfamedy.core.domain.CustomProduct;
-import com.cdfamedy.core.util.HttpUtil;
+import com.cdfamedy.core.util.ServletUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.catalog.service.CatalogService;
@@ -27,7 +27,7 @@ public class CheckFiveCardStatusActivity extends BaseActivity<ProcessContext<Car
         OrderItemRequestDTO itemRequest = request.getItemRequest();
         Long productId = itemRequest.getProductId();
         CustomProduct product = (CustomProduct) catalogService.findProductById(productId);
-        Object isUnlocked = HttpUtil.getRequest().getAttribute("isUnlocked");
+        Object isUnlocked = ServletUtil.getRequest().getAttribute("isUnlocked");
         //如果是爆品并且五折卡未激活
         if (product.isFeaturedProduct() && Boolean.FALSE.equals(isUnlocked)) {
             LOG.warn("当前五折卡状态==>" + isUnlocked);

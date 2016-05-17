@@ -1,7 +1,7 @@
 package com.cdfamedy.core.service.impl;
 
 import com.cdfamedy.core.dao.ShopDao;
-import com.cdfamedy.core.dao.payment.weixin.common.Configure;
+import com.cdfamedy.core.dao.payment.weixin.common.WxConfiguration;
 import com.cdfamedy.core.domain.Shop;
 import com.cdfamedy.core.service.ShopService;
 import org.springframework.stereotype.Service;
@@ -34,6 +34,6 @@ public class ShopServiceImpl implements ShopService {
     @PostConstruct
     public void init() {
         Set<Shop> allShop = this.getAllShop();
-        allShop.stream().forEach(shop -> Configure.accountMap.put(shop.getMchid(), shop.getShopAccount()));
+        allShop.stream().forEach(shop -> WxConfiguration.accountMap.put(shop.getMchid(), shop.getShopAccount()));
     }
 }

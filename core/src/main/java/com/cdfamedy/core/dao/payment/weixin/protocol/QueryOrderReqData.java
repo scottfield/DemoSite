@@ -1,7 +1,8 @@
 package com.cdfamedy.core.dao.payment.weixin.protocol;
 
 
-import com.cdfamedy.core.dao.payment.weixin.common.Signature;
+import com.cdfamedy.core.dao.payment.weixin.common.WxConfiguration;
+import com.cdfamedy.core.dao.payment.weixin.common.WxSignature;
 import com.cdfamedy.core.util.CommonUtils;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -23,7 +24,7 @@ public class QueryOrderReqData {
         this.mch_id = builder.mch_id;
         this.nonce_str = CommonUtils.getRandomStr();
         this.out_trade_no = builder.out_trade_no;
-        this.sign = Signature.getSign(toMap(), mch_id);
+        this.sign = WxSignature.getSignature(toMap(), WxConfiguration.getKey(mch_id));
     }
 
     public String getAppid() {

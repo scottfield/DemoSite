@@ -15,7 +15,7 @@ import java.util.Objects;
  * Created by jackie on 4/23/2016.
  */
 @Service
-public class WeixinServiceImpl implements WeixinService {
+public class WxServiceImpl implements WeixinService {
     @Override
     public Map<String, Object> getUserInfo(String openId) {
         Map<String, Object> param = new HashMap<>();
@@ -23,14 +23,14 @@ public class WeixinServiceImpl implements WeixinService {
         return sendRequest(param, "http://weixin.cplotus.com/weixin/userinfo.ashx");
     }
 
-    private Map<String, Object> getQueryStr(Map<String, Object> extraParam) {
+    private Map<String, Object> getQueryStr(Map<String, Object> queryParam) {
         Map<String, Object> param = new HashMap<>();
         param.put("app_key", WeiXinConstants.APP_KEY);
         param.put("nonce", CommonUtils.getRandomStr());
         param.put("timestamp", CommonUtils.currentTimeStamp() + "");//将timestamp转为字符串
         param.put("stat_src", WeiXinConstants.STATIC_SRC);
-        if (Objects.nonNull(extraParam)) {
-            param.putAll(extraParam);
+        if (Objects.nonNull(queryParam)) {
+            param.putAll(queryParam);
         }
         String tempStr = CommonUtils.getSortedStr(param);
         String signature = CommonUtils.md5Sign(tempStr, WeiXinConstants.APP_SECRET);
@@ -49,7 +49,7 @@ public class WeixinServiceImpl implements WeixinService {
 
     private Map<String, Object> sendRequest(Map<String, Object> extraParam, String url) {
         Map<String, Object> queryStr = getQueryStr(extraParam);
-        String responseStr = HttpUtil.sendGet(url, (String) queryStr.get("queryStr"));
+        String responseStr = HttpUtil.doGet(url + "?" + queryStr.get("queryStr").toString());
         HashMap response = JsonUtil.fromJson(responseStr, HashMap.class);
         if (Objects.nonNull(response)) {
             response.putAll(queryStr);
@@ -63,10 +63,10 @@ public class WeixinServiceImpl implements WeixinService {
     }
 
     public static void main(String[] args) {
-        WeixinService service = new WeixinServiceImpl();
-//        System.out.println(service.getVipInfo("o1Py0t7UnGihjJqCfZz2bigtkTu4"));
+        WeixinService service = new WxServiceImpl();
+        System.out.println(service.getVipInfo("o1Py0t7UnGihjJqCfZz2bigtkTu4"));
 //        System.out.println(service.getTicket());
-        System.out.println(service.getUserInfo("o1Py0twT_6kpQRqIX4rJiQD_fjvQ"));//老段
+//        System.out.println(service.getUserInfo("o1Py0twT_6kpQRqIX4rJiQD_fjvQ"));//老段
 //        System.out.println(service.getUserInfo("o1Py0tx91UJXWdtT_gD9xMdI5Rdo"));//jackie
       /*  Map<String, Object> param = new HashMap<>();
         param.put("timeStamp", "1461661208969");

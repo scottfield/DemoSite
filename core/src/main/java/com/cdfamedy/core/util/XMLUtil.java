@@ -1,4 +1,4 @@
-package com.cdfamedy.core.dao.payment.weixin.common;
+package com.cdfamedy.core.util;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * xml转换类
  */
-public class XMLParser {
+public final class XMLUtil {
 
     public static <T> T getObjectFromXML(String xml, Class<T> tClass) {
         //将从API返回的XML数据映射到Java对象
@@ -40,23 +40,23 @@ public class XMLParser {
         return tInputStringStream;
     }
 
-    public static Map<String,Object> getMapFromXML(String xmlString) throws ParserConfigurationException, IOException, SAXException {
+    public static Map<String, Object> getMapFromXML(String xmlString) throws ParserConfigurationException, IOException, SAXException {
 
         //这里用Dom的方式解析回包的最主要目的是防止API新增回包字段
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        InputStream is =  getStringStream(xmlString);
+        InputStream is = getStringStream(xmlString);
         Document document = builder.parse(is);
 
         //获取到document里面的全部结点
         NodeList allNodes = document.getFirstChild().getChildNodes();
         Node node;
         Map<String, Object> map = new HashMap<String, Object>();
-        int i=0;
+        int i = 0;
         while (i < allNodes.getLength()) {
             node = allNodes.item(i);
-            if(node instanceof Element){
-                map.put(node.getNodeName(),node.getTextContent());
+            if (node instanceof Element) {
+                map.put(node.getNodeName(), node.getTextContent());
             }
             i++;
         }
@@ -69,9 +69,6 @@ public class XMLParser {
         xStream.autodetectAnnotations(true);
         return xStream.toXML(o);
     }
-
-
-
 
 
 }

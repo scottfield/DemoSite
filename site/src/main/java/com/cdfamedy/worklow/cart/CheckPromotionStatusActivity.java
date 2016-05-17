@@ -1,7 +1,7 @@
 package com.cdfamedy.worklow.cart;
 
 import com.cdfamedy.core.domain.Promotion;
-import com.cdfamedy.core.util.HttpUtil;
+import com.cdfamedy.core.util.ServletUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.service.workflow.CartOperationRequest;
@@ -17,7 +17,7 @@ public class CheckPromotionStatusActivity extends BaseActivity<ProcessContext<Ca
 
     @Override
     public ProcessContext<CartOperationRequest> execute(ProcessContext<CartOperationRequest> context) throws Exception {
-        Integer status = HttpUtil.getRequestAttribute("promotionStatus");
+        Integer status = ServletUtil.getRequestAttribute("promotionStatus");
         if (status != Promotion.IN_PROCESS) {
             LOG.info("活动不在进行当中,当前活动状态:" + status);
             throw new PromotionException();

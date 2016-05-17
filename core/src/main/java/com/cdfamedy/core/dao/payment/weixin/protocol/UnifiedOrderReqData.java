@@ -1,8 +1,7 @@
 package com.cdfamedy.core.dao.payment.weixin.protocol;
 
 
-import com.cdfamedy.core.dao.payment.weixin.common.Configure;
-import com.cdfamedy.core.dao.payment.weixin.common.Signature;
+import com.cdfamedy.core.dao.payment.weixin.common.WxSignature;
 import com.cdfamedy.core.util.CommonUtils;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -54,7 +53,7 @@ public class UnifiedOrderReqData {
         this.product_id = builder.product_id;
         this.limit_pay = builder.limit_pay;
         this.openid = builder.openid;
-        this.sign = Signature.getSign(toMap(), mch_id);
+        this.sign = WxSignature.getSignature(toMap(), mch_id);
     }
 
     public String getAppid() {
@@ -176,24 +175,6 @@ public class UnifiedOrderReqData {
         private String product_id;
         private String limit_pay;
         private String openid;
-
-        /**
-         * 使用配置中的 appid 和  mch_id
-         *
-         * @param body
-         * @param out_trade_no
-         * @param total_fee
-         * @param spbill_create_ip
-         * @param notify_url
-         * @param trade_type
-         */
-        public UnifiedOrderReqDataBuilder(String body, String out_trade_no, Integer total_fee,
-                                          String spbill_create_ip, String notify_url, String trade_type) {
-
-            this(Configure.getAppid(), Configure.getMchid(), body, out_trade_no, total_fee,
-                    spbill_create_ip, notify_url, trade_type);
-
-        }
 
         public UnifiedOrderReqDataBuilder(String appid, String mch_id, String body, String out_trade_no, Integer total_fee,
                                           String spbill_create_ip, String notify_url, String trade_type) {

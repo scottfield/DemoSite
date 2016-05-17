@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Created by jackie on 4/27/2016.
  */
-public class JsonResponse {
+public final class JsonResponse {
     private Integer code;
     private String message;
     private Map<String, Object> others;

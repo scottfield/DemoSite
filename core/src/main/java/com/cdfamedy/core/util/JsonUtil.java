@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import javax.management.RuntimeErrorException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
@@ -26,8 +27,12 @@ public final class JsonUtil {
     }
 
 
-    public static <T> T fromJson(String json, Class<T> clazz) throws IOException {
-        return clazz.equals(String.class) ? (T) json : MAPPER.readValue(json, clazz);
+    public static <T> T fromJson(String json, Class<T> clazz) {
+        try {
+            return clazz.equals(String.class) ? (T) json : MAPPER.readValue(json, clazz);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -62,11 +67,6 @@ public final class JsonUtil {
             return null;
         }
     }
-
-//    public static ObjectMapper mapper() {
-//        return MAPPER;
-//    }
-
 
     private static ObjectMapper generateMapper(JsonInclude.Include include) {
 

@@ -1,8 +1,8 @@
 package com.cdfamedy.controller.wxpay;
 
 import com.cdfamedy.controller.account.OrderHistoryController;
-import com.cdfamedy.core.dao.payment.weixin.common.Configure;
-import com.cdfamedy.core.dao.payment.weixin.common.XMLParser;
+import com.cdfamedy.core.dao.payment.weixin.common.WxConfiguration;
+import com.cdfamedy.core.util.XMLUtil;
 import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.protocol.UnifiedOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.service.WxCallBackData;
@@ -110,7 +110,7 @@ public class WeiXinPayController {
             param.put("package", packageStr);
             param.put("signType", "MD5");
             String sortedStr = CommonUtils.getSortedStr(param);
-            String paySign = CommonUtils.md5Sign(sortedStr, Configure.getKey(mch_id), "key").toUpperCase();
+            String paySign = CommonUtils.md5Sign(sortedStr, WxConfiguration.getKey(mch_id), "key").toUpperCase();
             param.put("paySign", paySign);
 //            String jsApiParam = JsonUtil.toJson(param);
             /*LOG.info("-----------------------------------------------------------------------------------");
@@ -160,7 +160,7 @@ public class WeiXinPayController {
                 return null;
             }
             //解析xml
-            WxCallBackData result = XMLParser.getObjectFromXML(notifyXml, WxCallBackData.class);
+            WxCallBackData result = XMLUtil.getObjectFromXML(notifyXml, WxCallBackData.class);
             //验证签名 todo
             //检测支付结果
             //检测通信标示

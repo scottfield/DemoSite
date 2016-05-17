@@ -1,8 +1,8 @@
 package com.cdfamedy.core.dao.payment.weixin.service;
 
-import com.cdfamedy.core.dao.payment.weixin.common.Configure;
-import com.cdfamedy.core.dao.payment.weixin.common.HttpService;
-import com.cdfamedy.core.dao.payment.weixin.common.XMLParser;
+import com.cdfamedy.core.dao.payment.weixin.common.WxConfiguration;
+import com.cdfamedy.core.util.HttpUtil;
+import com.cdfamedy.core.util.XMLUtil;
 import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.protocol.UnifiedOrderReqData;
 import com.cdfamedy.core.util.JsonUtil;
@@ -23,15 +23,15 @@ public class WxPayApi {
     private static Log logger = LogFactory.getLog(WxPayApi.class);
 
     public static Map<String, Object> UnifiedOrder(UnifiedOrderReqData reqData) throws IOException, SAXException, ParserConfigurationException {
-        String res = HttpService.doPost(Configure.UNIFIED_ORDER_API, reqData);
+        String res = HttpUtil.doPost(WxConfiguration.UNIFIED_ORDER_API, reqData);
         logger.debug("UnifiedOrder get response:" + res);
-        return XMLParser.getMapFromXML(res);
+        return XMLUtil.getMapFromXML(res);
     }
 
     public static Map<String, Object> queryOrder(QueryOrderReqData reqData) throws IOException, SAXException, ParserConfigurationException {
-        String res = HttpService.doPost(Configure.PAY_QUERY_API, reqData);
+        String res = HttpUtil.doPost(WxConfiguration.PAY_QUERY_API, reqData);
         logger.debug("Pay Query get response:" + res);
-        return XMLParser.getMapFromXML(res);
+        return XMLUtil.getMapFromXML(res);
     }
 
     public static String getOpenid(String appid, String appSecret, String code) throws Exception {
@@ -40,7 +40,7 @@ public class WxPayApi {
                 + "&secret="
                 + appSecret
                 + "&code=" + code + "&grant_type=authorization_code";
-        String res = HttpService.doGet(requestUrl);
+        String res = HttpUtil.doGet(requestUrl);
         System.out.println(res);
         Map<String, Object> resultMap = JsonUtil.fromJson(res, HashMap.class);
         if (resultMap.get("openid") == null) {
@@ -84,7 +84,7 @@ public class WxPayApi {
 
        /* String result = "<xml><appid><![CDATA[wx937fba8914a5d9a9]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[1326016401]]></mch_id><nonce_str><![CDATA[5qg7pmgbrai2v30g8n0t8xr6ggtw2ri8]]></nonce_str><openid><![CDATA[o1Py0tx91UJXWdtT_gD9xMdI5Rdo]]></openid><out_trade_no><![CDATA[20160508212400943851]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[8F3173CFE9E3495B55E2AACC40C0F26F]]></sign><time_end><![CDATA[20160508212409]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[JSAPI]]></trade_type><transaction_id><![CDATA[4006002001201605085647871490]]></transaction_id></xml>";
 
-        Map<String, Object> mapFromXML = XMLParser.getMapFromXML(result);
+        Map<String, Object> mapFromXML = XMLUtil.getMapFromXML(result);
         System.out.println(JsonHelper.toJsonStr(mapFromXML));*/
     }
 }

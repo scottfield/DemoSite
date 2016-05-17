@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * Created by jackie on 4/22/2016.
  */
-public class CommonUtils {
+public final class CommonUtils {
     /**
      * 获取指定长度的随机字符串
      *
