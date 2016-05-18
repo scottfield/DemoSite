@@ -14,7 +14,6 @@ import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
 import org.broadleafcommerce.core.order.service.OrderServiceImpl;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
-import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.workflow.Processor;
 import org.broadleafcommerce.core.workflow.WorkflowException;
 import org.springframework.transaction.TransactionDefinition;
@@ -25,6 +24,7 @@ import org.xml.sax.SAXException;
 import javax.annotation.Resource;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,34 +78,18 @@ public class CustomOrderServiceImpl extends OrderServiceImpl implements CustomOr
             Object[] arr = (Object[]) cancelledOrder;
             String orderNumber = arr[1].toString();
             Shop shop = (Shop) arr[2];
-            /*List<String> numbers = new ArrayList<>();
-            numbers.add("201605091102156684217");
-            numbers.add("201605091116377744221");
-            numbers.add("201605091306007874502");
-            numbers.add("201605091635025394858");
-            numbers.add("201605091951245374897");
-            numbers.add("201605092127593145161");
-            numbers.add("201605091952167125243");
-            numbers.add("201605092104381365297");
-            numbers.add("201605092052239085311");
-            numbers.add("20160509212215135437");
-            numbers.add("201605092139052185541");
-            numbers.add("20160509212636955582");
-            numbers.add("201605092146136265818");
-            numbers.add("201605092207126785861");
-            numbers.add("20160509222246216005");
-            numbers.add("201605092339076556752");
-            numbers.add("201605120004253857877");
-            numbers.add("201605111119286099559");
-            numbers.add("2016051209111114610688");
-            numbers.add("2016051212204443510845");
+            List<String> numbers = new ArrayList<>();
+           /* numbers.add("2016051711304574214145");
             if (!numbers.contains(orderNumber)) {
                 return;
             }*/
-            QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(orderNumber).build();
             try {
-                Map<String, Object> result = WxPayApi.queryOrder(reqData);
                 Order order = this.findOrderByOrderNumber(orderNumber);
+                if (Objects.nonNull(order.getOrderAttributes()) && order.getOrderAttributes().containsKey("trade_state") && WxCallBackData.SUCCESS.equals(order.getOrderAttributes().get("trade_state"))) {
+                    return;
+                }
+                QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(orderNumber).build();
+                Map<String, Object> result = WxPayApi.queryOrder(reqData);
                 LOG.warn("自动更新订单状态为已支付开始,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
                 if (WxCallBackData.SUCCESS.equals(result.get("trade_state"))) {
                     LOG.warn("更新订单属性,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
@@ -117,20 +101,7 @@ public class CustomOrderServiceImpl extends OrderServiceImpl implements CustomOr
                         LOG.warn("已存在,取消更新订单属性,订单号:" + orderNumber + ",当前订单状态:" + order.getStatus().getType());
                         return;
                     }
-                    for (String key : result.keySet()) {
-                        if (orderAttributes.containsKey(key)) {
-                            OrderAttribute orderAttribute = orderAttributes.get(key);
-                            orderAttribute.setValue(result.get(key).toString());
-                        } else {
-                            OrderAttribute orderAttribute = new OrderAttributeImpl();
-                            orderAttribute.setName(key);
-                            orderAttribute.setValue(result.get(key).toString());
-                            orderAttribute.setOrder(order);
-                            orderAttributes.put(key, orderAttribute);
-                        }
-                    }
-                    order.setOrderAttributes(orderAttributes);
-                    this.save(order, false);
+                    updateOrderAttribute(order, result);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -138,9 +109,30 @@ public class CustomOrderServiceImpl extends OrderServiceImpl implements CustomOr
                 e.printStackTrace();
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
-            } catch (PricingException e) {
-                e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    @Transactional(value = TransactionUtils.DEFAULT_TRANSACTION_MANAGER)
+    public void updateOrderAttribute(Order order, Map<String, Object> attributes) {
+        Map<String, OrderAttribute> orderAttributes = order.getOrderAttributes();
+        if (Objects.isNull(orderAttributes)) {
+            orderAttributes = new HashMap<>();
+        }
+        for (String key : attributes.keySet()) {
+            if (orderAttributes.containsKey(key)) {
+                OrderAttribute orderAttribute = orderAttributes.get(key);
+                orderAttribute.setValue(attributes.get(key).toString());
+            } else {
+                OrderAttribute orderAttribute = new OrderAttributeImpl();
+                orderAttribute.setName(key);
+                orderAttribute.setValue(attributes.get(key).toString());
+                orderAttribute.setOrder(order);
+                orderAttributes.put(key, orderAttribute);
+            }
+        }
+        order.setOrderAttributes(orderAttributes);
+        orderDao.save(order);
     }
 }

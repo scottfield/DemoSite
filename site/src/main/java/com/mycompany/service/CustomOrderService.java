@@ -6,6 +6,7 @@ import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.workflow.WorkflowException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jackie on 4/20/2016.
@@ -35,4 +36,6 @@ public interface CustomOrderService extends OrderService {
     List<Order> findOrderByStatus(OrderStatus status);
 
     void updateWxOrderInfo();
+
+    void updateOrderAttribute(Order order, Map<String, Object> attributes);
 }

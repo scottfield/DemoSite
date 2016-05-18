@@ -50,8 +50,8 @@
         nextButton: '.swiper-button-next',
         pagination: '.swiper-pagination',
         loop: true,
-        autoplay:5000,
-        onAutoplayStop:function(){
+        autoplay: 5000,
+        onAutoplayStop: function () {
             mySwiper.startAutoplay();
         },
         loopAdditionalSlides: 1,
@@ -80,6 +80,12 @@
         $("#getFiveCard").click(function () {
             location.href = "[[@{/fiveCard/issue}]]";
         })
+    });
+    $(function () {
+        var param = decodeURIComponent(location.search).split("=");
+        if (decodeURIComponent(location.search).indexOf("message") > 0) {
+            alert(param[1]);
+        }
     });
 </script>
 </body>

@@ -30,8 +30,6 @@ WHERE o.`ORDER_NUMBER` IN (
   '201605111532208349900'
 );
 
-
-
 #end
 #根据用户openID查询订单信息
 SELECT
@@ -263,12 +261,32 @@ FROM BLC_CUSTOMER customerim0_ LEFT OUTER JOIN customer_extend customerim0_1_
   LEFT OUTER JOIN BLC_CUSTOMER customcust6_1_ ON customcust6_.CUSTOMER_ID = customcust6_1_.CUSTOMER_ID
 WHERE customerim0_.CUSTOMER_ID = 25797;
 
-SELECT count(*) FROM fivecard;
-SELECT * from fivecard WHERE card_no='7400055869578';
-SELECT * FROM blc_customer WHERE FIRST_NAME LIKE '%阿敏%';
-SELECT * FROM blc_customer WHERE CUSTOMER_ID=47919;
-SELECT * FROM customer_fivecard_xref WHERE customer_id=47919;
-SELECT count(*) from fivecard WHERE card_status=1;
-SELECT * FROM customer_fivecard_xref cx LEFT JOIN fivecard fd ON cx.fivecard_id=fd.card_id WHERE cx.fivecard_id=73336;
-SELECT count(*) FROM  blc_customer;
-SELECT * FROM blc_order o WHERE o.ORDER_STATUS='CONSUMED';
+SELECT count(*)
+FROM fivecard;
+SELECT *
+FROM fivecard
+WHERE card_no = '7400055869578';
+SELECT *
+FROM blc_customer
+WHERE FIRST_NAME LIKE '%阿敏%';
+SELECT *
+FROM blc_customer
+WHERE CUSTOMER_ID = 47919;
+SELECT *
+FROM customer_fivecard_xref
+WHERE customer_id = 47919;
+SELECT count(*)
+FROM fivecard
+WHERE card_status = 1;
+SELECT *
+FROM customer_fivecard_xref cx LEFT JOIN fivecard fd ON cx.fivecard_id = fd.card_id
+WHERE cx.fivecard_id = 73336;
+SELECT count(*)
+FROM blc_customer;
+SELECT count(*)
+FROM blc_order o
+WHERE o.ORDER_STATUS = 'PAID';
+
+SELECT *
+FROM shop
+WHERE `name` = '新塘店';

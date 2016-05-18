@@ -101,6 +101,12 @@
             <!--interceptor for checking five card quantity available -->
             <bean class="com.mycompany.interceptor.CheckFiveCardQuantityInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/fiveCard/issue"/>
+            <mvc:mapping path="/fiveCard/activate"/>
+            <!--interceptor for checking five card quantity available -->
+            <bean class="com.mycompany.interceptor.CheckFiveCardIssueDateInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <!-- Default locale set -->

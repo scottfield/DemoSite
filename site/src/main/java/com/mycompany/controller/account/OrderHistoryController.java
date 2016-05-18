@@ -23,6 +23,7 @@ import com.mycompany.sample.payment.weixin.protocol.QueryOrderReqData;
 import com.mycompany.sample.payment.weixin.service.WxCallBackData;
 import com.mycompany.sample.payment.weixin.service.WxPayApi;
 import com.mycompany.sample.util.JsonHelper;
+import com.mycompany.sample.util.JsonResponse;
 import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +39,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Resource;
@@ -144,6 +147,49 @@ public class OrderHistoryController extends BroadleafOrderHistoryController {
         } catch (PricingException e) {
             LOG.error("更新订单失败", e);
         }
+    }
+
+    /**
+     * 支付成功后确认订单
+     *
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/confirm")
+    @ResponseBody
+    public Object confirmOrder(@RequestParam Long orderId) {
+        JsonResponse result = JsonResponse.response("更新订单成功.");
+        Order order = orderService.findOrderById(orderId);
+        LOG.warn("检测订单状态开始,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+        if (Objects.isNull(order)) {
+            LOG.warn("订单号：" + orderId + "不存在.");
+            result.setMessage("更新订单失败，订单号:" + orderId + " 不存在");
+            result.setCode(JsonResponse.FAIL_CODE);
+            return result;
+        }
+        try {
+            //调用微信支付订单查询接口确认订单状态
+            CustomOrder customOrder = (CustomOrder) order;
+            Shop shop = customOrder.getAddress().getShop();
+            QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(order.getOrderNumber()).build();
+            Map<String, Object> queryOrderResult = WxPayApi.queryOrder(reqData);
+            if (WxCallBackData.SUCCESS.equals(queryOrderResult.get("trade_state"))) {
+                LOG.warn("更新订单状态,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+                order.setStatus(PAID);
+                CustomOrderService customOrderService = (CustomOrderService) orderService;
+                customOrderService.updateOrderAttribute(order, queryOrderResult);
+                LOG.warn("更新订单状态完成,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+                return result;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        LOG.warn("检测订单状态结束,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
+        return result;
     }
 
     @RequestMapping(value = "/detail/{orderNumber}", method = RequestMethod.GET)
