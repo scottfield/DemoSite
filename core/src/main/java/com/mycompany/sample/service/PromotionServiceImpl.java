@@ -17,10 +17,16 @@ public class PromotionServiceImpl implements PromotionService {
         //todo 完成从数据库获取活动时间
         Promotion promotion = new PromotionImpl();
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR,2016);
-        calendar.set(Calendar.MONTH,Calendar.MAY);
+        calendar.set(Calendar.YEAR, 2016);
+        calendar.set(Calendar.MONTH, Calendar.MAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        //活动开始时间
         calendar.set(Calendar.DAY_OF_MONTH, 9);
         Date startDate = calendar.getTime();
+        //活动结束时间
         calendar.set(Calendar.DAY_OF_MONTH, 19);
         calendar.set(Calendar.HOUR_OF_DAY, 14);
         Date endDate = calendar.getTime();

@@ -36,10 +36,10 @@ public class QRCodeController {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         //扫码开始时间
-        calendar.set(Calendar.DAY_OF_MONTH, 13);
+        calendar.set(Calendar.DAY_OF_MONTH, 20);
         start = calendar.getTime();
         //扫码结束时间
-        calendar.set(Calendar.DAY_OF_MONTH, 15);
+        calendar.set(Calendar.DAY_OF_MONTH, 23);
         end = calendar.getTime();
     }
 

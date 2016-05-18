@@ -62,10 +62,10 @@ public class CouponController {
 
 
         //线下开始时间
-        calendar.set(Calendar.DAY_OF_MONTH, 13);
+        calendar.set(Calendar.DAY_OF_MONTH, 20);
         offlineExchangeStartDate = calendar.getTime();
         //线下结束时间
-        calendar.set(Calendar.DAY_OF_MONTH, 15);
+        calendar.set(Calendar.DAY_OF_MONTH, 23);
         offlineExchangeEndDate = calendar.getTime();
     }
 
