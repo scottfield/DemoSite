@@ -1,11 +1,11 @@
 package com.cdfamedy.core.dao.payment.weixin.service;
 
 import com.cdfamedy.core.dao.payment.weixin.common.WxConfiguration;
-import com.cdfamedy.core.util.HttpUtil;
-import com.cdfamedy.core.util.XMLUtil;
 import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.protocol.UnifiedOrderReqData;
+import com.cdfamedy.core.util.HttpUtil;
 import com.cdfamedy.core.util.JsonUtil;
+import com.cdfamedy.core.util.XMLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
@@ -24,13 +24,13 @@ public class WxPayApi {
 
     public static Map<String, Object> UnifiedOrder(UnifiedOrderReqData reqData) throws IOException, SAXException, ParserConfigurationException {
         String res = HttpUtil.doPost(WxConfiguration.UNIFIED_ORDER_API, reqData);
-        logger.debug("UnifiedOrder get response:" + res);
+        logger.debug("UnifiedOrder get success:" + res);
         return XMLUtil.getMapFromXML(res);
     }
 
     public static Map<String, Object> queryOrder(QueryOrderReqData reqData) throws IOException, SAXException, ParserConfigurationException {
         String res = HttpUtil.doPost(WxConfiguration.PAY_QUERY_API, reqData);
-        logger.debug("Pay Query get response:" + res);
+        logger.debug("Pay Query get success:" + res);
         return XMLUtil.getMapFromXML(res);
     }
 

@@ -21,7 +21,11 @@ import com.cdfamedy.worklow.cart.ExceededMaxPurchaseQuantityLimitException;
 import com.cdfamedy.worklow.cart.FiveCardUnlockException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
-import org.broadleafcommerce.core.order.service.exception.*;
+import org.broadleafcommerce.core.order.service.exception.AddToCartException;
+import org.broadleafcommerce.core.order.service.exception.ProductOptionValidationException;
+import org.broadleafcommerce.core.order.service.exception.RemoveFromCartException;
+import org.broadleafcommerce.core.order.service.exception.RequiredAttributeNotProvidedException;
+import org.broadleafcommerce.core.order.service.exception.UpdateCartException;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.controller.cart.BroadleafCartController;
 import org.broadleafcommerce.core.web.order.CartState;
@@ -111,10 +115,10 @@ public class CartController extends BroadleafCartController {
      * for the given product so that the required options may be chosen.
      */
     // @RequestMapping(value = "/add", produces = {"text/html", "*/*"})
-    /*public String add(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
+    /*public String add(HttpServletRequest request, HttpServletResponse success, Model model, RedirectAttributes redirectAttributes,
                       @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
         try {
-            return super.add(request, response, model, addToCartItem);
+            return super.add(request, success, model, addToCartItem);
         } catch (AddToCartException e) {
             Product product = catalogService.findProductById(addToCartItem.getProductId());
             return "redirect:" + product.getUrl();

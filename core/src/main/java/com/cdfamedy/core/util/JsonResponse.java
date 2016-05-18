@@ -4,6 +4,7 @@ import java.util.Map;
 
 /**
  * Created by jackie on 4/27/2016.
+ * json返回值,用于封装json格式的响应数据
  */
 public final class JsonResponse {
     private Integer code;
@@ -12,13 +13,17 @@ public final class JsonResponse {
     public static final Integer SUCCESS_CODE = 1000;
     public static final Integer FAIL_CODE = -1000;
 
-    public static JsonResponse response() {
-        return response("成功");
+    public static JsonResponse success(String message) {
+        return response(message, SUCCESS_CODE);
     }
 
-    public static JsonResponse response(String errorMsg) {
+    public static JsonResponse fail(String message) {
+        return response(message, FAIL_CODE);
+    }
+
+    public static JsonResponse response(String errorMsg, Integer code) {
         JsonResponse response = new JsonResponse();
-        response.setCode(SUCCESS_CODE);
+        response.setCode(code);
         response.setMessage(errorMsg);
         return response;
     }

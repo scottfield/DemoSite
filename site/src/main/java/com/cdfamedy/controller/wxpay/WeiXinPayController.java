@@ -205,9 +205,7 @@ public class WeiXinPayController {
     @RequestMapping("/confirm")
     @ResponseBody
     public Object confirmOrder(@RequestParam Long orderId) {
-        JsonResponse result = JsonResponse.response();
-        result.setMessage("订单支付失败");
-        result.setCode(JsonResponse.FAIL_CODE);
+        JsonResponse result = JsonResponse.fail("订单支付失败");
         Order order = orderService.findOrderById(orderId);
         if (Objects.isNull(order)) {
             LOG.warn("订单ID：" + orderId + "不存在.");
@@ -262,7 +260,7 @@ public class WeiXinPayController {
     public Object getWxPayBack(@RequestParam String orderNumber) {
         Order order = orderService.findOrderByOrderNumber(orderNumber);
         if (Objects.isNull(order) && !(order instanceof CustomOrder)) {
-            return JsonResponse.response("订单(" + orderNumber + ")异常");
+            return JsonResponse.fail("订单(" + orderNumber + ")异常");
         }
         CustomOrder customOrder = (CustomOrder) order;
         Shop shop = customOrder.getAddress().getShop();

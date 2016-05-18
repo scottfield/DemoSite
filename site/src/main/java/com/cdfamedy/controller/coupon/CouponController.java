@@ -3,7 +3,12 @@ package com.cdfamedy.controller.coupon;
 import com.cdfamedy.controller.account.QRCodeController;
 import com.cdfamedy.controller.form.CouponExchangeForm;
 import com.cdfamedy.controller.wrapper.CardWrapper;
-import com.cdfamedy.core.domain.*;
+import com.cdfamedy.core.domain.Coupon;
+import com.cdfamedy.core.domain.CustomAddress;
+import com.cdfamedy.core.domain.CustomCustomer;
+import com.cdfamedy.core.domain.CustomerCouponXref;
+import com.cdfamedy.core.domain.CustomerFiveCardXref;
+import com.cdfamedy.core.domain.Shop;
 import com.cdfamedy.core.domain.impl.CustomerCouponXrefImpl;
 import com.cdfamedy.core.service.CouponService;
 import com.cdfamedy.core.service.CustomerCouponXrefService;
@@ -24,7 +29,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by jackie on 4/27/2016.
@@ -78,12 +88,11 @@ public class CouponController {
     @RequestMapping(value = "/issue/online", method = RequestMethod.GET)
     @ResponseBody
     public Object issueOnlineCoupon() {
-        JsonResponse result = JsonResponse.response("发放优惠券成功.");
+        JsonResponse result = JsonResponse.fail("发放优惠券失败.");
         //检测用户拥有优惠券的数量是否超过限制(最多三张)
         CustomCustomer customer = (CustomCustomer) CustomerState.getCustomer();
         List<CustomerCouponXref> couponXrefList = customer.getOnlineCouponXrefs();
         if (Objects.nonNull(couponXrefList) && couponXrefList.size() >= 3) {
-            result.setCode(JsonResponse.FAIL_CODE);
             String message = "优惠券数量已超出最大限制(每人最多3张),当前用户:" + customer.getId() + ",已拥有的优惠券" + couponXrefList.size() + "张";
             result.setMessage(message);
             LOG.info(message);
@@ -102,11 +111,10 @@ public class CouponController {
     @RequestMapping(value = "/issue/offline", method = RequestMethod.GET)
     @ResponseBody
     public Object issueOfflineCoupon(@RequestParam String token, HttpSession session) {
-        JsonResponse result = JsonResponse.response("发放优惠券成功.");
+        JsonResponse result = JsonResponse.fail("发放优惠券失败.");
         //校验token是否正确
         Object tokenInSession = session.getAttribute(QRCodeController.issueCouponTokenName);
         if (!token.equals(tokenInSession)) {
-            result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("验证口令错误");
             LOG.warn("发放优惠券失败,错误口令:" + token + ",正确口令:" + (Objects.isNull(tokenInSession) ? "" : tokenInSession.toString()));
             return result;
@@ -116,7 +124,6 @@ public class CouponController {
 
         CustomerFiveCardXref fiveCardXref = customer.getFiveCardXref();
         if (Objects.isNull(fiveCardXref)) {
-            result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("还没领取五折卡哦");
             return result;
         }
@@ -144,14 +151,12 @@ public class CouponController {
     }
 
     private JsonResponse issueCoupon(Coupon coupon, Customer customer) {
-        JsonResponse result = JsonResponse.response("发放优惠券成功.");
+        JsonResponse result = JsonResponse.fail("发放优惠券失败.");
         if (Objects.isNull(coupon)) {
-            result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("优惠券已发完");
             return result;
         }
         if (Objects.isNull(customer)) {
-            result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("用户不存在");
             return result;
         }
@@ -159,6 +164,9 @@ public class CouponController {
         others.put("couponValue", coupon.getValue());
         others.put("couponDesc", coupon.getDesc());
         others.put("couponType", coupon.getType());
+        result.setCode(JsonResponse.SUCCESS_CODE);
+        result.setMessage("发放优惠券成功.");
+
         result.setOthers(others);
         CustomerCouponXref couponXref = new CustomerCouponXrefImpl();
         couponXref.setCustomer(customer);
@@ -218,18 +226,16 @@ public class CouponController {
     @RequestMapping(value = "/exchange/confirm", method = RequestMethod.POST)
     @ResponseBody
     public Object exchangeCoupon(CouponExchangeForm form) {
-        JsonResponse result = JsonResponse.response("兑换优惠券成功.");
+        JsonResponse result = JsonResponse.fail("兑换优惠券失败.");
         CustomerCouponXref couponXref = couponXrefService.readById(form.getCouponXrefId());
 
         //检测优惠券是否存在
         if (Objects.isNull(couponXref)) {
-            result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("优惠券不存在");
             return result;
         }
         //检查优惠券是否兑换
         if (couponXref.getStatus()) {
-            result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("优惠券已兑换");
             return result;
         }
@@ -246,19 +252,16 @@ public class CouponController {
         }
 
         if (now.before(start)) {
-            result.setCode(-1000);
             result.setMessage("还未到优惠券兑换时间,最早兑换时间" + CommonUtils.formatDate(offlineExchangeStartDate));
             return result;
         }
         if (now.after(end)) {
-            result.setCode(-1000);
             result.setMessage("优惠券兑换时间已结束,最晚兑换时间" + CommonUtils.formatDate(offlineExchangeEndDate));
             return result;
         }
         //校验提货码(789+门店编号)
         String verifyCode = form.getVerifyCode();
         if (Objects.isNull(verifyCode) || (verifyCode.length() != 6)) {
-            result.setCode(-1000);
             result.setMessage("提货验证码错误");
             return result;
         }
@@ -266,7 +269,6 @@ public class CouponController {
         String shopCode = verifyCode.substring(3);
         Shop shop = shopService.readShopByCode(shopCode);
         if (Objects.isNull(shop)) {
-            result.setCode(JsonResponse.FAIL_CODE);
             result.setMessage("提货验证码错误");
             return result;
         }
@@ -276,6 +278,8 @@ public class CouponController {
         couponXref.setStatus(CustomerCouponXref.STATUS_USED);
         couponXref.setUpdatedOn(CommonUtils.currentDate());
         couponXrefService.saveCustomerXref(couponXref);
+        result.setCode(JsonResponse.SUCCESS_CODE);
+        result.setMessage("兑换优惠券成功");
         return result;
     }
 

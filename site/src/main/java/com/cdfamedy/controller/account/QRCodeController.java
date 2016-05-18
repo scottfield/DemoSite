@@ -1,6 +1,10 @@
 package com.cdfamedy.controller.account;
 
-import com.cdfamedy.core.domain.*;
+import com.cdfamedy.core.domain.CustomCustomer;
+import com.cdfamedy.core.domain.CustomerCouponXref;
+import com.cdfamedy.core.domain.CustomerFiveCardXref;
+import com.cdfamedy.core.domain.FiveCard;
+import com.cdfamedy.core.domain.QRCode;
 import com.cdfamedy.core.service.QRCodeService;
 import com.cdfamedy.core.util.CommonUtils;
 import com.cdfamedy.core.util.JsonResponse;
@@ -13,7 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by jackie on 4/21/2016.
@@ -58,8 +67,7 @@ public class QRCodeController {
     @RequestMapping(value = "/exchange/{code}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse consumeQRCode(@PathVariable("code") String code, HttpSession session) {
-        JsonResponse jsonResponse = JsonResponse.response("二维码兑换成功");
-        jsonResponse.setCode(JsonResponse.FAIL_CODE);
+        JsonResponse jsonResponse = JsonResponse.fail("二维码兑换成功");
         Date now = Calendar.getInstance().getTime();
 
         if (now.before(start)) {
