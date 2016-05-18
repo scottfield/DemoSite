@@ -42,7 +42,7 @@ public class CheckWxOrderStatusActivity extends BaseActivity<ProcessContext<Canc
         if (Objects.isNull(result)) {
             return context;
         }
-        WxCallBackData callBackData = JsonUtil.fromJson(JsonHelper.toJsonStr(result), WxCallBackData.class);
+        WxCallBackData callBackData = JsonUtil.fromJson(JsonUtil.toJson(result), WxCallBackData.class);
         if (WxCallBackData.SUCCESS.equals(callBackData.getTrade_state())) {
             throw new WxStatusException("微信订单已支付,交易号:" + callBackData.getTransaction_id());
         }

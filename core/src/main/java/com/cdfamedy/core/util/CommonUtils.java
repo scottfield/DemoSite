@@ -5,7 +5,13 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +23,7 @@ public final class CommonUtils {
      * 获取指定长度的随机字符串
      *
      * @param length 字符串长度
-     * @return
+     * @return 随机字符串
      */
     public static String getRandomStrByLength(int length) {
         String src = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -32,31 +38,61 @@ public final class CommonUtils {
      * 获取32位长的随机字符串
      *
      * @return
+     * @see CommonUtils#getRandomStrByLength(int)
      */
     public static String getRandomStr() {
         return getRandomStrByLength(32);
     }
 
+    /**
+     * 已指定的日期格式对日期进行格式化
+     *
+     * @param date    需格式化的日期
+     * @param pattern 日期格式
+     * @return 格式化后的日期字符串
+     */
     public static String formatDate(Date date, String pattern) {
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         String formatedDate = formatter.format(date);
         return formatedDate;
     }
 
+    /**
+     * 采用yyyyMMddHHmmss格式对日期进行格式化
+     *
+     * @param date
+     * @return
+     * @see CommonUtils#formatDate(java.util.Date, java.lang.String)
+     */
     public static String formatDate(Date date) {
         return formatDate(date, "yyyyMMddHHmmss");
     }
 
+    /**
+     * 获取系统当前时间字符串,格式为:yyyyMMddHHmmss
+     *
+     * @return
+     */
     public static String currentDateStr() {
         return formatDate(currentDate());
     }
 
+    /**
+     * 获取系统当前日期
+     *
+     * @return
+     */
     public static Date currentDate() {
         return new Date();
     }
 
-    public static String expireDate() {
-        return formatDate(new Date(System.currentTimeMillis() + 15 * 60 * 1000));
+    /**
+     * 获取当前系统时间戳
+     *
+     * @return
+     */
+    public static long currentTimeStamp() {
+        return System.currentTimeMillis();
     }
 
     public static String encodeUrl(String url) {
@@ -69,36 +105,88 @@ public final class CommonUtils {
         return encodeUrl;
     }
 
-    public static String sha1Sign(String queryStr, String appSecret) {
-        if (Objects.nonNull(appSecret)) {
-            queryStr = queryStr + "&app_secret=" + appSecret;
+    /**
+     * 对参数字符串进行sha1签名
+     *
+     * @param queryStr 请求字符串
+     * @param keyName  密匙名称
+     * @param keyValue 密匙值
+     * @return 经过加密过后的字符串
+     */
+    public static String sha1Sign(String queryStr, String keyName, String keyValue) {
+        if (Objects.nonNull(keyValue)) {
+            queryStr = queryStr + "&" + keyName + "=" + keyValue;
         }
         return DigestUtils.sha1Hex(queryStr);
     }
 
+    /**
+     * @param queryStr
+     * @param keyValue
+     * @return
+     * @see CommonUtils#sha1Sign(java.lang.String, java.lang.String, java.lang.String)
+     */
+    public static String sha1Sign(String queryStr, String keyValue) {
+        return sha1Sign(queryStr, "app_secret", keyValue);
+    }
+
+    /**
+     * @param queryStr
+     * @return
+     * @see CommonUtils#sha1Sign(java.lang.String, java.lang.String, java.lang.String)
+     */
     public static String sha1Sign(String queryStr) {
         return sha1Sign(queryStr, null);
     }
 
-    public static String md5Sign(String queryStr, String appSecret) {
-        return md5Sign(queryStr, appSecret, "app_secret");
+    /**
+     * 默认采用app_secret作为密匙的名称
+     *
+     * @param queryStr
+     * @param keyValue
+     * @return
+     * @see CommonUtils#md5Sign(java.lang.String, java.lang.String, java.lang.String)
+     */
+    public static String md5Sign(String queryStr, String keyValue) {
+        return md5Sign(queryStr, "app_secret", keyValue);
     }
 
-    public static String md5Sign(String queryStr, String appSecret, String keyName) {
-        if (Objects.nonNull(appSecret)) {
-            queryStr = queryStr + "&" + keyName + "=" + appSecret;
+    /**
+     * 对请求字符串进行md5加密
+     *
+     * @param queryStr 请求参数,已key=value的形式进行拼接
+     * @param keyName  密匙名称
+     * @param keyValue 密匙值
+     * @return 32位的加密字符串
+     */
+    public static String md5Sign(String queryStr, String keyName, String keyValue) {
+        if (Objects.nonNull(keyValue)) {
+            queryStr = queryStr + "&" + keyName + "=" + keyValue;
         }
         return DigestUtils.md5Hex(queryStr);
     }
 
+    /**
+     * 不采用密匙进行md5加密
+     *
+     * @param queryStr
+     * @return
+     * @see CommonUtils#md5Sign(java.lang.String, java.lang.String, java.lang.String)
+     */
     public static String md5Sign(String queryStr) {
         return md5Sign(queryStr, null);
     }
 
+    /**
+     * 将参数列表按字母顺序表进行拼接
+     *
+     * @param param 参数列表
+     * @return 经过排序后的拼接参数字符串
+     */
     public static String getSortedStr(Map<String, Object> param) {
         Set<String> keySet = param.keySet();
         List<String> keyList = new ArrayList<>(keySet);
-        Collections.sort(keyList);
+        Collections.sort(keyList, String.CASE_INSENSITIVE_ORDER);
         StringBuilder builder = new StringBuilder();
         for (String key : keyList) {
             Object value = param.get(key);
@@ -109,42 +197,22 @@ public final class CommonUtils {
         return builder.toString();
     }
 
-    public static long currentTimeStamp() {
-        return System.currentTimeMillis();
-    }
-
-    public static Map<String, Object> response() {
-        return response("成功");
-    }
-    public static Map<String, Object> response(String message) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("code", 1000);
-        response.put("message", message);
-        return response;
-    }
+    /**
+     * 过滤emoji表情
+     *
+     * @param source
+     * @return
+     */
     public static String filterEmoji(String source) {
-        if(source != null)
-        {
-            Pattern emoji = Pattern.compile ("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",Pattern.UNICODE_CASE | Pattern. CASE_INSENSITIVE ) ;
+        if (source != null) {
+            Pattern emoji = Pattern.compile("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]", Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
             Matcher emojiMatcher = emoji.matcher(source);
-            if ( emojiMatcher.find())
-            {
+            if (emojiMatcher.find()) {
                 source = emojiMatcher.replaceAll("*");
-                return source ;
+                return source;
             }
             return source;
         }
         return source;
-    }
-
-    public static void main(String[] args) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("name", "jackei");
-        param.put("xx", "jackei");
-        param.put("ee", "jackei");
-        param.put("fdf", "jackei");
-        param.put("dd", "jackei");
-        String sortedStr = getSortedStr(param);
-        System.out.println(md5Sign(sortedStr, "fdafda"));
     }
 }

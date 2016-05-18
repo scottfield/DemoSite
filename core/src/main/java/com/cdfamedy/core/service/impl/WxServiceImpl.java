@@ -16,11 +16,15 @@ import java.util.Objects;
  */
 @Service
 public class WxServiceImpl implements WeixinService {
+    private String userInfoUrl = "http://weixin.cplotus.com/weixin/userinfo.ashx";
+    private String vipUserInfoUrl = "http://weixin.cplotus.com/weixin/cmd.ashx";
+    private String ticketUrl = "http://weixin.cplotus.com/weixin/jsapi_ticket.ashx";
+
     @Override
     public Map<String, Object> getUserInfo(String openId) {
         Map<String, Object> param = new HashMap<>();
         param.put("openid", openId);
-        return sendRequest(param, "http://weixin.cplotus.com/weixin/userinfo.ashx");
+        return sendRequest(param, userInfoUrl);
     }
 
     private Map<String, Object> getQueryStr(Map<String, Object> queryParam) {
@@ -43,12 +47,12 @@ public class WxServiceImpl implements WeixinService {
         Map<String, Object> param = new HashMap<>();
         param.put("openid", openId);
         param.put("cmd", "getvip");
-        Map<String, Object> result = sendRequest(param, "http://weixin.cplotus.com/weixin/cmd.ashx");
+        Map<String, Object> result = sendRequest(param, vipUserInfoUrl);
         return result;
     }
 
-    private Map<String, Object> sendRequest(Map<String, Object> extraParam, String url) {
-        Map<String, Object> queryStr = getQueryStr(extraParam);
+    private Map<String, Object> sendRequest(Map<String, Object> param, String url) {
+        Map<String, Object> queryStr = getQueryStr(param);
         String responseStr = HttpUtil.doGet(url + "?" + queryStr.get("queryStr").toString());
         HashMap response = JsonUtil.fromJson(responseStr, HashMap.class);
         if (Objects.nonNull(response)) {
@@ -59,7 +63,7 @@ public class WxServiceImpl implements WeixinService {
 
     @Override
     public Map<String, Object> getTicket() {
-        return sendRequest(null, "http://weixin.cplotus.com/weixin/jsapi_ticket.ashx");
+        return sendRequest(null, ticketUrl);
     }
 
     public static void main(String[] args) {
@@ -67,7 +71,7 @@ public class WxServiceImpl implements WeixinService {
         System.out.println(service.getVipInfo("o1Py0t7UnGihjJqCfZz2bigtkTu4"));
 //        System.out.println(service.getTicket());
 //        System.out.println(service.getUserInfo("o1Py0twT_6kpQRqIX4rJiQD_fjvQ"));//老段
-//        System.out.println(service.getUserInfo("o1Py0tx91UJXWdtT_gD9xMdI5Rdo"));//jackie
+        System.out.println(service.getUserInfo("o1Py0tx91UJXWdtT_gD9xMdI5Rdo"));//jackie
       /*  Map<String, Object> param = new HashMap<>();
         param.put("timeStamp", "1461661208969");
         param.put("package", "prepay_id=wx201604261702421622b1c4a10329035995");

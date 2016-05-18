@@ -2,7 +2,6 @@ package com.cdfamedy.controller.wxpay;
 
 import com.cdfamedy.controller.account.OrderHistoryController;
 import com.cdfamedy.core.dao.payment.weixin.common.WxConfiguration;
-import com.cdfamedy.core.util.XMLUtil;
 import com.cdfamedy.core.dao.payment.weixin.protocol.QueryOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.protocol.UnifiedOrderReqData;
 import com.cdfamedy.core.dao.payment.weixin.service.WxCallBackData;
@@ -13,6 +12,7 @@ import com.cdfamedy.core.domain.ShopAccount;
 import com.cdfamedy.core.service.CustomOrderService;
 import com.cdfamedy.core.util.CommonUtils;
 import com.cdfamedy.core.util.JsonResponse;
+import com.cdfamedy.core.util.XMLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
@@ -110,7 +110,7 @@ public class WeiXinPayController {
             param.put("package", packageStr);
             param.put("signType", "MD5");
             String sortedStr = CommonUtils.getSortedStr(param);
-            String paySign = CommonUtils.md5Sign(sortedStr, WxConfiguration.getKey(mch_id), "key").toUpperCase();
+            String paySign = CommonUtils.md5Sign(sortedStr, "key", WxConfiguration.getKey(mch_id)).toUpperCase();
             param.put("paySign", paySign);
 //            String jsApiParam = JsonUtil.toJson(param);
             /*LOG.info("-----------------------------------------------------------------------------------");
