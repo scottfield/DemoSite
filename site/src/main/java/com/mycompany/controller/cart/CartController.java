@@ -19,8 +19,8 @@ package com.mycompany.controller.cart;
 
 import com.mycompany.worklow.cart.ExceededMaxPurchaseQuantityLimitException;
 import com.mycompany.worklow.cart.FiveCardUnlockException;
+import com.mycompany.worklow.cart.PromotionException;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
 import org.broadleafcommerce.core.order.service.exception.AddToCartException;
 import org.broadleafcommerce.core.order.service.exception.ProductOptionValidationException;
@@ -39,12 +39,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/cart")
@@ -103,6 +102,8 @@ public class CartController extends BroadleafCartController {
                 responseMap.put("error", "超出最大购买数量限制:" + exception.getMaxQuantityLimit() + ",已经添加数量:" + (exception.getQuantityRrequested() - 1));
             } else if (ExceptionUtils.getRootCause(e) instanceof FiveCardUnlockException) {
                 responseMap.put("error", "五折卡还未解锁哦，赶快去解锁吧!");
+            } else if (ExceptionUtils.getRootCause(e) instanceof PromotionException) {
+                responseMap.put("error", "活动已结束了哦!");
             } else {
                 throw e;
             }

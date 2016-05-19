@@ -16,7 +16,12 @@
 
 package com.mycompany.controller.checkout;
 
-import com.mycompany.sample.core.catalog.domain.*;
+import com.mycompany.sample.core.catalog.domain.CustomAddress;
+import com.mycompany.sample.core.catalog.domain.CustomAddressImpl;
+import com.mycompany.sample.core.catalog.domain.CustomCustomer;
+import com.mycompany.sample.core.catalog.domain.CustomOrder;
+import com.mycompany.sample.core.catalog.domain.Promotion;
+import com.mycompany.sample.core.catalog.domain.Shop;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,7 +30,11 @@ import org.broadleafcommerce.common.payment.PaymentType;
 import org.broadleafcommerce.common.vendor.service.exception.PaymentException;
 import org.broadleafcommerce.core.checkout.service.exception.CheckoutException;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
-import org.broadleafcommerce.core.web.checkout.model.*;
+import org.broadleafcommerce.core.web.checkout.model.BillingInfoForm;
+import org.broadleafcommerce.core.web.checkout.model.CustomerCreditInfoForm;
+import org.broadleafcommerce.core.web.checkout.model.GiftCardInfoForm;
+import org.broadleafcommerce.core.web.checkout.model.OrderInfoForm;
+import org.broadleafcommerce.core.web.checkout.model.ShippingInfoForm;
 import org.broadleafcommerce.core.web.controller.checkout.BroadleafCheckoutController;
 import org.broadleafcommerce.core.web.order.CartState;
 import org.broadleafcommerce.core.workflow.Activity;
@@ -97,6 +106,17 @@ public class CheckoutController extends BroadleafCheckoutController {
                            @ModelAttribute("giftCardInfoForm") GiftCardInfoForm giftCardInfoForm,
                            @ModelAttribute("customerCreditInfoForm") CustomerCreditInfoForm customerCreditInfoForm,
                            RedirectAttributes redirectAttributes) {
+        Object promotion = request.getAttribute("promotion");
+        if (promotion instanceof Promotion) {
+            Promotion currentPromotion = (Promotion) promotion;
+            int status = currentPromotion.getStatus();
+            if (status != Promotion.IN_PROCESS) {
+                model.addAttribute("errorMsg", "活动已结束!");
+                return checkoutView;
+            }
+
+        }
+
         CustomOrder cart = (CustomOrder) CartState.getCart();
         LOG.warn("开始提交订单,订单ID:" + cart.getId() + ",订单状态:" + cart.getStatus().getType());
         try {

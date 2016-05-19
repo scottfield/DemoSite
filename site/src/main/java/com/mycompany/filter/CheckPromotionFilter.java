@@ -57,9 +57,9 @@ public class CheckPromotionFilter extends OncePerRequestFilter {
                 response.sendRedirect("/promotion/countdown");
                 return;
             case Promotion.IN_PROCESS:
+            case Promotion.END:
                 filterChain.doFilter(request, response);
                 break;
-            case Promotion.END:
         }
 
     }

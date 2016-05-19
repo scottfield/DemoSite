@@ -30,6 +30,8 @@ WHERE o.`ORDER_NUMBER` IN (
   '201605111532208349900'
 );
 
+
+
 #end
 #根据用户openID查询订单信息
 SELECT
@@ -269,3 +271,4 @@ SELECT * FROM customer_fivecard_xref WHERE customer_id=47919;
 SELECT count(*) from fivecard WHERE card_status=1;
 SELECT * FROM customer_fivecard_xref cx LEFT JOIN fivecard fd ON cx.fivecard_id=fd.card_id WHERE cx.fivecard_id=73336;
 SELECT count(*) FROM  blc_customer;
+SELECT * FROM blc_order o WHERE o.ORDER_STATUS='CONSUMED';
