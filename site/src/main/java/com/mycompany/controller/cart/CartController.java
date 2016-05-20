@@ -103,7 +103,7 @@ public class CartController extends BroadleafCartController {
             } else if (ExceptionUtils.getRootCause(e) instanceof FiveCardUnlockException) {
                 responseMap.put("error", "五折卡还未解锁哦，赶快去解锁吧!");
             } else if (ExceptionUtils.getRootCause(e) instanceof PromotionException) {
-                responseMap.put("error", "活动已结束了哦!");
+                responseMap.put("error", "线上预售已结束！线下五折开始啦，快来哟！");
             } else {
                 throw e;
             }
