@@ -126,6 +126,6 @@ WHERE  receiver.`NAME` = 'receiver' AND receiverPhone.NAME='receiverPhone' AND
   AND '2016-05-11 23:59:59'
 )*/
 ORDER BY o.`SUBMIT_DATE`;
-SELECT *
+SELECT count(*)
 FROM blc_order
-WHERE ORDER_STATUS = 'CONSUMED';
+WHERE ORDER_STATUS IN ('PAID','CONSUMED');

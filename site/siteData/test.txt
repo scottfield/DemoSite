@@ -1,2 +1,0 @@
-appid=wx937fba8914a5d9a9&body=测试支付&mch_id=10010514&nonce_str=267raaju3dhuq3cp38ccaf6asyuxmw3b&notify_url=http://localhost:8080/wechatpay/index/notify&openid=o1Py0tx91UJXWdtT_gD9xMdI5Rdo&out_trade_no=201605031644291822651&spbill_create_ip=127.0.0.1&total_fee=1&trade_type=JSAPI&key=xVVm9pGXwwJpAQWkhJDszfi46wtBX1EQ
-

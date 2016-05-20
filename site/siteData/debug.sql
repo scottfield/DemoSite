@@ -266,9 +266,7 @@ FROM fivecard;
 SELECT *
 FROM fivecard
 WHERE card_no = '7400055869578';
-SELECT *
-FROM blc_customer
-WHERE FIRST_NAME LIKE '%阿敏%';
+
 SELECT *
 FROM blc_customer
 WHERE CUSTOMER_ID = 47919;
@@ -290,3 +288,9 @@ WHERE o.ORDER_STATUS = 'PAID';
 SELECT *
 FROM shop
 WHERE `name` = '新塘店';
+# 查询用户信息
+SELECT *
+FROM blc_customer
+WHERE FIRST_NAME LIKE '%美银记%';
+SELECT * from blc_order WHERE CUSTOMER_ID=83065;
+SELECT * FROM blc_order_attribute WHERE NAME='transaction_id' AND VALUE='1219167401391605191234349959';

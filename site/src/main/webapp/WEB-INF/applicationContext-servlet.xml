@@ -104,6 +104,8 @@
         <mvc:interceptor>
             <mvc:mapping path="/fiveCard/issue"/>
             <mvc:mapping path="/fiveCard/activate"/>
+            <mvc:mapping path="/fiveCard/share/page"/>
+            <mvc:mapping path="/fiveCard"/>
             <!--interceptor for checking five card quantity available -->
             <bean class="com.mycompany.interceptor.CheckFiveCardIssueDateInterceptor"/>
         </mvc:interceptor>

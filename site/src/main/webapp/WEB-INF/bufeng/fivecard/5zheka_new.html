@@ -316,6 +316,12 @@
             $window.addClass("none");
         });
     });
+    $(function () {
+        var param = decodeURIComponent(location.search).split("=");
+        if (decodeURIComponent(location.search).indexOf("message") > 0) {
+            alert(param[1]);
+        }
+    });
     //]]>
 </script>
 <div th:replace="/fivecard/partials/share::shareFiveCard"></div>
