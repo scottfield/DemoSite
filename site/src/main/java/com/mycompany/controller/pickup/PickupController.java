@@ -24,7 +24,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by jackie on 4/20/2016.
@@ -47,6 +51,10 @@ public class PickupController {
         calendar.set(Calendar.YEAR, 2016);
         calendar.set(Calendar.MONTH, Calendar.MAY);
         calendar.set(Calendar.DAY_OF_MONTH, 20);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         pickupStartDate = calendar.getTime();
         calendar.set(Calendar.DAY_OF_MONTH, 23);
         pickupEndDate = calendar.getTime();
@@ -98,7 +106,19 @@ public class PickupController {
             result.put("message", "提货验证码错误");
             return result;
         }
-        //todo 检测订单的收货门店是否与工作人员输入的门店编号相同
+        if (!(order instanceof CustomOrder)) {
+            result.put("code", -1000);
+            result.put("message", "订单异常");
+            return result;
+        }
+        //检测订单的收货门店是否与工作人员输入的门店编号相同
+        CustomOrder customOrder = (CustomOrder) order;
+        CustomAddress address = customOrder.getAddress();
+        if (!shopCode.equals(address.getShop().getCode())) {
+            result.put("code", -1000);
+            result.put("message", "下单门店与输入门店编号不一致,下单门店:" + address.getShop().getName() + ",输入门店编号:" + shopCode);
+            return result;
+        }
         //提取货物
         Map<String, OrderAttribute> orderAttributes = order.getOrderAttributes();
         OrderAttribute receiver = new OrderAttributeImpl();
