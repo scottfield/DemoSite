@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:replace="/partials/title::title"></title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
+    <script type="text/javascript" th:inline="text" th:attr="data-jsapi=${jsApiParam}">
+        //调用微信JS api 支付
+        function jsApiCall() {
+            WeixinJSBridge.invoke(
+                    'getBrandWCPayRequest', {
+                        "appId": "[[${appId}]]",
+                        "timeStamp": "[[${timeStamp}]]",
+                        "nonceStr": "[[${nonceStr}]]",
+                        "package": "[[${package}]]",
+                        "signType": "[[${signType}]]",
+                        "paySign": "[[${paySign}]]"
+                    },
+                    function (res) {
+                        WeixinJSBridge.log(res.err_msg);
+                        paymentCallback(res);
+                    }
+            )
+            ;
+        }
+        /*<![CDATA[*/
+        function paymentCallback(res) {
+            if ("get_brand_wcpay_request:ok" == res.err_msg) {
+                alert("支付成功");
+                location.href = "@{/rebate}";
+            } else {
+                alert("err_code:" + res.err_code + ",err_desc:" + res.err_desc + ",err_msg:" + res.err_msg);
+            }
+        }
+        /*]]>*/
+
+        function callpay() {
+            if (typeof WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                    document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                }
+            } else {
+                jsApiCall();
+            }
+        }
+        callpay();
+    </script>
+</head>
+<body>
+</body>
+</html>

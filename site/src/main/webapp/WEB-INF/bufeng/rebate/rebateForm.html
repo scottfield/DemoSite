@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>退款</title>
+</head>
+<body>
+<blc:form th:action="@{/wechatpay/index/pay}" th:method="post">
+    <label th:for="shopList">门店</label><select id="shopList" name="shopCode">
+    <div th:each="area,index:${areas}">
+        <option th:object="${shop}" th:each="shop:${area.value}" th:text="*{province+'/'+city+'/'+name}"
+                th:attr="data-address=*{address},data-shopid=*{id},data-city=*{city}" th:value="*{code}">
+            四川省/成都市/青羊区/苏坡街道
+        </option>
+    </div>
+</select>
+    <div>
+        <label th:for="amount">金额</label><input th:id="amount" th:name="amount"/>
+    </div>
+    <input type="hidden" name="rebate" value="true"/>
+    <div>
+        <button type="submit">提交</button>
+    </div>
+</blc:form>
+</body>
+</html>

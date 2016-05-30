@@ -292,5 +292,55 @@ WHERE `name` = '新塘店';
 SELECT *
 FROM blc_customer
 WHERE FIRST_NAME LIKE '%美银记%';
-SELECT * from blc_order WHERE CUSTOMER_ID=83065;
-SELECT * FROM blc_order_attribute WHERE NAME='transaction_id' AND VALUE='1219167401391605191234349959';
+SELECT *
+FROM blc_order
+WHERE CUSTOMER_ID = 83065;
+SELECT *
+FROM blc_order_attribute
+WHERE NAME = 'transaction_id' AND VALUE = '1219167401391605191234349959';
+
+
+SELECT
+  FROM_UNIXTIME(UNIX_TIMESTAMP(o.`SUBMIT_DATE`), '%Y%M%D %H'),
+  COUNT(o.SUBMIT_DATE),
+  SUM(o.`ORDER_SUBTOTAL`)
+FROM
+  blc_order o
+  LEFT JOIN order_extend oe
+    ON o.`ORDER_ID` = oe.`ORDER_ID`
+  LEFT JOIN blc_address ba
+    ON oe.`ADDRESS_ID` = ba.`ADDRESS_ID`
+  LEFT JOIN blc_phone bp
+    ON bp.`PHONE_ID` = ba.`PHONE_PRIMARY_ID`
+  LEFT JOIN address_shop adds
+    ON adds.`address_id` = ba.`ADDRESS_ID`
+  LEFT JOIN shop s
+    ON s.`id` = adds.`shop_id`
+  LEFT JOIN shop_account sa
+    ON sa.`id` = s.`shop_account_id`
+  LEFT JOIN blc_customer bc
+    ON bc.`CUSTOMER_ID` = o.`CUSTOMER_ID`
+  LEFT JOIN blc_order_attribute boa
+    ON boa.`ORDER_ID` = o.`ORDER_ID`
+WHERE boa.`NAME` = 'transaction_id'
+      AND o.`ORDER_STATUS` IN ('PAID', 'CONSUMED')
+      AND (
+        o.`SUBMIT_DATE` BETWEEN '2016-05-9 00:00:00'
+        AND '2016-05-19 23:59:59'
+      )
+GROUP BY FROM_UNIXTIME(UNIX_TIMESTAMP(o.`SUBMIT_DATE`), '%Y%M%D %H')
+ORDER BY o.`SUBMIT_DATE`;
+
+SELECT COUNT(*)
+FROM blc_order
+WHERE ORDER_STATUS = 'CONSUMED';
+
+SELECT
+  bc.FIRST_NAME,
+  a.customer_id
+FROM customer_fivecard_xref cfx LEFT JOIN blc_customer bc ON cfx.referer = bc.CUSTOMER_ID
+WHERE a.referer != ''
+GROUP BY a.referer;
+SELECT sharer.customer_id,referer.customer_id FROM customer_fivecard_xref sharer LEFT JOIN customer_fivecard_xref referer ON sharer.customer_id = referer.referer ORDER BY sharer.customer_id;
+# 根据订单号查询订单项详情
+SELECT * FROM blc_order_item bi LEFT JOIN blc_order bo ON bi.ORDER_ID=bo.ORDER_ID WHERE bo.ORDER_NUMBER='2016051711304574214145';

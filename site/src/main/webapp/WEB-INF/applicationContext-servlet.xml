@@ -83,6 +83,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/account/addresses"/>
             <mvc:mapping path="/coupon/exchange"/>
+            <mvc:mapping path="/rebate"/>
             <!--interceptor for address form-->
             <bean class="com.mycompany.interceptor.ShopInfoInterceptor"/>
         </mvc:interceptor>
@@ -108,6 +109,11 @@
             <mvc:mapping path="/fiveCard"/>
             <!--interceptor for checking five card quantity available -->
             <bean class="com.mycompany.interceptor.CheckFiveCardIssueDateInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/wechatpay/index/pay"/>
+            <!--interceptor for rebate pay-->
+            <bean class="com.mycompany.interceptor.UnifyOrderInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

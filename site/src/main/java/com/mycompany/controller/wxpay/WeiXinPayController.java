@@ -16,8 +16,6 @@ import com.mycompany.service.CustomOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.order.domain.Order;
-import org.broadleafcommerce.core.order.domain.OrderAttribute;
-import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.profile.core.domain.Customer;
@@ -54,6 +52,9 @@ public class WeiXinPayController {
     @RequestMapping("/pay")
     public String unifyOrder(HttpServletRequest request, Long orderId) {
         String retView = "wxpay/wxpay";
+        if (Objects.nonNull(request.getParameter("rebate"))) {
+            return "rebate/wxrebatepay";
+        }
         CustomOrder order = (CustomOrder) orderService.findOrderById(orderId);
         Customer orderOwner = order.getCustomer();
         Customer currentLoginCustomer = CustomerState.getCustomer();
@@ -196,67 +197,6 @@ public class WeiXinPayController {
         }
         LOG.warn("----------微信异步通知更新订单状态结束------------");
         return null;
-    }
-
-    /**
-     * 支付成功后确认订单
-     *
-     * @param orderId
-     * @return
-     */
-    @RequestMapping("/confirm")
-    @ResponseBody
-    public Object confirmOrder(@RequestParam Long orderId) {
-        JsonResponse result = JsonResponse.response();
-        result.setMessage("订单支付失败");
-        result.setCode(JsonResponse.FAIL_CODE);
-        Order order = orderService.findOrderById(orderId);
-        if (Objects.isNull(order)) {
-            LOG.warn("订单ID：" + orderId + "不存在.");
-            result.setMessage("更新订单失败，订单ID:" + orderId + " 不存在");
-            return result;
-        }
-        try {
-            if (!(order instanceof CustomOrder)) {
-                LOG.warn("订单类型异常,订单ID：" + orderId + "不存在.");
-                result.setMessage("异常订单，订单ID:" + orderId);
-                return result;
-            }
-            LOG.warn("调用微信账单接口检测订单状态开始,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
-            CustomOrder customOrder = (CustomOrder) order;
-            Shop shop = customOrder.getAddress().getShop();
-            QueryOrderReqData reqData = new QueryOrderReqData.QueryOrderReqDataBuilder().setAppid(shop.getAppId()).setMch_id(shop.getMchid()).setOut_trade_no(order.getOrderNumber()).build();
-            Map<String, Object> wxOrderInfo = WxPayApi.queryOrder(reqData);
-            if (!WxCallBackData.SUCCESS.equals(wxOrderInfo.get("return_code"))) {
-                result.setMessage(Objects.isNull(wxOrderInfo.get("return_msg")) ? "通讯错误" : wxOrderInfo.get("return_msg").toString());
-                return result;
-            }
-            if (!WxCallBackData.SUCCESS.equals(wxOrderInfo.get("result_code"))) {
-                result.setMessage(Objects.isNull(wxOrderInfo.get("err_code_des")) ? "业务错误" : wxOrderInfo.get("err_code_des").toString());
-                return result;
-            }
-            LOG.warn("订单号," + order.getOrderNumber() + ",查询结果:out_trade_no=" + wxOrderInfo.get("out_trade_no") + ",trade_state=" + wxOrderInfo.get("trade_state"));
-            if (WxCallBackData.SUCCESS.equals(wxOrderInfo.get("trade_state"))) {
-                order.setStatus(OrderHistoryController.PAID);
-                result.setMessage("订单支付成功.");
-                result.setCode(JsonResponse.SUCCESS_CODE);
-            } else {
-                order.setStatus(OrderHistoryController.UNPAID);
-            }
-            orderService.save(order, false);
-            LOG.warn("更新订单状态完成,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
-            //todo 微信账单信息写入数据库
-        } catch (IOException e) {
-            LOG.error("io错误", e);
-        } catch (SAXException e) {
-            LOG.error("xml解析错误", e);
-        } catch (ParserConfigurationException e) {
-            LOG.error("xml配置错误", e);
-        } catch (PricingException e) {
-            LOG.error("修改订单价格错误", e);
-        }
-        LOG.warn("检测订单状态结束,订单编号:" + order.getOrderNumber() + ",订单状态:" + order.getStatus().getType());
-        return result;
     }
 
     @RequestMapping("/bill")
