@@ -28,7 +28,10 @@
 <div class="coupon-exchange">
     <div class="img-panel head">
         <img th:src="@{/images/new/coupon/exchange-head.jpg}" width="100%"/>
-        <span class="link" th:text="${card.value}">6</span>
+        <div class="number">
+            <span class="num" th:text="${card.value}">6</span>
+            <span class="unit">元</span>
+        </div>
     </div>
     <div class="text-content">
         <div style="text-align:center;" th:text="${card.description}">超市购物任意消费立减00元</div>

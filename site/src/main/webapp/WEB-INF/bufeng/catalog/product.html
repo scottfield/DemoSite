@@ -95,7 +95,7 @@
 
         <p>库存：[[${product.defaultSku.quantityAvailable?:'货源充足'}]]</p>
         <p>售出数量：[[${product.sales}]]</p>
-        <p th:if="${product.promoMessage}">促销：<font>[[${product.promoMessage}]]</font></p>
+        <p th:if="${product.promoMessage}">促销：[[${product.promoMessage}]]</p>
         <div class="num">
             <div class="box">
                 <span class="mnus">-</span>
